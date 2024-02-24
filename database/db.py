@@ -4,10 +4,11 @@ Base = declarative_base()
 
 
 from database.config import USER, PASSWORD, HOST, PORT, DB_NAME
+
+# UTILS Import
 from database.users.utils import *
-
 from database.organization.utils import *
-
+from database.departaments.utils import *
 
 
 engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}')
@@ -35,6 +36,15 @@ class DataBase:
     @staticmethod
     def get_organization(session=session):
         return get_organization(session)
+
+    @staticmethod
+    def create_departament(name, org_id, manager_id, departament_id):
+        return create_departament(session, org_id=org_id, name=name, manager_id=manager_id,
+                                   departament_id=departament_id)
+
+    @staticmethod
+    def get_departament(session=session):
+        return get_departament(session)
 
 
 db = DataBase()
