@@ -1,11 +1,11 @@
-from database.models import Employee
+
 from sqlalchemy.exc import SQLAlchemyError
+from user.models import UserCreate
 
-
-# EMPLOYEE UTILS
-def create_employee(session, name, email, password, employee_id):
+# USERS UTILS
+def create_user(session, name, email, password, user_id):
     try:
-        obj = Employee(name=name, email=email, password=password, id=employee_id)
+        obj = UserCreate(name=name, email=email, password=password, id=user_id)
         session.add(obj)
         session.commit()
         return obj
@@ -15,6 +15,12 @@ def create_employee(session, name, email, password, employee_id):
         return error
 
 
-def get_employees(session):
-    employees = session.query(Employee).all()
-    return Employee.serialize_employees(employees)
+def get_users(session):
+    users = session.query(UserCreate).all()
+    return UserCreate.serialize_employees(users)
+
+def create_organization():
+    print("HI")
+
+def get_organization():
+    print("HI")
