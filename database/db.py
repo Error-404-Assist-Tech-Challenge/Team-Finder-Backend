@@ -1,12 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+Base = declarative_base()
+
 
 from database.config import USER, PASSWORD, HOST, PORT, DB_NAME
 from database.users.utils import *
 
 from database.organization.utils import *
 
-Base = declarative_base()
 
 
 engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}')
@@ -32,7 +33,7 @@ class DataBase:
         return create_organization(session, admin_id=admin_id, name=name, hq_address=hq_address, organization_id=organization_id)
 
     @staticmethod
-    def get_organization(session):
+    def get_organization(session=session):
         return get_organization(session)
 
 

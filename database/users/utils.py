@@ -1,10 +1,10 @@
 
 from sqlalchemy.exc import SQLAlchemyError
-from user.models import UserCreate
+from database.users.models import Users
 
 def create_user(session, name, email, password, user_id):
     try:
-        obj = UserCreate(name=name, email=email, password=password, id=user_id)
+        obj = Users(name=name, email=email, password=password, id=user_id)
         session.add(obj)
         session.commit()
         return obj
@@ -15,5 +15,5 @@ def create_user(session, name, email, password, user_id):
 
 
 def get_users(session):
-    users = session.query(UserCreate).all()
-    return UserCreate.serialize_employees(users)
+    users = session.query(Users).all()
+    return Users.serialize_employees(users)

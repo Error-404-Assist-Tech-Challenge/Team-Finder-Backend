@@ -1,5 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
-from organization.models import Organization
+from database.organization.models import Organization
+
 
 def create_organization(session, admin_id, name, hq_address, organization_id):
     try:
