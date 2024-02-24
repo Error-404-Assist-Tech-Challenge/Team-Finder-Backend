@@ -2,7 +2,6 @@
 from sqlalchemy.exc import SQLAlchemyError
 from user.models import UserCreate
 
-# USERS UTILS
 def create_user(session, name, email, password, user_id):
     try:
         obj = UserCreate(name=name, email=email, password=password, id=user_id)
@@ -18,9 +17,3 @@ def create_user(session, name, email, password, user_id):
 def get_users(session):
     users = session.query(UserCreate).all()
     return UserCreate.serialize_employees(users)
-
-def create_organization():
-    print("HI")
-
-def get_organization():
-    print("HI")
