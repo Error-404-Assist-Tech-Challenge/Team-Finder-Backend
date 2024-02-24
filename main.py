@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from organization.organization import organization_router
 from user.user import user_router
-from employee.employee import employee_router
 
 app = FastAPI()
 
@@ -17,7 +17,7 @@ app.add_middleware(
 )
 
 app.include_router(user_router)
-app.include_router(employee_router)
+app.include_router(organization_router)
 
 if __name__ == "__main__":
     import uvicorn
