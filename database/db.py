@@ -1,12 +1,13 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 from database.config import USER, PASSWORD, HOST, PORT, DB_NAME
-from database.users.models import Base
 from database.users.utils import *
 
-#from database.organization.models import Base
 from database.organization.utils import *
+
+Base = declarative_base()
+
 
 engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}')
 

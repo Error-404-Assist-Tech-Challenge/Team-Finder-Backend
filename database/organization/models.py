@@ -2,8 +2,7 @@ import uuid
 from sqlalchemy import Column, String
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.dialects.postgresql import UUID
-
-Base = declarative_base()
+from database.db import Base
 
 
 class Organization(Base):
