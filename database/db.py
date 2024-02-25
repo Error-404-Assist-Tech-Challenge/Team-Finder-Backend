@@ -74,8 +74,8 @@ class DataBase:
 
     # DEPARTMENT_MEMBERS
     @staticmethod
-    def create_department_member(dept_id, user_id):
-        return create_department_member(session=session, dept_id=dept_id, user_id=user_id)
+    def create_department_member(dept_id, user_id, department_member_id):
+        return create_department_member(session=session, dept_id=dept_id, user_id=user_id, department_member_id=department_member_id)
 
     @staticmethod
     def get_department_members():
