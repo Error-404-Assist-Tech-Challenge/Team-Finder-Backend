@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from user.user import user_router
+from users.users import user_router
 from user_roles.user_roles import user_roles_router
-from departaments.departaments import departaments_router
-from organization.organization import organization_router
+from departments.departments import departments_router
+from organizations.organizations import organization_router
 
 app = FastAPI()
 
@@ -21,7 +21,7 @@ app.add_middleware(
 app.include_router(user_router)
 app.include_router(user_roles_router)
 app.include_router(organization_router)
-app.include_router(departaments_router)
+app.include_router(departments_router)
 
 if __name__ == "__main__":
     import uvicorn

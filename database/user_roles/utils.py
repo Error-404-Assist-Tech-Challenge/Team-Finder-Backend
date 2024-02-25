@@ -16,4 +16,4 @@ def create_user_role(session, user_id, role_id):
 
 def get_user_roles(session):
     user_roles = session.query(UserRole).all()
-    return UserRole.serialize_employees(user_roles)
+    return UserRole.serialize_user_roles(user_roles)
