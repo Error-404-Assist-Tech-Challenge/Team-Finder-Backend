@@ -10,11 +10,18 @@ def create_organization_member(session, org_id, user_id, organization_member_id)
         session.commit()
         return obj
     except SQLAlchemyError as e:
+        session.rollback()
         error = str(e.__dict__['orig'])
         print(error)
         return error
 
 
 def get_organization_members(session):
-    members = session.query(Organization_members).all()
-    return Organization_members.serialize_organization_members(members)
+    try:
+        members = session.query(Organization_members).all()
+        return Organization_members.serialize_organization_members(members)
+    except SQLAlchemyError as e:
+        session.rollback()
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error

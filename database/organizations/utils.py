@@ -10,11 +10,18 @@ def create_organization(session, admin_id, name, hq_address, organization_id):
         session.commit()
         return obj
     except SQLAlchemyError as e:
+        session.rollback()
         error = str(e.__dict__['orig'])
         print(error)
         return error
 
 
 def get_organizations(session):
-    organizations = session.query(Organization).all()
-    return Organization.serialize_organizations(organizations)
+    try:
+        organizations = session.query(Organization).all()
+        return Organization.serialize_organizations(organizations)
+    except SQLAlchemyError as e:
+        session.rollback()
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
