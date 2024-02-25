@@ -16,4 +16,4 @@ def create_user(session, name, email, password, user_id):
 
 def get_users(session):
     users = session.query(Users).all()
-    return Users.serialize_employees(users)
+    return Users.serialize_users(users)
