@@ -15,6 +15,6 @@ def create_department(data):
     db.create_department(name=department_data.get("name"),
                          org_id=department_data.get("org_id"),
                          manager_id=department_data.get("manager_id"),
-                         departament_id=department_id)
+                         department_id=department_id)
 
     return department_data
