@@ -5,7 +5,7 @@ from departments.utils import create_department, get_departments
 departments_router = APIRouter()
 
 
-@departments_router.post("/api/department", response_model=Department)
+@departments_router.post("/api/departments", response_model=Department)
 def create_department_route(department_data: Department):
     return create_department(department_data)
 
