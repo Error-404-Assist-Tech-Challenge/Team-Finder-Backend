@@ -7,6 +7,8 @@ from database.config import USER, PASSWORD, HOST, PORT, DB_NAME
 
 # UTILS Import
 from database.users.utils import *
+from database.roles.utils import *
+from database.user_roles.utils import *
 from database.organization.utils import *
 from database.departaments.utils import *
 
@@ -45,6 +47,21 @@ class DataBase:
     @staticmethod
     def get_departament(session=session):
         return get_departament(session)
+
+    @staticmethod
+    def create_user_role(user_id, role_id):
+        return create_user_role(session=session, user_id=user_id, role_id=role_id)
+
+    @staticmethod
+    def get_user_roles():
+        return get_user_roles(session=session)
+
+
+    # PREDEFINED ROLES
+    @staticmethod
+    def get_roles():
+        return get_roles(session=session)
+
 
 
 db = DataBase()
