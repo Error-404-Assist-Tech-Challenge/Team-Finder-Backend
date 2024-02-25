@@ -134,9 +134,9 @@ class DataBase:
 
     #USER_SKILLS
     @staticmethod
-    def create_user_skills(user_id, skill_id):
+    def create_user_skills(user_id, skill_id, level, experience):
         with session_scope() as session:
-            return create_user_skills(session=session, user_id=user_id, skill_id=skill_id)
+            return create_user_skills(session=session, user_id=user_id, skill_id=skill_id, level=level, experience=experience)
 
     @staticmethod
     def get_user_skills():
