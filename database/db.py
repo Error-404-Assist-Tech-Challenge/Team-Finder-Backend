@@ -128,16 +128,17 @@ class DataBase:
 
     @staticmethod
     def get_all_details():
-        all_details = {}
-        all_details['users'] = get_users(session=session)
-        all_details['organizations'] = get_organizations(session=session)
-        all_details['organization_members'] = get_organization_members(session=session)
-        all_details['departments'] = get_department(session=session)
-        all_details['department_members'] = get_department_members(session=session)
-        all_details['user_roles'] = get_user_roles(session=session)
-        all_details['roles'] = get_roles(session=session)
+        with session_scope() as session:
+            all_details = {}
+            all_details['users'] = get_users(session=session)
+            all_details['organizations'] = get_organizations(session=session)
+            all_details['organization_members'] = get_organization_members(session=session)
+            all_details['departments'] = get_department(session=session)
+            all_details['department_members'] = get_department_members(session=session)
+            all_details['user_roles'] = get_user_roles(session=session)
+            all_details['roles'] = get_roles(session=session)
 
-        return all_details
+            return all_details
 
 
 db = DataBase()

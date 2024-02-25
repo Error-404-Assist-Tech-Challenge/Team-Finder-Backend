@@ -3,7 +3,7 @@ from database.db import db
 import os
 from typing import Dict
 
-openai_secretkey = "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"
+openai_secretkey = os.environ["CHAT_SECRET_KEY"]
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", f"{openai_secretkey}"))
 MODEL = "gpt-3.5-turbo"
 def make_chat_gpt_request(data) -> Dict[str, str]:
