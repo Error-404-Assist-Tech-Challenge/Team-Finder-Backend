@@ -10,11 +10,18 @@ def create_department_member(session, dept_id, user_id, department_member_id):
         session.commit()
         return obj
     except SQLAlchemyError as e:
+        session.rollback()
         error = str(e.__dict__['orig'])
         print(error)
         return error
 
 
 def get_department_members(session):
-    members = session.query(Department_members).all()
-    return Department_members.serialize_department_members(members)
+    try:
+        members = session.query(Department_members).all()
+        return Department_members.serialize_department_members(members)
+    except SQLAlchemyError as e:
+        session.rollback()
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error

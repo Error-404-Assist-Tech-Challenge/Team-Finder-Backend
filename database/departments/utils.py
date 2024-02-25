@@ -10,11 +10,18 @@ def create_department(session, org_id, name, manager_id, department_id):
         session.commit()
         return obj
     except SQLAlchemyError as e:
+        session.rollback()
         error = str(e.__dict__['orig'])
         print(error)
         return error
 
 
 def get_department(session):
-    departments = session.query(Department).all()
-    return Department.serialize_departments(departments)
+    try:
+        departments = session.query(Department).all()
+        return Department.serialize_departments(departments)
+    except SQLAlchemyError as e:
+        session.rollback()
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
