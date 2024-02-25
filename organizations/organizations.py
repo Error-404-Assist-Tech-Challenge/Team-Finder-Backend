@@ -7,7 +7,7 @@ organization_router = APIRouter()
 
 @organization_router.post("/api/organizations", response_model=Organization)
 def create_organization(organization_data: Organization):
-    return organization_data
+    return create_organization(organization_data)
 
 
 @organization_router.get("/api/organizations")

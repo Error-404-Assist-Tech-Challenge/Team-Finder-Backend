@@ -10,8 +10,9 @@ from database.users.utils import *
 from database.roles.utils import *
 from database.user_roles.utils import *
 from database.organizations.utils import *
+from database.organization_members.utils import *
 from database.departments.utils import *
-
+from database.departments_member.utils import *
 
 engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}')
 
@@ -47,6 +48,16 @@ class DataBase:
     def get_organizations():
         return get_organizations(session=session)
 
+    # ORGANIZATIONS_MEMBERS
+    @staticmethod
+    def create_organization_member(org_id, user_id, organization_member_id):
+        return create_organization_member(session=session, org_id=org_id, user_id=user_id, organization_member_id=organization_member_id)
+
+    @staticmethod
+    def get_organization_members():
+        return get_organization_members(session=session)
+
+
 
     # DEPARTMENTS
     @staticmethod
@@ -60,6 +71,15 @@ class DataBase:
     @staticmethod
     def get_department():
         return get_department(session=session)
+
+    # DEPARTMENT_MEMBERS
+    @staticmethod
+    def create_department_member(dept_id, user_id):
+        return create_department_member(session=session, dept_id=dept_id, user_id=user_id)
+
+    @staticmethod
+    def get_department_members():
+        return get_department_members(session=session)
 
 
     # USER ROLES

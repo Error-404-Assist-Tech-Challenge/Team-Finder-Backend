@@ -7,7 +7,7 @@ user_router = APIRouter()
 
 @user_router.post("/api/users", response_model=UserCreate)
 def create_user(user_data: UserCreate):
-    return user_data
+    return create_user(user_data)
 
 
 @user_router.get("/api/users")
