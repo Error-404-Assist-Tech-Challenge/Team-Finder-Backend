@@ -10,8 +10,14 @@ Base = declarative_base()
 from database.users.utils import *
 from database.roles.utils import *
 from database.user_roles.utils import *
+from database.user_skills.utils import *
+
+from database.skills.utils import *
+from database.skill_categories.utils import *
+
 from database.organizations.utils import *
 from database.organization_members.utils import *
+
 from database.departments.utils import *
 from database.departments_member.utils import *
 
@@ -126,18 +132,55 @@ class DataBase:
         with session_scope() as session:
             return get_roles(session=session)
 
+    #USER_SKILLS
+    @staticmethod
+    def create_user_skills(user_id, skill_id, level, experience):
+        with session_scope() as session:
+            return create_user_skills(session=session, user_id=user_id, skill_id=skill_id, level=level, experience=experience)
+
+    @staticmethod
+    def get_user_skills():
+        with session_scope() as session:
+            return get_user_skills(session=session)
+
+    #SKILLS
+    @staticmethod
+    def create_skill(dept_id, category_id, name, description, skill_id):
+        with session_scope() as session:
+            return create_skill(session=session, dept_id=dept_id, category_id=category_id, name=name, description=description, skill_id=skill_id)
+
+    @staticmethod
+    def get_skills():
+        with session_scope() as session:
+            return get_skills(session=session)
+
+    # SKILL_CATEGORIES
+    @staticmethod
+    def create_skill_categories(name, dept_id, skill_categories_id):
+        with session_scope() as session:
+            return create_skill_categories(session=session, name=name, dept_id=dept_id,
+                                 skill_categories_id=skill_categories_id)
+
+    @staticmethod
+    def get_skill_categories():
+        with session_scope() as session:
+            return get_skill_categories(session=session)
+
+
+
     @staticmethod
     def get_all_details():
-        all_details = {}
-        all_details['users'] = get_users(session=session)
-        all_details['organizations'] = get_organizations(session=session)
-        all_details['organization_members'] = get_organization_members(session=session)
-        all_details['departments'] = get_department(session=session)
-        all_details['department_members'] = get_department_members(session=session)
-        all_details['user_roles'] = get_user_roles(session=session)
-        all_details['roles'] = get_roles(session=session)
+        with session_scope() as session:
+            all_details = {}
+            all_details['users'] = get_users(session=session)
+            all_details['organizations'] = get_organizations(session=session)
+            all_details['organization_members'] = get_organization_members(session=session)
+            all_details['departments'] = get_department(session=session)
+            all_details['department_members'] = get_department_members(session=session)
+            all_details['user_roles'] = get_user_roles(session=session)
+            all_details['roles'] = get_roles(session=session)
 
-        return all_details
+            return all_details
 
 
 db = DataBase()
