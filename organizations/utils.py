@@ -15,6 +15,7 @@ def create_organization(data):
     db.create_organization(name=organization_data.get("name"),
                            admin_id=organization_data.get("admin_id"),
                            hq_address=organization_data.get("hq_address"),
+                           created_at=organization_data.get("created_at"),
                            organization_id=organization_id)
 
     return organization_data

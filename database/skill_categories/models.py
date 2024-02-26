@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, TIMESTAMP
 from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
@@ -10,6 +10,8 @@ class Skill_categories(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
     dept_id = Column(UUID, nullable=False)
     name = Column(String, nullable=False)
+    created_at = Column(TIMESTAMP, nullable=False)
+
     @staticmethod
     def serialize_skill_categories(skill_categories):
         serialize_skill_category = {}
@@ -17,6 +19,7 @@ class Skill_categories(Base):
             serialize_skill_category[str(skill_category.id)] = {
                 "id": str(skill_category.id),
                 "dept_id": str(skill_category.dept_id),
-                "name": str(skill_category.name)
+                "name": str(skill_category.name),
+                "created_at": str(skill_category.created_at)
             }
         return serialize_skill_category

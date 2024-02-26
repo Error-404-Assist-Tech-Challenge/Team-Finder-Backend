@@ -3,7 +3,7 @@ from database.db import db
 
 
 def get_departments():
-    departments = db.get_organization()
+    departments = db.get_department()
     return departments
 
 
@@ -15,6 +15,7 @@ def create_department(data):
     db.create_department(name=department_data.get("name"),
                          org_id=department_data.get("org_id"),
                          manager_id=department_data.get("manager_id"),
+                         created_at=department_data.get("created_at"),
                          department_id=department_id)
 
     return department_data
