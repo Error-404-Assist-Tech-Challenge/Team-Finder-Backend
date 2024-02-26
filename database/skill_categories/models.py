@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, TIMESTAMP
+from sqlalchemy import Column, String, TIMESTAMP, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
@@ -8,7 +8,7 @@ class Skill_categories(Base):
     __tablename__ = "skill_categories"
 
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-    dept_id = Column(UUID, nullable=False)
+    dept_id = Column(UUID, ForeignKey("departments.id"),nullable=False)
     name = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
 

@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, TIMESTAMP
+from sqlalchemy import Column, String, TIMESTAMP, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
@@ -8,9 +8,9 @@ class Department(Base):
     __tablename__ = "departments"
 
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-    org_id = Column(UUID(as_uuid=True), nullable=False)
+    org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"),nullable=False)
     name = Column(String, nullable=False)
-    manager_id = Column(UUID(as_uuid=True), nullable=False)
+    manager_id = Column(UUID(as_uuid=True), ForeignKey("users.id"),nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
 
     @staticmethod
