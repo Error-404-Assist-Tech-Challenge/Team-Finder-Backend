@@ -3,14 +3,12 @@ from sqlalchemy.exc import SQLAlchemyError
 from database.organization_members.models import Organization_members
 
 
-def create_organization_member(session, org_id, user_id, organization_member_id):
+def create_organization_member(session, org_id, user_id):
     try:
-        obj = Organization_members(org_id=org_id, user_id=user_id, id=organization_member_id)
+        obj = Organization_members(org_id=org_id, user_id=user_id)
         session.add(obj)
-        session.commit()
         return obj
     except SQLAlchemyError as e:
-        session.rollback()
         error = str(e.__dict__['orig'])
         print(error)
         return error

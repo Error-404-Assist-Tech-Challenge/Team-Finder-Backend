@@ -26,7 +26,7 @@ engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{
 
 @contextmanager
 def session_scope():
-    Session = sessionmaker(bind=engine)
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
     session = Session()
     try:
         yield session
@@ -45,7 +45,7 @@ class DataBase:
 
     # USERS
     @staticmethod
-    def create_users(name, email, password, user_id, created_at):
+    def create_admin(name, email, password, user_id, created_at):
         with session_scope() as session:
             return create_user(session=session,
                                name=name,
@@ -79,9 +79,9 @@ class DataBase:
 
     # ORGANIZATIONS_MEMBERS
     @staticmethod
-    def create_organization_member(org_id, user_id, organization_member_id):
+    def create_organization_member(org_id, user_id):
         with session_scope() as session:
-            return create_organization_member(session=session, org_id=org_id, user_id=user_id, organization_member_id=organization_member_id)
+            return create_organization_member(session=session, org_id=org_id, user_id=user_id)
 
     @staticmethod
     def get_organization_members():
@@ -163,10 +163,10 @@ class DataBase:
     def update_user_skill(user_id, level, experience, skill_id):
         with session_scope() as session:
             return update_user_skill(session=session,
-                                      user_id=user_id,
-                                      skill_id=skill_id,
-                                      level=level,
-                                      experience=experience)
+                                     user_id=user_id,
+                                     skill_id=skill_id,
+                                     level=level,
+                                     experience=experience)
 
     #SKILLS
     @staticmethod
