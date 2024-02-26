@@ -1,6 +1,5 @@
 import uuid
 from sqlalchemy import Column, String, TIMESTAMP
-from sqlalchemy.orm import declarative_base
 from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
@@ -13,6 +12,15 @@ class Users(Base):
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
+
+    def serialize(self):
+        return {
+            "id": str(self.id),
+            "name": str(self.name),
+            "email": str(self.email),
+            "password": str(self.password),
+            "created_at": str(self.created_at)
+        }
 
     @staticmethod
     def serialize_users(users):
