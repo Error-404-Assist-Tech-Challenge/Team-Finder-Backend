@@ -6,5 +6,5 @@ class UserSkills(BaseModel):
     user_id: UUID
     skill_id: UUID
     level: int
-    exprience: int
+    experience: int
     created_at: datetime = datetime.now().isoformat()

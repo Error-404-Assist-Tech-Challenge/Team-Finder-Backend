@@ -133,7 +133,11 @@ class DataBase:
             return get_user_roles(session=session)
 
 
-    # PREDEFINED ROLES
+    # ROLES
+    @staticmethod
+    def create_roles(name, role_id):
+        with session_scope() as session:
+            return create_role(session=session, name=name, role_id=role_id)
     @staticmethod
     def get_roles():
         with session_scope() as session:

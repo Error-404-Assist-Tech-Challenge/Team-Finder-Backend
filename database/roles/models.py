@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
@@ -6,7 +6,7 @@ from database.db import Base
 class Role(Base):
     __tablename__ = "roles"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
+    id = Column(UUID(as_uuid=True), ForeignKey("user_roles.role_id"),primary_key=True, nullable=False)
     name = Column(String, nullable=False)
 
     @staticmethod

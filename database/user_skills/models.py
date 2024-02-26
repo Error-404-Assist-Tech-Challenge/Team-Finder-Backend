@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, TIMESTAMP
+from sqlalchemy import Column, Integer, TIMESTAMP, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
@@ -6,8 +6,8 @@ from database.db import Base
 class UserSkills(Base):
     __tablename__ = "user_skills"
 
-    user_id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
-    skill_id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"),primary_key=True, nullable=False)
+    skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"),primary_key=True, nullable=False)
     level = Column(Integer,nullable=False)
     experience = Column(Integer,nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
