@@ -9,3 +9,8 @@ class UserSkills(BaseModel):
     experience: int
     created_at: datetime = datetime.now().isoformat()
 
+class UpdateSkills(BaseModel):
+    user_id: str
+    skill_id: str
+    level: int
+    experience: int
