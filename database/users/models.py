@@ -25,4 +25,5 @@ class Users(Base):
                 "password": str(user.password),
                 "created_at": str(user.created_at)
             }
+
         return serialized_users
