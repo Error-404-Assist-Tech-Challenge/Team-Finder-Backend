@@ -15,16 +15,17 @@ def create_user_skills(session, user_id, skill_id, level, experience, created_at
         return error
 
 
-
 def get_user_skills(session):
     try:
-        user_roles = session.query(UserSkills).all()
-        return UserSkills.serialize_user_skills(user_roles)
+        user_skills = session.query(UserSkills).all()
+        return UserSkills.serialize_user_skills(user_skills)
     except SQLAlchemyError as e:
         session.rollback()
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
+
 
 def update_user_skill(session, user_id, level, experience, skill_id):
     try:
