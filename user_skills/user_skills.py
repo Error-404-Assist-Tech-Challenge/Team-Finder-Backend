@@ -1,7 +1,6 @@
-from uuid import UUID
-
+from typing import List
 from fastapi import APIRouter
-from user_skills.models import UserSkills
+from user_skills.models import *
 from user_skills.utils import *
 
 user_skills_router = APIRouter()
@@ -17,8 +16,8 @@ def user_skills_get(user_id: str):
     return get_skills_by_users_id(user_id)
 
 
-@user_skills_router.put("/api/user_skills", response_model=UserSkills)
-def updating_user_skills(user_skill_data: UserSkills):
+@user_skills_router.put("/api/user_skills", response_model=UpdateSkills)
+def updating_user_skills(user_skill_data: List[UpdateSkills]):
     return update_user_skills(user_skill_data)
 
 

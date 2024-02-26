@@ -19,7 +19,6 @@ def get_organization_members(session):
         members = session.query(Organization_members).all()
         return Organization_members.serialize_organization_members(members)
     except SQLAlchemyError as e:
-        session.rollback()
         error = str(e.__dict__['orig'])
         print(error)
         return error
