@@ -13,6 +13,7 @@ class Skills(Base):
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
+    author_id = Column(UUID, nullable=False)
 
     @staticmethod
     def serialize_skills(skills):
@@ -24,6 +25,7 @@ class Skills(Base):
                 "name": str(skill.name),
                 "category_id": str(skill.category_id),
                 "description": str(skill.description),
-                "created_at": str(skill.created_at)
+                "created_at": str(skill.created_at),
+                "author_id": str(skill.author_id)
             }
         return serialize_skills
