@@ -8,3 +8,4 @@ class UserSkills(BaseModel):
     level: int
     experience: int
     created_at: datetime = datetime.now().isoformat()
+

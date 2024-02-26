@@ -11,5 +11,11 @@ def create_user_skill_route(user_skill_data: UserSkills):
 
 
 @user_skills_router.get("/api/user_skills")
-def user_skills_get():
-    return get_user_skills()
+def user_skills_get(user_id: str):
+    return get_skills_by_users_id(user_id)
+
+@user_skills_router.put("/api/user_skills", response_model=UserSkills)
+def updating_user_skills(user_skill_data: UserSkills):
+    return update_user_skills(user_skill_data)
+
+

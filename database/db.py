@@ -159,6 +159,15 @@ class DataBase:
         with session_scope() as session:
             return get_user_skills(session=session)
 
+    @staticmethod
+    def update_user_skill(user_id, level, experience, skill_id):
+        with session_scope() as session:
+            return update_user_skill(session=session,
+                                      user_id=user_id,
+                                      skill_id=skill_id,
+                                      level=level,
+                                      experience=experience)
+
     #SKILLS
     @staticmethod
     def create_skill(dept_id, category_id, name, description, created_at, skill_id, author_id):
@@ -191,6 +200,7 @@ class DataBase:
     def get_skill_categories():
         with session_scope() as session:
             return get_skill_categories(session=session)
+
 
 
 
