@@ -1,9 +1,9 @@
 from sqlalchemy.exc import SQLAlchemyError
 from database.users.models import Users
 
-def create_user(session, name, email, password, user_id):
+def create_user(session, name, email, password, user_id, created_at):
     try:
-        obj = Users(name=name, email=email, password=password, id=user_id)
+        obj = Users(name=name, email=email, password=password, id=user_id, created_at=created_at)
         session.add(obj)
         session.commit()
         return obj

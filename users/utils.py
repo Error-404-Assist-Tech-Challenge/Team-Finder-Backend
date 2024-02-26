@@ -15,6 +15,7 @@ def create_user(data):
     db.create_users(name=user_data.get("name"),
                     email=user_data.get("email"),
                     password=user_data.get("password"),
+                    created_at=user_data.get("created_at"),
                     user_id=user_id)
 
     return user_data

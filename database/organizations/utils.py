@@ -3,9 +3,9 @@ from sqlalchemy.exc import SQLAlchemyError
 from database.organizations.models import Organization
 
 
-def create_organization(session, admin_id, name, hq_address, organization_id):
+def create_organization(session, admin_id, name, hq_address, created_at, organization_id):
     try:
-        obj = Organization(admin_id=admin_id, name=name, hq_address=hq_address, id=organization_id)
+        obj = Organization(admin_id=admin_id, name=name, hq_address=hq_address, created_at=created_at, id=organization_id)
         session.add(obj)
         session.commit()
         return obj

@@ -4,7 +4,6 @@ from database.db import db
 
 def get_skill_categories():
     skill_categories = db.get_skill_categories()
-    print(skill_categories)
     return skill_categories
 
 
@@ -15,6 +14,7 @@ def create_skill_categories(data):
 
     db.create_skill_categories(name=skill_categories_data.get("name"),
                            dept_id=skill_categories_data.get("dept_id"),
+                           created_at=skill_categories_data.get("created_at"),
                            skill_categories_id=skill_categories_id)
 
     return skill_categories_data

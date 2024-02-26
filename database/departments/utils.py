@@ -3,9 +3,9 @@ from sqlalchemy.exc import SQLAlchemyError
 from database.departments.models import Department
 
 
-def create_department(session, org_id, name, manager_id, department_id):
+def create_department(session, org_id, name, manager_id, created_at, department_id):
     try:
-        obj = Department(org_id=org_id, name=name, manager_id=manager_id, id=department_id)
+        obj = Department(org_id=org_id, name=name, manager_id=manager_id, created_at=created_at, id=department_id)
         session.add(obj)
         session.commit()
         return obj

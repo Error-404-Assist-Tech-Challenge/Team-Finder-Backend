@@ -45,9 +45,14 @@ class DataBase:
 
     # USERS
     @staticmethod
-    def create_users(name, email, password, user_id):
+    def create_users(name, email, password, user_id, created_at):
         with session_scope() as session:
-            return create_user(session=session, name=name, email=email, password=password, user_id=user_id)
+            return create_user(session=session,
+                               name=name,
+                               email=email,
+                               password=password,
+                               created_at=created_at,
+                               user_id=user_id)
 
     @staticmethod
     def get_users():
@@ -57,12 +62,13 @@ class DataBase:
 
     # ORGANIZATIONS
     @staticmethod
-    def create_organization(name, admin_id, hq_address, organization_id):
+    def create_organization(name, admin_id, hq_address, organization_id, created_at):
         with session_scope() as session:
             return create_organization(session=session,
                                        admin_id=admin_id,
                                        name=name,
                                        hq_address=hq_address,
+                                       created_at=created_at,
                                        organization_id=organization_id)
 
     @staticmethod
@@ -85,12 +91,13 @@ class DataBase:
 
     # DEPARTMENTS
     @staticmethod
-    def create_department(name, org_id, manager_id, department_id):
+    def create_department(name, org_id, manager_id, department_id, created_at):
         with session_scope() as session:
             return create_department(session=session,
                                      org_id=org_id,
                                      name=name,
                                      manager_id=manager_id,
+                                     created_at=created_at,
                                      department_id=department_id)
 
     @staticmethod
@@ -134,9 +141,14 @@ class DataBase:
 
     #USER_SKILLS
     @staticmethod
-    def create_user_skills(user_id, skill_id, level, experience):
+    def create_user_skills(user_id, skill_id, level, experience, created_at):
         with session_scope() as session:
-            return create_user_skills(session=session, user_id=user_id, skill_id=skill_id, level=level, experience=experience)
+            return create_user_skills(session=session,
+                                      user_id=user_id,
+                                      skill_id=skill_id,
+                                      level=level,
+                                      created_at=created_at,
+                                      experience=experience)
 
     @staticmethod
     def get_user_skills():
@@ -145,9 +157,15 @@ class DataBase:
 
     #SKILLS
     @staticmethod
-    def create_skill(dept_id, category_id, name, description, skill_id):
+    def create_skill(dept_id, category_id, name, description, created_at, skill_id):
         with session_scope() as session:
-            return create_skill(session=session, dept_id=dept_id, category_id=category_id, name=name, description=description, skill_id=skill_id)
+            return create_skill(session=session,
+                                dept_id=dept_id,
+                                category_id=category_id,
+                                name=name,
+                                description=description,
+                                created_at=created_at,
+                                skill_id=skill_id)
 
     @staticmethod
     def get_skills():
@@ -156,10 +174,13 @@ class DataBase:
 
     # SKILL_CATEGORIES
     @staticmethod
-    def create_skill_categories(name, dept_id, skill_categories_id):
+    def create_skill_categories(name, dept_id, created_at, skill_categories_id):
         with session_scope() as session:
-            return create_skill_categories(session=session, name=name, dept_id=dept_id,
-                                 skill_categories_id=skill_categories_id)
+            return create_skill_categories(session=session,
+                                           name=name,
+                                           dept_id=dept_id,
+                                           created_at=created_at,
+                                           skill_categories_id=skill_categories_id)
 
     @staticmethod
     def get_skill_categories():

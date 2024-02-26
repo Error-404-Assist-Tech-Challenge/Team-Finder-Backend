@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, TIMESTAMP
 from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
@@ -11,6 +11,8 @@ class Department(Base):
     org_id = Column(UUID(as_uuid=True), nullable=False)
     name = Column(String, nullable=False)
     manager_id = Column(UUID(as_uuid=True), nullable=False)
+    created_at = Column(TIMESTAMP, nullable=False)
+
     @staticmethod
     def serialize_departments(departments):
         serialize_department = {}
@@ -19,6 +21,7 @@ class Department(Base):
                 "id": str(department.id),
                 "org_id": str(department.org_id),
                 "name": str(department.name),
-                "manager_id": str(department.manager_id)
+                "manager_id": str(department.manager_id),
+                "created_at": str(department.created_at)
             }
         return serialize_department
