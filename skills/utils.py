@@ -17,6 +17,7 @@ def create_skills(data):
                    description=skill_data.get("description"),
                    category_id=skill_data.get("category_id"),
                     created_at=skill_data.get("created_at"),
+                    author_id=skill_data.get("author_id"),
                     skill_id=skill_id)
 
     return skill_data

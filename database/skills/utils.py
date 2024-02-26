@@ -3,13 +3,14 @@ from sqlalchemy.exc import SQLAlchemyError
 from database.skills.models import Skills
 
 
-def create_skill(session, dept_id, category_id, name, description, skill_id, created_at):
+def create_skill(session, dept_id, category_id, name, description, skill_id, created_at, author_id):
     try:
         obj = Skills(dept_id=dept_id,
                      category_id=category_id,
                      name=name,
                      description=description,
                      created_at=created_at,
+                     author_id=author_id,
                      id=skill_id)
         session.add(obj)
         session.commit()

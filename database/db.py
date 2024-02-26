@@ -161,7 +161,7 @@ class DataBase:
 
     #SKILLS
     @staticmethod
-    def create_skill(dept_id, category_id, name, description, created_at, skill_id):
+    def create_skill(dept_id, category_id, name, description, created_at, skill_id, author_id):
         with session_scope() as session:
             return create_skill(session=session,
                                 dept_id=dept_id,
@@ -169,6 +169,7 @@ class DataBase:
                                 name=name,
                                 description=description,
                                 created_at=created_at,
+                                author_id=author_id,
                                 skill_id=skill_id)
 
     @staticmethod
