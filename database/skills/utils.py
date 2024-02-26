@@ -13,10 +13,8 @@ def create_skill(session, dept_id, category_id, name, description, skill_id, cre
                      author_id=author_id,
                      id=skill_id)
         session.add(obj)
-        session.commit()
         return obj
     except SQLAlchemyError as e:
-        session.rollback()
         error = str(e.__dict__['orig'])
         print(error)
         return error
@@ -27,7 +25,6 @@ def get_skills(session):
         skills = session.query(Skills).all()
         return Skills.serialize_skills(skills)
     except SQLAlchemyError as e:
-        session.rollback()
         error = str(e.__dict__['orig'])
         print(error)
         return error
