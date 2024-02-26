@@ -5,7 +5,7 @@ def create_user(session, name, email, password, user_id, created_at):
     try:
         obj = Users(name=name, email=email, password=password, id=user_id, created_at=created_at)
         session.add(obj)
-        return obj
+        return obj.serialize(), None
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
