@@ -13,7 +13,7 @@ class Skills(Base):
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
-    author_id = Column(UUID, nullable=False)
+    author_id = Column(UUID, ForeignKey("users.id"),nullable=False)
 
     @staticmethod
     def serialize_skills(skills):
