@@ -6,14 +6,12 @@ from database.config import USER, PASSWORD, HOST, PORT, DB_NAME
 
 Base = declarative_base()
 
+from database.Skills.utils import *
+
 # UTILS Import
 from database.users.utils import *
 from database.roles.utils import *
 from database.user_roles.utils import *
-from database.user_skills.utils import *
-
-from database.skills.utils import *
-from database.skill_categories.utils import *
 
 from database.organizations.utils import *
 from database.organization_members.utils import *
@@ -169,10 +167,9 @@ class DataBase:
 
     #SKILLS
     @staticmethod
-    def create_skill(dept_id, category_id, name, description, created_at, skill_id, author_id, org_id):
+    def create_skill(category_id, name, description, created_at, skill_id, author_id, org_id):
         with session_scope() as session:
             return create_skill(session=session,
-                                dept_id=dept_id,
                                 category_id=category_id,
                                 name=name,
                                 description=description,
@@ -202,6 +199,18 @@ class DataBase:
             return get_skill_categories(session=session)
 
 
+
+    #DEPARTMENT_SKILLS
+    def create_department_skill(dept_id, skill_id):
+        with session_scope() as session:
+            return create_department_skill(session=session,
+                                           dept_id=dept_id,
+                                           skill_id=skill_id)
+
+    @staticmethod
+    def get_department_skills():
+        with session_scope() as session:
+            return get_department_skills(session=session)
 
 
     @staticmethod

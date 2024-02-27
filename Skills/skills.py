@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from skills.models import Skills
-from skills.utils import *
+from Skills.models import Skills
+from Skills.utils import create_skills, get_skills
 
 skills_router = APIRouter()
 
