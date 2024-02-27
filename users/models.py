@@ -16,6 +16,7 @@ class AuthResponse(BaseModel):
     email: str
     password: str
     org_id: UUID
+    token: str
 
 
 class EmployeeCreate(BaseModel):

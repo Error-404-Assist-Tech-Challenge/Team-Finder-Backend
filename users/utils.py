@@ -1,17 +1,11 @@
 from uuid import uuid4
+from auth import AuthHandler
 from datetime import datetime
 from passlib.context import CryptContext
 from database.db import db
 
+auth_handler = AuthHandler()
 pwd_context = CryptContext(schemes=["bcrypt"])
-
-
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
 
 
 def get_users(organization_id):
@@ -38,10 +32,11 @@ def create_admin(data):
     user_id = str(uuid4())
     user_data["id"] = user_id
     created_at = datetime.now()
+    hashed_password = auth_handler.get_password_hash(user_data.get("password"))
 
     admin_obj, error = db.create_admin(name=user_data.get("name"),
                                        email=user_data.get("email"),
-                                       password=get_password_hash(user_data.get("password")),
+                                       password=hashed_password,
                                        created_at=created_at,
                                        user_id=user_id)
 
@@ -78,7 +73,7 @@ def login_user(data):
         if users_data[key].get("email") == login_data.get("email"):
             user_data = users_data[key]
 
-            if verify_password(login_data.get("password"), user_data.get("password")):
+            if auth_handler.verify_password(login_data.get("password"), user_data.get("password")):
                 orgs_data = db.get_organization_members()
                 login_data["id"] = user_data.get("id")
                 login_data["name"] = user_data.get("name")
@@ -88,7 +83,7 @@ def login_user(data):
 
                     return login_data, False
                 else:
-                    return login_data, "Authorization complete but not apart of an organization"
+                    return login_data, "Authentication successful but not apart of an organization"
             else:
                 return login_data, "Incorrect password"
 
