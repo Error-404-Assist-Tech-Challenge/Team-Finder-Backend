@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter
-from user_skills.models import *
-from user_skills.utils import *
+from Skills.models import UserSkills, UpdateSkills
+from Skills.utils import create_user_skills, get_skills_by_users_id, update_user_skills
 
 user_skills_router = APIRouter()
 
