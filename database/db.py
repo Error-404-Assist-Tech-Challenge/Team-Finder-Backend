@@ -76,7 +76,6 @@ class DataBase:
         with session_scope() as session:
             return get_organizations(session=session)
 
-
     # ORGANIZATIONS_MEMBERS
     @staticmethod
     def create_organization_member(org_id, user_id, organization_member_id):
@@ -170,7 +169,7 @@ class DataBase:
 
     #SKILLS
     @staticmethod
-    def create_skill(dept_id, category_id, name, description, created_at, skill_id, author_id):
+    def create_skill(dept_id, category_id, name, description, created_at, skill_id, author_id, org_id):
         with session_scope() as session:
             return create_skill(session=session,
                                 dept_id=dept_id,
@@ -179,6 +178,7 @@ class DataBase:
                                 description=description,
                                 created_at=created_at,
                                 author_id=author_id,
+                                org_id=org_id,
                                 skill_id=skill_id)
 
     @staticmethod

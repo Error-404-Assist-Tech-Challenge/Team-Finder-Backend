@@ -22,3 +22,5 @@ def get_organizations(session):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
+

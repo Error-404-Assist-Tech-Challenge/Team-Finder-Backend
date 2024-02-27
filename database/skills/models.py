@@ -14,6 +14,7 @@ class Skills(Base):
     description = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
     author_id = Column(UUID, ForeignKey("users.id"),nullable=False)
+    org_id = Column(UUID, ForeignKey("organizations.id"), nullable=False)
 
     @staticmethod
     def serialize_skills(skills):
@@ -26,6 +27,7 @@ class Skills(Base):
                 "category_id": str(skill.category_id),
                 "description": str(skill.description),
                 "created_at": str(skill.created_at),
-                "author_id": str(skill.author_id)
+                "author_id": str(skill.author_id),
+                "org_id": str(skill.org_id)
             }
         return serialize_skills

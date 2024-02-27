@@ -5,6 +5,7 @@ from datetime import datetime
 class Skills(BaseModel):
     dept_id: UUID
     category_id: UUID
+    org_id: UUID
     name: str
     description: str
     author_id: UUID

@@ -1,6 +1,8 @@
+from uuid import UUID
+
 from fastapi import APIRouter
 from organizations.models import Organization
-from organizations.utils import create_organization, get_organizations
+from organizations.utils import *
 
 organization_router = APIRouter()
 
@@ -13,3 +15,8 @@ def create_organization_route(organization_data: Organization):
 @organization_router.get("/api/organizations")
 def organization_get():
     return get_organizations()
+
+@organization_router.get("/api/organization_skills")
+def organization_get_skills(organization_id: str):
+    return get_organizations_skills(organization_id)
+
