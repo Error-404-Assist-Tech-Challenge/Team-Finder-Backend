@@ -12,9 +12,6 @@ from database.Departments.utils import *
 from database.users.utils import *
 
 
-from database.roles.utils import *
-
-
 engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}')
 
 
@@ -52,6 +49,24 @@ class DataBase:
     def get_users():
         with session_scope() as session:
             return get_users(session=session)
+
+    @staticmethod
+    def get_organization_users(organization_id):
+        with session_scope() as session:
+            returned_users = []
+            users = db.get_users()
+            organization_members = db.get_organization_members()
+            for key in organization_members:
+                organization_member = organization_members[key]
+                if organization_member.get("org_id") == organization_id:
+                    organization_member_id = organization_member.get("user_id")
+                    for user in users:
+                        current_user = users[user]
+                        if current_user.get("id") == organization_member_id:
+                            returned_users.append(current_user)
+                            break
+
+            return returned_users(session=session)
 
 
     # ORGANIZATIONS

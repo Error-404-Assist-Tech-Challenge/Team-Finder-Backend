@@ -14,9 +14,15 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def get_users():
-    users = db.get_users()
-    return users
+def get_users(organization_id):
+    users = db.get_organization_users(organization_id)
+    print(users)
+    # users_roles = db.get_user_roles()
+    # organization_roles = db.get_organization_roles()
+    # for key in users:
+    #     user = users[key]
+    #
+    # return users
 
 
 def create_admin(data):

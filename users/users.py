@@ -31,5 +31,5 @@ def user_login(user_data: UserLogin):
 
 
 @user_router.get("/api/users")
-def users_get():
-    return get_users()
+def users_get(organization_id: str):
+    return get_users(organization_id)
