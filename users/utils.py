@@ -16,13 +16,21 @@ def get_password_hash(password):
 
 def get_users(organization_id):
     users = db.get_organization_users(organization_id)
-    print(users)
-    # users_roles = db.get_user_roles()
-    # organization_roles = db.get_organization_roles()
-    # for key in users:
-    #     user = users[key]
-    #
-    # return users
+    users_roles = db.get_user_roles()
+    organization_roles = db.get_organization_roles()
+    for key in users:
+        user = users[key]
+        user["user_roles"] = []
+        for user_role in users_roles:
+            current_role = users_roles[user_role]
+            current_role_id = current_role.get("role_id")
+            for organization_role in organization_roles:
+                current_organ_role = organization_roles[organization_role]
+                if current_organ_role.get("id") == current_role_id:
+                    user["user_roles"].append(current_organ_role.get("name"))
+                    break
+    return users
+
 
 
 def create_admin(data):
