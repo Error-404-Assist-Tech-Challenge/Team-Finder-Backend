@@ -18,17 +18,19 @@ def get_users(organization_id):
     users = db.get_organization_users(organization_id)
     users_roles = db.get_user_roles()
     organization_roles = db.get_organization_roles()
-
-    org_roles_by_id = {users_roles.get("id"): role.get("name") for role in organization_roles}
-
-    for user_id, user in users.items():
+    for key in users:
+        user = users[key]
         user["user_roles"] = []
-        for user_role_id in user.get("user_roles", []):
-            role_name = org_roles_by_id.get(user_role_id)
-            if role_name:
-                user["user_roles"].append(role_name)
-
+        for user_role in users_roles:
+            current_role = users_roles[user_role]
+            current_role_id = current_role.get("role_id")
+            for organization_role in organization_roles:
+                current_organ_role = organization_roles[organization_role]
+                if current_organ_role.get("id") == current_role_id:
+                    user["user_roles"].append(current_organ_role.get("name"))
+                    break
     return users
+
 
 
 def create_admin(data):
