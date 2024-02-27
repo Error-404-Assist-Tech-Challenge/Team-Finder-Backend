@@ -7,17 +7,13 @@ from database.config import USER, PASSWORD, HOST, PORT, DB_NAME
 Base = declarative_base()
 
 from database.Skills.utils import *
-
-# UTILS Import
+from database.Organizations.utils import *
+from database.Departments.utils import *
 from database.users.utils import *
+
+
 from database.roles.utils import *
-from database.user_roles.utils import *
 
-from database.organizations.utils import *
-from database.organization_members.utils import *
-
-from database.departments.utils import *
-from database.departments_member.utils import *
 
 engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}')
 
@@ -85,6 +81,16 @@ class DataBase:
         with session_scope() as session:
             return get_organization_members(session=session)
 
+    #ORGANIZATION_ROLES
+    @staticmethod
+    def create_organization_role(id, name):
+        with session_scope() as session:
+            return create_organization_role(session=session, id=id, name=name)
+
+    @staticmethod
+    def get_organization_roles():
+        with session_scope() as session:
+            return get_organization_roles(session=session)
 
     # DEPARTMENTS
     @staticmethod
@@ -211,6 +217,20 @@ class DataBase:
     def get_department_skills():
         with session_scope() as session:
             return get_department_skills(session=session)
+
+    #TEAM_ROLES
+    def create_team_role(id, org_id, name):
+        with session_scope() as session:
+            return create_team_role(session=session,
+                                           id=id,
+                                           org_id=org_id,
+                                           name=name)
+
+    @staticmethod
+    def get_team_roles():
+        with session_scope() as session:
+            return get_team_roles(session=session)
+
 
 
     @staticmethod

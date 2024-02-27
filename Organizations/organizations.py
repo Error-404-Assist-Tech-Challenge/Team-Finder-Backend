@@ -1,8 +1,8 @@
 from uuid import UUID
 
 from fastapi import APIRouter
-from organizations.models import Organization
-from organizations.utils import *
+from Organizations.models import Organization
+from Organizations.utils import *
 
 organization_router = APIRouter()
 

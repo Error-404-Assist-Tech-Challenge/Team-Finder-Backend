@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from user_roles.models import UserRole
-from user_roles.utils import *
+from Organizations.models import UserRole
+from Organizations.utils import *
 
 user_roles_router = APIRouter()
 

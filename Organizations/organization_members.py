@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from organization_members.models import Organization_member
-from organization_members.utils import create_organization_member, get_organization_members
+from Organizations.models import Organization_member
+from Organizations.utils import create_organization_member, get_organization_members
 
 organization_members_router = APIRouter()
 
