@@ -147,16 +147,6 @@ class DataBase:
             return get_user_roles(session=session)
 
 
-    # ROLES
-    @staticmethod
-    def create_roles(name, role_id):
-        with session_scope() as session:
-            return create_role(session=session, name=name, role_id=role_id)
-    @staticmethod
-    def get_roles():
-        with session_scope() as session:
-            return get_roles(session=session)
-
     #USER_SKILLS
     @staticmethod
     def create_user_skills(user_id, skill_id, level, experience, created_at):
@@ -221,7 +211,14 @@ class DataBase:
                     organization_skills.append(skill_category)
             return organization_skills
 
-
+    @staticmethod
+    def update_skill_category(id, org_id, name, modified_at):
+        with session_scope() as session:
+            return update_skill_category(session=session,
+                                     id=id,
+                                     org_id=org_id,
+                                     name=name,
+                                    modified_at=modified_at)
 
     #DEPARTMENT_SKILLS
     def create_department_skill(dept_id, skill_id):

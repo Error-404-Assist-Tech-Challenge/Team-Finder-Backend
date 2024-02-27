@@ -112,3 +112,19 @@ def get_skill_categories(session):
         print(error)
         return error
 
+def update_skill_category(session, id, org_id, name, modified_at):
+    try:
+        skill_category = session.query(Skill_categories).filter(Skill_categories.id == id).first()
+        if skill_category:
+            skill_category.org_id = org_id
+            skill_category.name = name
+            skill_category.created_at = modified_at
+            session.commit()
+            return skill_category
+        else:
+            return None
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
