@@ -92,3 +92,17 @@ def create_organization_role(data):
                         name=organization_role_data.get("name"))
 
     return organization_role_data
+
+#TEAM_ROLES
+def get_team_roles():
+    team_roles = db.get_team_roles()
+    return team_roles
+
+
+def create_team_role(data):
+    team_role_data = data.model_dump()
+    db.create_team_role(id=team_role_data.get("id"),
+                        org_id=team_role_data.get("org_id"),
+                        name=team_role_data.get("name"))
+
+    return team_role_data

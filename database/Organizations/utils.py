@@ -85,3 +85,23 @@ def get_user_roles(session):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
+#TEAM_ROLES
+def create_team_role(session, id, name, org_id):
+    try:
+        obj = TeamRoles(id=id, name=name, org_id=org_id)
+        session.add(obj)
+        return obj
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+def get_team_roles(session):
+    try:
+        team_roles = session.query(TeamRoles).all()
+        return TeamRoles.serialize_team_roles(team_roles)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error

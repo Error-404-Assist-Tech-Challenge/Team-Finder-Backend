@@ -14,6 +14,7 @@ from Organizations.user_roles import user_roles_router
 from Organizations.organizations import organization_router
 from Organizations.organization_members import organization_members_router
 from Organizations.organization_roles import organization_roles_router
+from Organizations.team_roles import team_roles_router
 
 from Departments.departments import departments_router
 from Departments.department_members import department_members_router
@@ -50,6 +51,7 @@ app.include_router(skill_categories_router)
 app.include_router(roles_router)
 app.include_router(department_skills_router)
 app.include_router(organization_roles_router)
+app.include_router(team_roles_router)
 
 if __name__ == "__main__":
     import uvicorn

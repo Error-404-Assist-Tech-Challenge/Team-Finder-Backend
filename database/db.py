@@ -218,6 +218,20 @@ class DataBase:
         with session_scope() as session:
             return get_department_skills(session=session)
 
+    #TEAM_ROLES
+    def create_team_role(id, org_id, name):
+        with session_scope() as session:
+            return create_team_role(session=session,
+                                           id=id,
+                                           org_id=org_id,
+                                           name=name)
+
+    @staticmethod
+    def get_team_roles():
+        with session_scope() as session:
+            return get_team_roles(session=session)
+
+
 
     @staticmethod
     def get_all_details():

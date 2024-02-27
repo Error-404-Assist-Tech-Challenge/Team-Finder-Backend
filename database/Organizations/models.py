@@ -74,3 +74,21 @@ class UserRole(Base):
                 "role_id": str(user_role.role_id)
             }
         return serialized_user_roles
+
+#TEAM_ROLES
+class TeamRoles(Base):
+    __tablename__ = "team_roles"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
+    org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
+    name = Column(String, nullable=False)
+
+    @staticmethod
+    def serialize_team_roles(team_roles):
+        serialized_team_roles = {}
+        for team_role in team_roles:
+            serialized_team_roles[str(team_role.id)] = {
+                "org_id": str(team_role.org_id),
+                "name": str(team_role.name)
+            }
+        return serialized_team_roles

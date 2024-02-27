@@ -111,3 +111,4 @@ def get_skill_categories(session):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+

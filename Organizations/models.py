@@ -26,3 +26,9 @@ class UserRole(BaseModel):
 class Organization_roles(BaseModel):
     id: UUID
     name: str
+
+#TEAM_ROLES
+class Team_roles(BaseModel):
+    id: UUID
+    org_id: UUID
+    name: str
