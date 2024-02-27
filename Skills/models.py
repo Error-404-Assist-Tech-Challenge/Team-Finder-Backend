@@ -37,6 +37,12 @@ class Skill_categories(BaseModel):
     name: str
     created_at: datetime = datetime.now().isoformat()
 
+class Update_skill_category(BaseModel):
+    id: UUID
+    org_id: UUID
+    name: str
+    modified_at: datetime = datetime.now().isoformat()
+
 #DEPARTMENT_SKILLS
 
 class Department_skills(BaseModel):

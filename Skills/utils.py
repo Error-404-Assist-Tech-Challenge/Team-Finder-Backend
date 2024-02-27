@@ -81,6 +81,14 @@ def create_skill_categories(data):
 
     return skill_categories_data
 
+def update_skill_category(data):
+    user_skill_category_dict = data.model_dump()
+    db.update_skill_category(id=user_skill_category_dict.get("id"),
+                         org_id=user_skill_category_dict.get("org_id"),
+                         name=user_skill_category_dict.get("name"),
+                         modified_at=user_skill_category_dict.get("modified_at"))
+    return user_skill_category_dict
+
 #DEPARTMENT_SKILLS
 
 def get_department_skills():
