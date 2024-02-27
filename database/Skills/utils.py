@@ -92,9 +92,9 @@ def get_department_skills(session):
 
 #SKILL_CATEGORIES
 
-def create_skill_categories(session, dept_id, name, created_at, skill_categories_id):
+def create_skill_categories(session, org_id, name, created_at, skill_categories_id):
     try:
-        obj = Skill_categories(dept_id=dept_id, name=name, created_at=created_at, id=skill_categories_id)
+        obj = Skill_categories(org_id=org_id, name=name, created_at=created_at, id=skill_categories_id)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
