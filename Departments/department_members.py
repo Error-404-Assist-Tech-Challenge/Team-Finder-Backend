@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from department_members.models import Department_member
-from department_members.utils import create_department_member, get_department_members
+from Departments.models import Department_member
+from Departments.utils import create_department_member, get_department_members
 
 department_members_router = APIRouter()
 

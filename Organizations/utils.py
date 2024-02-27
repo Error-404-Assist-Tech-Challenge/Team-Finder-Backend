@@ -1,7 +1,20 @@
 from uuid import uuid4
 from database.db import db
 
+#USER_ROLES
+def get_user_roles():
+    user_roles = db.get_roles()
+    return user_roles
 
+
+def create_user_role(data):
+    user_role_data = data.model_dump()
+    db.create_user_role(user_id=user_role_data.get("user_id"),
+                        role_id=user_role_data.get("role_id"))
+
+    return user_role_data
+
+#ORGANIZATIONS
 def get_organizations():
     organizations = db.get_organizations()
     return organizations
@@ -49,3 +62,33 @@ def create_organization(data):
                            organization_id=organization_id)
 
     return organization_data
+
+#ORGANIZATION_MERMBERS
+
+def get_organization_members():
+    members = db.get_organization_members()
+    return members
+
+
+def create_organization_member(data):
+    organization_member_data = data.model_dump()
+    organization_member_id = str(uuid4())
+    organization_member_data["id"] = organization_member_id
+
+    db.create_organization_member(org_id=organization_member_data.get("org_id"),
+                                  user_id=organization_member_data.get("user_id"),
+                                  organization_member_id=organization_member_id)
+    return organization_member_data
+
+#ORGANIZATION_ROLES
+def get_organization_roles():
+    user_roles = db.get_organization_roles()
+    return user_roles
+
+
+def create_organization_role(data):
+    organization_role_data = data.model_dump()
+    db.create_organization_role(id=organization_role_data.get("id"),
+                        name=organization_role_data.get("name"))
+
+    return organization_role_data
