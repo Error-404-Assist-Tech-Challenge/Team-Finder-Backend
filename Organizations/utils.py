@@ -20,11 +20,13 @@ def get_organizations():
     return organizations
 
 def get_organizations_skills(organization_id):
-    skills = db.get_skills()
     returned_skills = []
+
+    skills = db.get_skills()
     skill_categories = db.get_skill_categories()
     departments = db.get_department()
     users = db.get_users()
+
     for key in skills:
         skill = skills[key]
         if skill.get("org_id") == organization_id:

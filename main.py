@@ -19,7 +19,6 @@ from Organizations.team_roles import team_roles_router
 from Departments.departments import departments_router
 from Departments.department_members import department_members_router
 
-from roles.roles import roles_router
 
 
 
@@ -48,7 +47,6 @@ app.include_router(chat_gpt_router)
 app.include_router(user_skills_router)
 app.include_router(skills_router)
 app.include_router(skill_categories_router)
-app.include_router(roles_router)
 app.include_router(department_skills_router)
 app.include_router(organization_roles_router)
 app.include_router(team_roles_router)
