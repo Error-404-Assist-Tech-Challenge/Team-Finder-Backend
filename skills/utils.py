@@ -13,11 +13,12 @@ def create_skills(data):
     skill_data["id"] = skill_id
 
     db.create_skill(name=skill_data.get("name"),
-                   dept_id=skill_data.get("dept_id"),
-                   description=skill_data.get("description"),
-                   category_id=skill_data.get("category_id"),
+                    dept_id=skill_data.get("dept_id"),
+                    description=skill_data.get("description"),
+                    category_id=skill_data.get("category_id"),
                     created_at=skill_data.get("created_at"),
                     author_id=skill_data.get("author_id"),
+                    org_id=skill_data.get("org_id"),
                     skill_id=skill_id)
 
     return skill_data

@@ -3,7 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from database.skills.models import Skills
 
 
-def create_skill(session, dept_id, category_id, name, description, skill_id, created_at, author_id):
+def create_skill(session, dept_id, category_id, name, description, skill_id, created_at, author_id, org_id):
     try:
         obj = Skills(dept_id=dept_id,
                      category_id=category_id,
@@ -11,8 +11,10 @@ def create_skill(session, dept_id, category_id, name, description, skill_id, cre
                      description=description,
                      created_at=created_at,
                      author_id=author_id,
+                     org_id=org_id,
                      id=skill_id)
         session.add(obj)
+        session.commit()
         return obj
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
