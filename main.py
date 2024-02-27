@@ -20,11 +20,6 @@ from Departments.departments import departments_router
 from Departments.department_members import department_members_router
 
 
-
-
-
-
-
 app = FastAPI()
 
 origins = ["*"]

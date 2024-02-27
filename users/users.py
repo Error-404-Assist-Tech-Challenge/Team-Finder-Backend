@@ -1,7 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from auth import AuthHandler
 from users.models import AdminCreate, AuthResponse, EmployeeCreate, UserLogin
 from users.utils import create_admin, get_users, login_user, account_exists
 
+auth_handler = AuthHandler()
 user_router = APIRouter()
 
 
@@ -12,9 +14,22 @@ def admin_create(user_data: AdminCreate):
         admin_obj, error = create_admin(user_data)
         if error:
             raise HTTPException(status_code=500, detail="Failed to create user: " + error)
+        token = auth_handler.encode_token(admin_obj.get("id"))
+        admin_obj["token"] = token
         return admin_obj
     else:
         raise HTTPException(status_code=409, detail="User with this email already exists")
+
+
+@user_router.get("/api/users/refresh_token")
+def refresh_token(token=Depends(auth_handler.refresh_auth_wrapper)):
+    return {"token": token}
+
+
+# Just a testing route
+@user_router.get("/api/users/protected")
+def protected(user_id=Depends(auth_handler.auth_wrapper)):
+    return {"user_id": user_id}
 
 
 @user_router.post("/api/users/employee")
@@ -27,6 +42,9 @@ def user_login(user_data: UserLogin):
     login_obj, error = login_user(user_data)
     if error:
         raise HTTPException(status_code=500, detail=error)
+    else:
+        token = auth_handler.encode_token(login_obj.get("id"))
+        login_obj["token"] = token
     return login_obj
 
 
