@@ -64,8 +64,8 @@ def update_user_skills(data):
 
 #SKILL_CATEGORIES
 
-def get_skill_categories():
-    skill_categories = db.get_skill_categories()
+def get_skill_categories(organization_id):
+    skill_categories = db.get_skill_categories(organization_id)
     return skill_categories
 
 
@@ -75,7 +75,7 @@ def create_skill_categories(data):
     skill_categories_data["id"] = skill_categories_id
 
     db.create_skill_categories(name=skill_categories_data.get("name"),
-                           dept_id=skill_categories_data.get("dept_id"),
+                           org_id=skill_categories_data.get("org_id"),
                            created_at=skill_categories_data.get("created_at"),
                            skill_categories_id=skill_categories_id)
 

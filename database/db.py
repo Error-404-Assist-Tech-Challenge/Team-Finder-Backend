@@ -202,18 +202,24 @@ class DataBase:
 
     # SKILL_CATEGORIES
     @staticmethod
-    def create_skill_categories(name, dept_id, created_at, skill_categories_id):
+    def create_skill_categories(name, org_id, created_at, skill_categories_id):
         with session_scope() as session:
             return create_skill_categories(session=session,
                                            name=name,
-                                           dept_id=dept_id,
+                                           org_id=org_id,
                                            created_at=created_at,
                                            skill_categories_id=skill_categories_id)
 
     @staticmethod
-    def get_skill_categories():
+    def get_skill_categories(organization_id):
         with session_scope() as session:
-            return get_skill_categories(session=session)
+            organization_skills = []
+            skill_categories = get_skill_categories(session=session)
+            for key in skill_categories:
+                skill_category = skill_categories[key]
+                if skill_category.get("org_id") == organization_id:
+                    organization_skills.append(skill_category)
+            return organization_skills
 
 
 
