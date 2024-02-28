@@ -16,7 +16,18 @@ def create_organization_route(organization_data: Organization):
 def organization_get():
     return get_organizations()
 
+
 @organization_router.get("/api/organizations/skills")
-def organization_get_skills(user_id: str):
+def organization_get_skills(user_id: UUID):
     return get_organizations_skills(user_id)
+
+
+@organization_router.post("/api/organizations/signup_token")
+def signup_token_create(org_id: UUID):
+    return create_signup_token(org_id)
+
+
+@organization_router.get("/api/organizations/signup_tokens")
+def signup_tokens_get(org_id: UUID):
+    return get_organization_signup_tokens(org_id)
 

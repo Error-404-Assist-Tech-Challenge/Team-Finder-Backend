@@ -34,7 +34,7 @@ def create_admin(data):
     user_id = str(uuid4())
     org_id = str(uuid4())
     user_data["id"] = user_id
-    created_at = datetime.now()
+    created_at = datetime.utcnow()
     hashed_password = auth_handler.get_password_hash(user_data.get("password"))
 
     db.create_organization(organization_id=org_id,
@@ -54,6 +54,37 @@ def create_admin(data):
             db.create_user_role(user_id=user_id, role_id=org_roles[key].get("id"))
 
     return admin_obj, error
+
+
+def create_employee(data):
+    user_data = data.model_dump()
+    user_id = str(uuid4())
+    user_data["id"] = user_id
+    created_at = datetime.utcnow()
+    hashed_password = auth_handler.get_password_hash(user_data.get("password"))
+    token = user_data.get("token")
+    signup_token = db.get_signup_token(token)
+
+    if signup_token:
+        org_id = signup_token[token].get("org_id")
+        format = "%Y-%m-%d %H:%M:%S"
+        current_time = datetime.utcnow()
+
+        if datetime.strptime(signup_token[token].get("expires_at"), format) > current_time:
+            employee_obj, error = db.create_employee(name=user_data.get("name"),
+                                                     email=user_data.get("email"),
+                                                     password=hashed_password,
+                                                     created_at=created_at,
+                                                     org_id=org_id,
+                                                     user_id=user_id)
+
+            db.delete_signup_token(token)
+        else:
+            return False, "Sign up token expired"
+    else:
+        return False, "Sign up token invalid"
+
+    return employee_obj, error
 
 
 def account_exists(data):
@@ -79,7 +110,23 @@ def login_user(data):
                 login_data["name"] = user_data.get("name")
 
                 if user_data.get("org_id"):
+                    org_data = db.get_organization(user_data.get("org_id"))
+                    org_roles = db.get_organization_roles()
+                    user_roles = db.get_user_roles(user_data.get("id"))
+
+                    user_role_names = []
+                    for role in user_roles:
+                        id = role.get("role_id")
+                        if org_roles.get(id):
+                            user_role_names.append(org_roles.get(id).get("name"))
+
+                    if not user_role_names:
+                        user_role_names.append("employee")
+
+                    login_data["roles"] = user_role_names
                     login_data["org_id"] = user_data.get("org_id")
+                    login_data["org_name"] = org_data.get("name")
+                    login_data["hq_address"] = org_data.get("hq_address")
                     return login_data, False
                 else:
                     return login_data, "Authentication successful but not apart of an organization"

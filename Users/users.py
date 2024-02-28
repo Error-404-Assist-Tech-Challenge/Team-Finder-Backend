@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from auth import AuthHandler
 from Users.models import AdminCreate, AuthResponse, EmployeeCreate, UserLogin
-from Users.utils import create_admin, get_users, login_user, account_exists
+from Users.utils import create_admin, create_employee, get_users, login_user, account_exists
 
 auth_handler = AuthHandler()
 user_router = APIRouter()
@@ -34,7 +34,16 @@ def protected(user_id=Depends(auth_handler.auth_wrapper)):
 
 @user_router.post("/api/users/employee")
 def employee_create(user_data: EmployeeCreate):
-    pass
+    # Check if account exists with the provided email
+    if not account_exists(user_data):
+        employee_obj, error = create_employee(user_data)
+        if error:
+            raise HTTPException(status_code=409, detail=error)
+        token = auth_handler.encode_token(employee_obj.get("id"))
+        employee_obj["token"] = token
+        return employee_obj
+    else:
+        raise HTTPException(status_code=409, detail="User with this email already exists")
 
 
 @user_router.post("/api/users/login", response_model=AuthResponse)

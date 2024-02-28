@@ -3,6 +3,7 @@ from sqlalchemy import Column, String, TIMESTAMP, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
+
 #ORGANIZATIONS
 class Organization(Base):
     __tablename__ = "organizations"
@@ -11,6 +12,13 @@ class Organization(Base):
     name = Column(String, nullable=False)
     hq_address = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
+
+    @staticmethod
+    def serialize_organization(organization):
+        return {
+            "name": str(organization.name),
+            "hq_address": str(organization.hq_address)
+        }
 
     @staticmethod
     def serialize_organizations(organizations):
@@ -23,6 +31,7 @@ class Organization(Base):
                 "created_at": str(organization.created_at)
             }
         return serialize_organization
+
 
 #ORGANIZATION_ROLES
 class Organization_roles(Base):
@@ -46,17 +55,18 @@ class UserRole(Base):
     __tablename__ = "user_roles"
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), primary_key=True, nullable=False)
-    role_id = Column(UUID(as_uuid=True), ForeignKey("organization_roles.id"),primary_key=True, nullable=False)
+    role_id = Column(UUID(as_uuid=True), ForeignKey("organization_roles.id"), primary_key=True, nullable=False)
 
     @staticmethod
     def serialize_user_roles(user_roles):
-        serialized_user_roles = {}
+        serialized_user_roles = []
         for user_role in user_roles:
-            serialized_user_roles[str(user_role.user_id)] = {
+            serialized_user_roles.append({
                 "user_id": str(user_role.user_id),
                 "role_id": str(user_role.role_id)
-            }
+            })
         return serialized_user_roles
+
 
 #TEAM_ROLES
 class TeamRoles(Base):
@@ -75,3 +85,29 @@ class TeamRoles(Base):
                 "name": str(team_role.name)
             }
         return serialized_team_roles
+
+
+#SIGNUP_TOKENS
+class SignUpTokens(Base):
+    __tablename__ = "signup_tokens"
+
+    id = Column(String, primary_key=True, nullable=False)
+    org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
+    expires_at = Column(TIMESTAMP, nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "expires_at": self.expires_at
+        }
+
+    @staticmethod
+    def serialize_tokens(tokens):
+        serialized_tokens = {}
+        for token in tokens:
+            serialized_tokens[str(token.id)] = {
+                "org_id": str(token.org_id),
+                "expires_at": str(token.expires_at)
+            }
+
+        return serialized_tokens
