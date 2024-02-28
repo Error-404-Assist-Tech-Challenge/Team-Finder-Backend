@@ -16,7 +16,7 @@ def create_organization_route(organization_data: Organization):
 def organization_get():
     return get_organizations()
 
-@organization_router.get("/api/organization_skills")
+@organization_router.get("/api/organizations/skills")
 def organization_get_skills(organization_id: str):
     return get_organizations_skills(organization_id)
 
