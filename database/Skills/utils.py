@@ -92,9 +92,9 @@ def get_department_skills(session):
 
 #SKILL_CATEGORIES
 
-def create_skill_categories(session, dept_id, name, created_at, skill_categories_id):
+def create_skill_categories(session, org_id, name, created_at, skill_categories_id):
     try:
-        obj = Skill_categories(dept_id=dept_id, name=name, created_at=created_at, id=skill_categories_id)
+        obj = Skill_categories(org_id=org_id, name=name, created_at=created_at, id=skill_categories_id)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
@@ -107,6 +107,22 @@ def get_skill_categories(session):
     try:
         skill_categories = session.query(Skill_categories).all()
         return Skill_categories.serialize_skill_categories(skill_categories)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+def update_skill_category(session, id, org_id, name, modified_at):
+    try:
+        skill_category = session.query(Skill_categories).filter(Skill_categories.id == id).first()
+        if skill_category:
+            skill_category.org_id = org_id
+            skill_category.name = name
+            skill_category.created_at = modified_at
+            session.commit()
+            return skill_category
+        else:
+            return None
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)

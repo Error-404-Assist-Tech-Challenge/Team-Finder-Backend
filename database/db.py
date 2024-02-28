@@ -147,16 +147,6 @@ class DataBase:
             return get_user_roles(session=session)
 
 
-    # ROLES
-    @staticmethod
-    def create_roles(name, role_id):
-        with session_scope() as session:
-            return create_role(session=session, name=name, role_id=role_id)
-    @staticmethod
-    def get_roles():
-        with session_scope() as session:
-            return get_roles(session=session)
-
     #USER_SKILLS
     @staticmethod
     def create_user_skills(user_id, skill_id, level, experience, created_at):
@@ -202,20 +192,33 @@ class DataBase:
 
     # SKILL_CATEGORIES
     @staticmethod
-    def create_skill_categories(name, dept_id, created_at, skill_categories_id):
+    def create_skill_categories(name, org_id, created_at, skill_categories_id):
         with session_scope() as session:
             return create_skill_categories(session=session,
                                            name=name,
-                                           dept_id=dept_id,
+                                           org_id=org_id,
                                            created_at=created_at,
                                            skill_categories_id=skill_categories_id)
 
     @staticmethod
-    def get_skill_categories():
+    def get_skill_categories(organization_id):
         with session_scope() as session:
-            return get_skill_categories(session=session)
+            organization_skills = []
+            skill_categories = get_skill_categories(session=session)
+            for key in skill_categories:
+                skill_category = skill_categories[key]
+                if skill_category.get("org_id") == organization_id:
+                    organization_skills.append(skill_category)
+            return organization_skills
 
-
+    @staticmethod
+    def update_skill_category(id, org_id, name, modified_at):
+        with session_scope() as session:
+            return update_skill_category(session=session,
+                                     id=id,
+                                     org_id=org_id,
+                                     name=name,
+                                    modified_at=modified_at)
 
     #DEPARTMENT_SKILLS
     def create_department_skill(dept_id, skill_id):
