@@ -102,9 +102,17 @@ class DataBase:
                                      department_id=department_id)
 
     @staticmethod
-    def get_department():
+    def get_department(organization_id):
         with session_scope() as session:
-            return get_department(session=session)
+            returned_departments = {}
+
+            departments = get_department(session=session)
+            for department in departments:
+                current_department = departments[department]
+                if current_department.get("org_id") == organization_id:
+                    current_department_id = current_department.get("id")
+                    returned_departments[current_department_id] = current_department
+            return returned_departments
 
 
     # DEPARTMENT_MEMBERS
@@ -173,9 +181,16 @@ class DataBase:
                                 skill_id=skill_id)
 
     @staticmethod
-    def get_skills():
+    def get_skills(organization_id):
         with session_scope() as session:
-            return get_skills(session=session)
+            returned_skills = {}
+            skills = get_skills(session=session)
+            for skill in skills:
+                current_skill = skills[skill]
+                if current_skill.get("org_id") == organization_id:
+                    current_skill_id = current_skill.get("id")
+                    returned_skills[current_skill_id] = current_skill
+            return returned_skills
 
     # SKILL_CATEGORIES
     @staticmethod
@@ -188,16 +203,17 @@ class DataBase:
                                            skill_categories_id=skill_categories_id)
 
     @staticmethod
-    def get_skill_categories(user_id):
+    def get_skill_categories(organization_id):
         with session_scope() as session:
-            organization_skills = []
-            users = get_users(session=session)
-            organization_id = users[user_id].get("org_id")
+            organization_skills = {}
+
             skill_categories = get_skill_categories(session=session)
-            for key in skill_categories:
-                skill_category = skill_categories[key]
-                if skill_category.get("org_id") == organization_id:
-                    organization_skills.append(skill_category)
+
+            for skill_category in skill_categories:
+                current_category = skill_categories[skill_category]
+                if current_category.get("org_id") == organization_id:
+                    current_category_id = current_category.get("id")
+                    organization_skills[current_category_id] = current_category
             return organization_skills
 
     @staticmethod
@@ -242,11 +258,9 @@ class DataBase:
             all_details = {}
             all_details['users'] = get_users(session=session)
             all_details['organizations'] = get_organizations(session=session)
-            all_details['organization_members'] = get_organization_members(session=session)
             all_details['departments'] = get_department(session=session)
             all_details['department_members'] = get_department_members(session=session)
             all_details['user_roles'] = get_user_roles(session=session)
-            all_details['roles'] = get_roles(session=session)
 
             return all_details
 

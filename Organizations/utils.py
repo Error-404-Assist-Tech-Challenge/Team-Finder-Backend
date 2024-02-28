@@ -19,37 +19,35 @@ def get_organizations():
     organizations = db.get_organizations()
     return organizations
 
-def get_organizations_skills(organization_id):
+def get_organizations_skills(user_id):
     returned_skills = []
-
-    skills = db.get_skills()
-    skill_categories = db.get_skill_categories()
-    departments = db.get_department()
     users = db.get_users()
 
-    for key in skills:
-        skill = skills[key]
-        if skill.get("org_id") == organization_id:
-            modified_skill = skill
-            for user in users:
-                current_user = users[user]
-                if modified_skill.get("author_id") == current_user.get("id"):
-                    modified_skill["author_name"] = current_user.get("name")
-                    break
-            for department in departments:
-                current_department = departments[department]
-                if modified_skill.get("dept_id") == current_department.get("id"):
-                    modified_skill["dept_name"] = current_department.get("name")
-                    break
-            for skill_category in skill_categories:
-                current_skill_category = skill_categories[skill_category]
-                if modified_skill.get("category_id") == current_skill_category.get("id"):
-                    modified_skill["category_name"] = current_skill_category.get("name")
-                    break
-            returned_skills.append(modified_skill)
+    organization_id = users[user_id].get("org_id")
+
+    skills = db.get_skills(organization_id)
+    skill_categories = db.get_skill_categories(organization_id)
+    departments = db.get_department(organization_id)
+
+    for skill in skills:
+        modified_skill = skills[skill]
+        for user in users:
+            current_user = users[user]
+            if modified_skill.get("author_id") == current_user.get("id"):
+                modified_skill["author_name"] = current_user.get("name")
+                break
+        for department in departments:
+            current_department = departments[department]
+            if modified_skill.get("dept_id") == current_department.get("id"):
+                modified_skill["dept_name"] = current_department.get("name")
+                break
+        for skill_category in skill_categories:
+            current_skill_category_id = skill_categories[skill_category]
+            if modified_skill.get("category_id") == current_skill_category_id:
+                modified_skill["category_name"] = skill_category.get("name")
+                break
+        returned_skills.append(modified_skill)
     return returned_skills
-
-
 
 def create_organization(data):
     organization_data = data.model_dump()
