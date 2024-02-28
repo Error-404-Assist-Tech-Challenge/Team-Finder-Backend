@@ -25,9 +25,9 @@ def get_organization_roles(session):
         return error
 
 #ORGANIZATIONS
-def create_organization(session, admin_id, name, hq_address, created_at, organization_id):
+def create_organization(session, name, hq_address, created_at, organization_id):
     try:
-        obj = Organization(admin_id=admin_id, name=name, hq_address=hq_address, created_at=created_at, id=organization_id)
+        obj = Organization(name=name, hq_address=hq_address, created_at=created_at, id=organization_id)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
