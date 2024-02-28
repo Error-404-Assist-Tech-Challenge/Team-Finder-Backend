@@ -17,6 +17,6 @@ def organization_get():
     return get_organizations()
 
 @organization_router.get("/api/organizations/skills")
-def organization_get_skills(organization_id: str):
-    return get_organizations_skills(organization_id)
+def organization_get_skills(user_id: str):
+    return get_organizations_skills(user_id)
 
