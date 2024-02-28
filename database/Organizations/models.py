@@ -48,16 +48,18 @@ class UserRole(Base):
     __tablename__ = "user_roles"
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), primary_key=True, nullable=False)
-    role_id = Column(UUID(as_uuid=True), ForeignKey("organization_roles.id"),primary_key=True, nullable=False)
+    role_id = Column(UUID(as_uuid=True), ForeignKey("organization_roles.id"), primary_key=True, nullable=False)
 
     @staticmethod
     def serialize_user_roles(user_roles):
         serialized_user_roles = {}
+        increment = 1
         for user_role in user_roles:
-            serialized_user_roles[str(user_role.user_id)] = {
+            serialized_user_roles[f"entry: {increment}"] = {
                 "user_id": str(user_role.user_id),
                 "role_id": str(user_role.role_id)
             }
+            increment += 1
         return serialized_user_roles
 
 #TEAM_ROLES

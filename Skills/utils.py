@@ -27,6 +27,7 @@ def create_skills(data):
 
 def get_skills_by_users_id(user_id):
     user_skills = db.get_user_skills()
+
     skills = db.get_skills()
     user_skills_list = []
     for key in user_skills:

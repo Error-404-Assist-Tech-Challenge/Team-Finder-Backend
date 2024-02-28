@@ -9,23 +9,23 @@ pwd_context = CryptContext(schemes=["bcrypt"])
 
 
 def get_users(user_id):
-    users = db.get_organization_users(user_id)
-    users_roles = db.get_user_roles()
+    users = db.get_users()
+    organization_id = users[user_id].get("org_id")
+    organ_users = db.get_organization_users(organization_id)
     organization_roles = db.get_organization_roles()
-    for key in users:
-        user = users[key]
-        user["user_roles"] = []
-        for user_role in users_roles:
-            current_role = users_roles[user_role]
-            current_role_id = current_role.get("role_id")
-            current_role_user = current_role.get("user_id")
-            if current_role_user == user.get("id"):
-                for organization_role in organization_roles:
-                    current_organ_role = organization_roles[organization_role]
-                    if current_organ_role.get("id") == current_role_id:
-                        user["user_roles"].append(current_organ_role.get("name"))
-                        break
-    return users
+    for user in organ_users:
+        current_user = organ_users[user]
+        current_user["user_roles"] = []
+        current_user_id = current_user.get("id")
+        user_roles = db.user_roles_get(current_user_id)
+        for user_role in user_roles:
+            role_id = user_role
+            for o_role in organization_roles:
+                if organization_roles[o_role].get("id") == role_id:
+                    current_user["user_roles"].append(organization_roles[o_role].get("name"))
+    return organ_users
+
+
 
 
 

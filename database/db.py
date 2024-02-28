@@ -52,14 +52,13 @@ class DataBase:
             return get_users(session=session)
 
     @staticmethod
-    def get_organization_users(user_id):
+    def get_organization_users(organization_id):
         returned_users = {}
         users = db.get_users()
-        organization_id = users[user_id].get("org_id")
-        for key in users:
-            user = users[key]
-            if user.get("org_id") == organization_id:
-                returned_users[user.get("id")] = user
+        for user in users:
+            current_user = users[user]
+            if current_user.get("org_id") == organization_id:
+                returned_users[current_user.get("id")] = current_user
         return returned_users
 
     # ORGANIZATIONS
@@ -137,9 +136,17 @@ class DataBase:
             return create_user_role(session=session, user_id=user_id, role_id=role_id)
 
     @staticmethod
-    def get_user_roles():
+    def user_roles_get(user_id):
         with session_scope() as session:
-            return get_user_roles(session=session)
+            user_roles = get_user_roles(session=session)
+            returned_user_roles = {}
+            for role in user_roles:
+                current_role = user_roles[role]
+                if current_role.get("user_id") == user_id:
+                    role_id = current_role.get("role_id")
+                    current_role[role_id] = current_role
+                    returned_user_roles[role_id] = user_id
+            return returned_user_roles
 
 
     #USER_SKILLS
