@@ -38,6 +38,7 @@ def create_admin(data):
                                        email=user_data.get("email"),
                                        password=hashed_password,
                                        created_at=created_at,
+                                       org_id= user_data.get("org_id"),
                                        user_id=user_id)
 
     if admin_obj:
