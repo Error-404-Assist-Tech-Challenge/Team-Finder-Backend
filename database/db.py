@@ -47,6 +47,17 @@ class DataBase:
                                user_id=user_id)
 
     @staticmethod
+    def create_employee(name, email, password, user_id, created_at, org_id):
+        with session_scope() as session:
+            return create_user(session=session,
+                               name=name,
+                               email=email,
+                               password=password,
+                               created_at=created_at,
+                               org_id=org_id,
+                               user_id=user_id)
+
+    @staticmethod
     def get_users():
         with session_scope() as session:
             return get_users(session=session)
@@ -61,6 +72,7 @@ class DataBase:
             if user.get("org_id") == organization_id:
                 returned_users[user.get("id")] = user
         return returned_users
+
 
     # ORGANIZATIONS
     @staticmethod
@@ -78,6 +90,11 @@ class DataBase:
             return get_organizations(session=session)
 
 
+    @staticmethod
+    def get_organization(id):
+        with session_scope() as session:
+            return get_organization(session=session, id=id)
+
     #ORGANIZATION_ROLES
     @staticmethod
     def create_organization_role(id, name):
@@ -88,6 +105,7 @@ class DataBase:
     def get_organization_roles():
         with session_scope() as session:
             return get_organization_roles(session=session)
+
 
     # DEPARTMENTS
     @staticmethod
@@ -136,9 +154,9 @@ class DataBase:
             return create_user_role(session=session, user_id=user_id, role_id=role_id)
 
     @staticmethod
-    def get_user_roles():
+    def get_user_roles(user_id):
         with session_scope() as session:
-            return get_user_roles(session=session)
+            return get_user_roles(session=session, user_id=user_id)
 
 
     #USER_SKILLS
@@ -166,6 +184,7 @@ class DataBase:
                                      level=level,
                                      experience=experience)
 
+
     #SKILLS
     @staticmethod
     def create_skill(category_id, name, description, created_at, skill_id, author_id, org_id):
@@ -190,6 +209,7 @@ class DataBase:
                     current_skill_id = current_skill.get("id")
                     returned_skills[current_skill_id] = current_skill
             return returned_skills
+
 
     # SKILL_CATEGORIES
     @staticmethod
@@ -219,12 +239,14 @@ class DataBase:
     def update_skill_category(id, org_id, name, modified_at):
         with session_scope() as session:
             return update_skill_category(session=session,
-                                     id=id,
-                                     org_id=org_id,
-                                     name=name,
-                                    modified_at=modified_at)
+                                         id=id,
+                                         org_id=org_id,
+                                         name=name,
+                                         modified_at=modified_at)
+
 
     #DEPARTMENT_SKILLS
+    @staticmethod
     def create_department_skill(dept_id, skill_id):
         with session_scope() as session:
             return create_department_skill(session=session,
@@ -236,13 +258,15 @@ class DataBase:
         with session_scope() as session:
             return get_department_skills(session=session)
 
+
     #TEAM_ROLES
+    @staticmethod
     def create_team_role(id, org_id, name):
         with session_scope() as session:
             return create_team_role(session=session,
-                                           id=id,
-                                           org_id=org_id,
-                                           name=name)
+                                    id=id,
+                                    org_id=org_id,
+                                    name=name)
 
     @staticmethod
     def get_team_roles():
@@ -250,12 +274,42 @@ class DataBase:
             return get_team_roles(session=session)
 
 
+    #SIGNUP_TOKENS
+    @staticmethod
+    def create_signup_token(id, org_id, expires_at):
+        with session_scope() as session:
+            return create_signup_token(session=session,
+                                       id=id,
+                                       org_id=org_id,
+                                       expires_at=expires_at)
+
+    @staticmethod
+    def delete_signup_token(id):
+        with session_scope() as session:
+            return delete_signup_token(session=session, id=id)
+
+    @staticmethod
+    def get_signup_tokens():
+        with session_scope() as session:
+            return get_signup_tokens(session=session)
+
+    @staticmethod
+    def get_org_signup_tokens(org_id):
+        with session_scope() as session:
+            return get_org_signup_tokens(session=session, org_id=org_id)
+
+    @staticmethod
+    def get_signup_token(id):
+        with session_scope() as session:
+            return get_signup_token(session=session, id=id)
+
+
 
     @staticmethod
     def get_all_details():
         with session_scope() as session:
             all_details = {}
-            all_details['Users'] = get_users(session=session)
+            all_details['users'] = get_users(session=session)
             all_details['organizations'] = get_organizations(session=session)
             all_details['departments'] = get_department(session=session)
             all_details['department_members'] = get_department_members(session=session)

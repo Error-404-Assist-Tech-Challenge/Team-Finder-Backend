@@ -1,5 +1,6 @@
 from uuid import UUID
 from pydantic import BaseModel
+from typing import List
 
 
 class AdminCreate(BaseModel):
@@ -16,6 +17,9 @@ class AuthResponse(BaseModel):
     email: str
     password: str
     org_id: UUID
+    org_name: str
+    hq_address: str
+    roles: List[str]
     token: str
 
 
@@ -23,6 +27,7 @@ class EmployeeCreate(BaseModel):
     name: str
     email: str
     password: str
+    token: str
 
 
 class UserLogin(BaseModel):
