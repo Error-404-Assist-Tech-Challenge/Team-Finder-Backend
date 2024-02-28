@@ -5,8 +5,8 @@ import secrets
 
 
 #USER_ROLES
-def get_user_roles():
-    user_roles = db.get_roles()
+def get_user_roles(user_id):
+    user_roles = db.user_roles_get(user_id)
     return user_roles
 
 

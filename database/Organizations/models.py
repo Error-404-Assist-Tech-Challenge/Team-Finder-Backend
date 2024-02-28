@@ -54,7 +54,7 @@ class Organization_roles(Base):
 class UserRole(Base):
     __tablename__ = "user_roles"
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), primary_key=True, nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("Users.id"), primary_key=True, nullable=False)
     role_id = Column(UUID(as_uuid=True), ForeignKey("organization_roles.id"), primary_key=True, nullable=False)
 
     @staticmethod
@@ -65,7 +65,7 @@ class UserRole(Base):
                 "user_id": str(user_role.user_id),
                 "role_id": str(user_role.role_id)
             })
-
+        return serialized_user_roles
 
 #TEAM_ROLES
 class TeamRoles(Base):

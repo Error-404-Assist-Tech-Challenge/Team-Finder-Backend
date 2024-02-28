@@ -11,7 +11,6 @@ from database.Organizations.utils import *
 from database.Departments.utils import *
 from database.Users.utils import *
 
-
 engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}')
 
 
@@ -68,7 +67,8 @@ class DataBase:
         users = db.get_users()
         for user in users:
             current_user = users[user]
-            if current_user.get("org_id") == organization_id:
+            current_user_id = current_user.get("org_id")
+            if current_user_id == organization_id:
                 returned_users[current_user.get("id")] = current_user
         return returned_users
 
@@ -152,10 +152,18 @@ class DataBase:
         with session_scope() as session:
             return create_user_role(session=session, user_id=user_id, role_id=role_id)
 
+
     @staticmethod
-    def get_user_roles(user_id):
+    def user_roles_get(user_id):
         with session_scope() as session:
-            return get_user_roles(session=session, user_id=user_id)
+            user_roles = get_user_roles(session=session, user_id=user_id)
+            returned_user_roles = {}
+            for role in user_roles:
+                if role.get("user_id") == user_id:
+                    role_id = role.get("role_id")
+                    role[role_id] = role
+                    returned_user_roles[role_id] = user_id
+            return returned_user_roles
 
 
     #USER_SKILLS
@@ -263,6 +271,36 @@ class DataBase:
     def get_department_skills():
         with session_scope() as session:
             return get_department_skills(session=session)
+
+    @staticmethod
+    def get_department_skills_names(organization_id):
+        with session_scope() as session:
+            dep_skills = get_department_skills(session=session)
+
+            # GET ORGANIZATION DEPARTMENTS
+            returned_departments = {}
+            departments = get_department(session=session)
+            for department in departments:
+                current_department = departments[department]
+                if current_department.get("org_id") == organization_id:
+                    current_department_id = current_department.get("id")
+                    returned_departments[current_department_id] = current_department
+
+            # Atribute name to each skill
+            for dep_skill in dep_skills:
+                current_dep_skill = dep_skills[dep_skill]
+                for department in returned_departments:
+                    current_department = returned_departments[department]
+                    if current_dep_skill.get("dept_id") == current_department.get("id"):
+                        current_dep_skill["dept_name"] = current_department.get("name")
+            return dep_skills
+
+    @staticmethod
+    def skill_department_update(dept_id, skill_id, new_dept_id, new_skill_id):
+        with session_scope() as session:
+            return update_department_skill(session=session, dept_id=dept_id, skill_id=skill_id, new_dept_id=new_dept_id,
+                                           new_skill_id=new_skill_id)
+
     #TEAM_ROLES
     @staticmethod
     def create_team_role(id, org_id, name):
@@ -313,7 +351,7 @@ class DataBase:
     def get_all_details():
         with session_scope() as session:
             all_details = {}
-            all_details['users'] = get_users(session=session)
+            all_details['Users'] = get_users(session=session)
             all_details['organizations'] = get_organizations(session=session)
             all_details['departments'] = get_department(session=session)
             all_details['department_members'] = get_department_members(session=session)

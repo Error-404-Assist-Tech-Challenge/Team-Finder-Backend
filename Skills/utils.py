@@ -26,9 +26,10 @@ def create_skills(data):
 #USER_SKILLS
 
 def get_skills_by_users_id(user_id):
+    all_users = db.get_users()
+    organization_id = all_users[user_id].get("org_id")
     user_skills = db.get_user_skills()
-
-    skills = db.get_skills()
+    skills = db.get_skills(organization_id)
     user_skills_list = []
     for key in user_skills:
         user_skill = user_skills[key]

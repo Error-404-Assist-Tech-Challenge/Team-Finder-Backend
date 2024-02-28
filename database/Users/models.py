@@ -35,5 +35,4 @@ class Users(Base):
                 "org_id": str(user.org_id),
                 "created_at": str(user.created_at)
             }
-
         return serialized_users

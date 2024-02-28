@@ -11,5 +11,5 @@ def create_user_role_route(user_role_data: UserRole):
 
 
 @user_roles_router.get("/api/organizations/user_roles")
-def user_roles_get():
-    return get_user_roles()
+def user_roles_get(user_id):
+    return get_user_roles(user_id)
