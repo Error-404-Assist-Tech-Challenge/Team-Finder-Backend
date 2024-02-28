@@ -9,7 +9,7 @@ class Skill_categories(Base):
     __tablename__ = "skill_categories"
 
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-    org_id = Column(UUID, ForeignKey("organizations.id"),nullable=False)
+    org_id = Column(UUID, ForeignKey("organizations.id"), nullable=False)
     name = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
 

@@ -1,5 +1,5 @@
 from sqlalchemy.exc import SQLAlchemyError
-from database.users.models import Users
+from database.Users.models import Users
 
 
 def create_user(session, name, email, password, user_id, created_at, org_id):

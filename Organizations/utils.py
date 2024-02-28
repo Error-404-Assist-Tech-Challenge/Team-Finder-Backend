@@ -1,5 +1,8 @@
 from uuid import uuid4
 from database.db import db
+from datetime import datetime, timedelta
+import secrets
+
 
 #USER_ROLES
 def get_user_roles():
@@ -14,10 +17,12 @@ def create_user_role(data):
 
     return user_role_data
 
+
 #ORGANIZATIONS
 def get_organizations():
     organizations = db.get_organizations()
     return organizations
+
 
 def get_organizations_skills(user_id):
     returned_skills = []
@@ -53,6 +58,7 @@ def get_organizations_skills(user_id):
         returned_skills.append(modified_skill)
     return returned_skills
 
+
 def create_organization(data):
     organization_data = data.model_dump()
     organization_id = str(uuid4())
@@ -80,6 +86,7 @@ def create_organization_role(data):
 
     return organization_role_data
 
+
 #TEAM_ROLES
 def get_team_roles():
     team_roles = db.get_team_roles()
@@ -93,3 +100,18 @@ def create_team_role(data):
                         name=team_role_data.get("name"))
 
     return team_role_data
+
+
+#SIGNUP_TOKENS
+def create_signup_token(org_id):
+    format = "%Y-%m-%d %H:%M:%S"
+    current_time = datetime.utcnow().strftime(format)
+    expires_at = datetime.strptime(current_time, format) + timedelta(hours=12)
+    id = secrets.token_urlsafe(16)
+    token = db.create_signup_token(id, org_id, expires_at)
+    return token
+
+
+def get_organization_signup_tokens(org_id):
+    tokens = db.get_org_signup_tokens(org_id)
+    return tokens
