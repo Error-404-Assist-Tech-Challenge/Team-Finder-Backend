@@ -52,9 +52,10 @@ class DataBase:
             return get_users(session=session)
 
     @staticmethod
-    def get_organization_users(organization_id):
+    def get_organization_users(user_id):
         returned_users = {}
         users = db.get_users()
+        organization_id = users[user_id].get("org_id")
         for key in users:
             user = users[key]
             if user.get("org_id") == organization_id:
@@ -77,16 +78,6 @@ class DataBase:
         with session_scope() as session:
             return get_organizations(session=session)
 
-    # ORGANIZATIONS_MEMBERS
-    @staticmethod
-    def create_organization_member(org_id, user_id):
-        with session_scope() as session:
-            return create_organization_member(session=session, org_id=org_id, user_id=user_id)
-
-    @staticmethod
-    def get_organization_members():
-        with session_scope() as session:
-            return get_organization_members(session=session)
 
     #ORGANIZATION_ROLES
     @staticmethod
@@ -197,9 +188,11 @@ class DataBase:
                                            skill_categories_id=skill_categories_id)
 
     @staticmethod
-    def get_skill_categories(organization_id):
+    def get_skill_categories(user_id):
         with session_scope() as session:
             organization_skills = []
+            users = get_users(session=session)
+            organization_id = users[user_id].get("org_id")
             skill_categories = get_skill_categories(session=session)
             for key in skill_categories:
                 skill_category = skill_categories[key]

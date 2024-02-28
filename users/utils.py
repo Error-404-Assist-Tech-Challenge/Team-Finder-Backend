@@ -8,8 +8,8 @@ auth_handler = AuthHandler()
 pwd_context = CryptContext(schemes=["bcrypt"])
 
 
-def get_users(organization_id):
-    users = db.get_organization_users(organization_id)
+def get_users(user_id):
+    users = db.get_organization_users(user_id)
     users_roles = db.get_user_roles()
     organization_roles = db.get_organization_roles()
     for key in users:
@@ -23,7 +23,6 @@ def get_users(organization_id):
                 for organization_role in organization_roles:
                     current_organ_role = organization_roles[organization_role]
                     if current_organ_role.get("id") == current_role_id:
-                        print(user.get("name"))
                         user["user_roles"].append(current_organ_role.get("name"))
                         break
     return users

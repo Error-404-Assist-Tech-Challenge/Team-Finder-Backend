@@ -12,8 +12,8 @@ def create_skill_categories_route(skill_categories_data: Skill_categories):
 
 
 @skill_categories_router.get("/api/skills/categories")
-def skill_categories_get(organization_id: str):
-    return get_skill_categories(organization_id)
+def skill_categories_get(user_id: str):
+    return get_skill_categories(user_id)
 
 
 @skill_categories_router.put("/api/skills/categories", response_model=Update_skill_category)
