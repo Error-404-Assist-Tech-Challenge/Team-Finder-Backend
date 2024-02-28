@@ -31,7 +31,6 @@ def get_organizations_skills(user_id):
     for skill in skills:
 
         modified_skill = skills[skill]
-        modified_skill_department_id = modified_skill.get("dept_id")
         modified_skill["dept_name"] = []
         for user in users:
             current_user = users[user]
