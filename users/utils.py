@@ -18,11 +18,14 @@ def get_users(organization_id):
         for user_role in users_roles:
             current_role = users_roles[user_role]
             current_role_id = current_role.get("role_id")
-            for organization_role in organization_roles:
-                current_organ_role = organization_roles[organization_role]
-                if current_organ_role.get("id") == current_role_id:
-                    user["user_roles"].append(current_organ_role.get("name"))
-                    break
+            current_role_user = current_role.get("user_id")
+            if current_role_user == user.get("id"):
+                for organization_role in organization_roles:
+                    current_organ_role = organization_roles[organization_role]
+                    if current_organ_role.get("id") == current_role_id:
+                        print(user.get("name"))
+                        user["user_roles"].append(current_organ_role.get("name"))
+                        break
     return users
 
 

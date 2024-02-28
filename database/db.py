@@ -55,15 +55,10 @@ class DataBase:
     def get_organization_users(organization_id):
         returned_users = {}
         users = db.get_users()
-        organization_members = db.get_organization_members()
-        for key in organization_members:
-            organization_member = organization_members[key]
-            if organization_member.get("org_id") == organization_id:
-                organization_member_id = organization_member.get("user_id")
-                for user_id, user_data in users.items():
-                    if user_data.get("id") == organization_member_id:
-                        returned_users[user_id] = user_data
-                        break
+        for key in users:
+            user = users[key]
+            if user.get("org_id") == organization_id:
+                returned_users[user.get("id")] = user
         return returned_users
 
     # ORGANIZATIONS
