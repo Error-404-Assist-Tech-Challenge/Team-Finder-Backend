@@ -36,13 +36,14 @@ class DataBase:
 
     # USERS
     @staticmethod
-    def create_admin(name, email, password, user_id, created_at):
+    def create_admin(name, email, password, user_id, created_at, org_id):
         with session_scope() as session:
             return create_user(session=session,
                                name=name,
                                email=email,
                                password=password,
                                created_at=created_at,
+                               org_id=org_id,
                                user_id=user_id)
 
     @staticmethod
