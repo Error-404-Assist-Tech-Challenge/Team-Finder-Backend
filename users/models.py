@@ -8,7 +8,6 @@ class AdminCreate(BaseModel):
     password: str
     org_name: str
     hq_address: str
-    org_id: str
 
 
 class AuthResponse(BaseModel):
@@ -24,7 +23,6 @@ class EmployeeCreate(BaseModel):
     name: str
     email: str
     password: str
-    org_id: UUID
 
 
 class UserLogin(BaseModel):

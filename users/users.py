@@ -41,7 +41,7 @@ def employee_create(user_data: EmployeeCreate):
 def user_login(user_data: UserLogin):
     login_obj, error = login_user(user_data)
     if error:
-        raise HTTPException(status_code=500, detail=error)
+        raise HTTPException(status_code=409, detail=error)
     else:
         token = auth_handler.encode_token(login_obj.get("id"))
         login_obj["token"] = token

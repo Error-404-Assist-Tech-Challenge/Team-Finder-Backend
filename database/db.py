@@ -64,10 +64,9 @@ class DataBase:
 
     # ORGANIZATIONS
     @staticmethod
-    def create_organization(name, admin_id, hq_address, organization_id, created_at):
+    def create_organization(name, hq_address, organization_id, created_at):
         with session_scope() as session:
             return create_organization(session=session,
-                                       admin_id=admin_id,
                                        name=name,
                                        hq_address=hq_address,
                                        created_at=created_at,
