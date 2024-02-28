@@ -99,11 +99,15 @@ def get_department_skills():
 
 def create_department_skill(data):
     department_skills_data = data.model_dump()
-    department_skills_id = str(uuid4())
-    department_skills_data["id"] = department_skills_id
 
-    db.create_department_skill(dept_id=department_skills_data.get("dept_id"),
-                           skill_id=department_skills_data.get("skill_id"))
+    db.skill_department_create(dept_id=department_skills_data.get("dept_id"), skill_id=department_skills_data.get("skill_id"))
 
     return department_skills_data
 
+def update_department_skills(data):
+    department_skills_data = data.model_dump()
+    db.skill_department_update(dept_id=department_skills_data.get("dept_id"),
+                               skill_id=department_skills_data.get("skill_id"),
+                               new_dept_id=department_skills_data.get("new_dept_id"),
+                               new_skill_id=department_skills_data.get("new_skill_id"))
+    return department_skills_data

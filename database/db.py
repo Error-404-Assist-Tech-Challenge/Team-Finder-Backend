@@ -192,11 +192,18 @@ class DataBase:
         with session_scope() as session:
             returned_skills = {}
             skills = get_skills(session=session)
+            departments_skills = get_department_skills(session=session)
             for skill in skills:
                 current_skill = skills[skill]
                 if current_skill.get("org_id") == organization_id:
                     current_skill_id = current_skill.get("id")
                     returned_skills[current_skill_id] = current_skill
+                    returned_skills[current_skill_id]["dept_id"] = []
+                    for departments_skill in departments_skills:
+                        current_department_skill = departments_skills[departments_skill]
+                        if current_skill_id == current_department_skill.get("skill_id"):
+                            dept_id = current_department_skill.get("dept_id")
+                            returned_skills[current_skill_id]["dept_id"].append(dept_id)
             return returned_skills
 
     # SKILL_CATEGORIES
@@ -233,7 +240,8 @@ class DataBase:
                                     modified_at=modified_at)
 
     #DEPARTMENT_SKILLS
-    def create_department_skill(dept_id, skill_id):
+    @staticmethod
+    def skill_department_create(skill_id, dept_id,):
         with session_scope() as session:
             return create_department_skill(session=session,
                                            dept_id=dept_id,
@@ -244,7 +252,36 @@ class DataBase:
         with session_scope() as session:
             return get_department_skills(session=session)
 
+    @staticmethod
+    def get_department_skills_names(organization_id):
+        with session_scope() as session:
+            dep_skills = get_department_skills(session=session)
+
+            # GET ORGANIZATION DEPARTMENTS
+            returned_departments = {}
+            departments = get_department(session=session)
+            for department in departments:
+                current_department = departments[department]
+                if current_department.get("org_id") == organization_id:
+                    current_department_id = current_department.get("id")
+                    returned_departments[current_department_id] = current_department
+
+            # Atribute name to each skill
+            for dep_skill in dep_skills:
+                current_dep_skill = dep_skills[dep_skill]
+                for department in returned_departments:
+                    current_department = returned_departments[department]
+                    if current_dep_skill.get("dept_id") == current_department.get("id"):
+                        current_dep_skill["dept_name"] = current_department.get("name")
+            return dep_skills
+
+    @staticmethod
+    def skill_department_update(dept_id, skill_id, new_dept_id, new_skill_id):
+        with session_scope() as session:
+            return update_department_skill(session=session, dept_id=dept_id, skill_id=skill_id, new_dept_id=new_dept_id, new_skill_id=new_skill_id)
+
     #TEAM_ROLES
+    @staticmethod
     def create_team_role(id, org_id, name):
         with session_scope() as session:
             return create_team_role(session=session,

@@ -90,7 +90,7 @@ class Department_skills(Base):
     def serialize_department_skills(department_skills):
         serialize_department_skills = {}
         for department_skill in department_skills:
-            serialize_department_skills[str(department_skill.id)] = {
+            serialize_department_skills[str(department_skill.dept_id)] = {
                 "dept_id": str(department_skill.dept_id),
                 "skill_id": str(department_skill.skill_id)
             }

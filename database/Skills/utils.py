@@ -84,11 +84,37 @@ def create_department_skill(session, dept_id, skill_id):
 def get_department_skills(session):
     try:
         department_skill = session.query(Department_skills).all()
-        return Department_skills.serialize_departments(department_skill)
+        return Department_skills.serialize_department_skills(department_skill)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
+
+def update_department_skill(session, dept_id, skill_id, new_dept_id, new_skill_id):
+    try:
+        department_skill = session.query(Department_skills).filter(
+            Department_skills.dept_id == dept_id,
+            Department_skills.skill_id == skill_id
+        ).first()
+
+        if department_skill:
+            if(not(dept_id == new_dept_id)):
+                department_skill.dept_id = new_dept_id
+            if (not (skill_id == new_skill_id)):
+                department_skill.skill_id = new_skill_id
+            session.commit()
+            session.rollback()
+            return department_skill
+        else:
+            return None
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        session.rollback()
+        print(error)
+        return error
+
+
 
 #SKILL_CATEGORIES
 
