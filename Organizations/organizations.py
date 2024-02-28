@@ -18,7 +18,7 @@ def organization_get():
 
 
 @organization_router.get("/api/organizations/skills")
-def organization_get_skills(user_id: UUID):
+def organization_get_skills(user_id):
     return get_organizations_skills(user_id)
 
 

@@ -5,8 +5,8 @@ import secrets
 
 
 #USER_ROLES
-def get_user_roles():
-    user_roles = db.get_roles()
+def get_user_roles(user_id):
+    user_roles = db.user_roles_get(user_id)
     return user_roles
 
 
@@ -27,30 +27,34 @@ def get_organizations():
 def get_organizations_skills(user_id):
     returned_skills = []
     users = db.get_users()
-
     organization_id = users[user_id].get("org_id")
 
     skills = db.get_skills(organization_id)
     skill_categories = db.get_skill_categories(organization_id)
-    departments = db.get_department(organization_id)
+    departments = db.get_department_skills_names(organization_id)
 
     for skill in skills:
+
         modified_skill = skills[skill]
+        modified_skill["dept_name"] = []
         for user in users:
             current_user = users[user]
             if modified_skill.get("author_id") == current_user.get("id"):
                 modified_skill["author_name"] = current_user.get("name")
-                break
+
         for department in departments:
             current_department = departments[department]
-            if modified_skill.get("dept_id") == current_department.get("id"):
-                modified_skill["dept_name"] = current_department.get("name")
-                break
+            current_department_id = current_department.get("dept_id")
+            current_skill_department_ids = modified_skill.get("dept_id")
+            for department_id in current_skill_department_ids:
+                if department_id == current_department_id:
+                    modified_skill["dept_name"].append(current_department.get("dept_name"))
+
         for skill_category in skill_categories:
-            current_skill_category_id = skill_categories[skill_category]
+            current_skill_category = skill_categories[skill_category]
+            current_skill_category_id = skill_categories[skill_category].get("id")
             if modified_skill.get("category_id") == current_skill_category_id:
-                modified_skill["category_name"] = skill_category.get("name")
-                break
+                modified_skill["category_name"] = current_skill_category.get("name")
         returned_skills.append(modified_skill)
     return returned_skills
 

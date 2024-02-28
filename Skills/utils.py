@@ -26,8 +26,10 @@ def create_skills(data):
 #USER_SKILLS
 
 def get_skills_by_users_id(user_id):
+    all_users = db.get_users()
+    organization_id = all_users[user_id].get("org_id")
     user_skills = db.get_user_skills()
-    skills = db.get_skills()
+    skills = db.get_skills(organization_id)
     user_skills_list = []
     for key in user_skills:
         user_skill = user_skills[key]
@@ -98,11 +100,15 @@ def get_department_skills():
 
 def create_department_skill(data):
     department_skills_data = data.model_dump()
-    department_skills_id = str(uuid4())
-    department_skills_data["id"] = department_skills_id
 
-    db.create_department_skill(dept_id=department_skills_data.get("dept_id"),
-                           skill_id=department_skills_data.get("skill_id"))
+    db.skill_department_create(dept_id=department_skills_data.get("dept_id"), skill_id=department_skills_data.get("skill_id"))
 
     return department_skills_data
 
+def update_department_skills(data):
+    department_skills_data = data.model_dump()
+    db.skill_department_update(dept_id=department_skills_data.get("dept_id"),
+                               skill_id=department_skills_data.get("skill_id"),
+                               new_dept_id=department_skills_data.get("new_dept_id"),
+                               new_skill_id=department_skills_data.get("new_skill_id"))
+    return department_skills_data
