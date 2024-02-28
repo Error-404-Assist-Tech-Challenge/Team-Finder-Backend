@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from auth import AuthHandler
-from users.models import AdminCreate, AuthResponse, EmployeeCreate, UserLogin
-from users.utils import create_admin, get_users, login_user, account_exists
+from Users.models import AdminCreate, AuthResponse, EmployeeCreate, UserLogin
+from Users.utils import create_admin, get_users, login_user, account_exists
 
 auth_handler = AuthHandler()
 user_router = APIRouter()

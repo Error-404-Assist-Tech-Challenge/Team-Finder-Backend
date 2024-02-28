@@ -9,7 +9,7 @@ Base = declarative_base()
 from database.Skills.utils import *
 from database.Organizations.utils import *
 from database.Departments.utils import *
-from database.users.utils import *
+from database.Users.utils import *
 
 
 engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}')
@@ -255,7 +255,7 @@ class DataBase:
     def get_all_details():
         with session_scope() as session:
             all_details = {}
-            all_details['users'] = get_users(session=session)
+            all_details['Users'] = get_users(session=session)
             all_details['organizations'] = get_organizations(session=session)
             all_details['departments'] = get_department(session=session)
             all_details['department_members'] = get_department_members(session=session)

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from users.users import user_router
+from Users.users import user_router
 
 from openai_feature.chat_gpt_feature import chat_gpt_router
 
