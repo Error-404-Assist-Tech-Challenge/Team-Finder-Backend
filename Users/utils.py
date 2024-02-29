@@ -112,11 +112,10 @@ def login_user(data):
                 if user_data.get("org_id"):
                     org_data = db.get_organization(user_data.get("org_id"))
                     org_roles = db.get_organization_roles()
-                    user_roles = db.get_user_roles(user_data.get("id"))
-
+                    user_roles = db.user_roles_get(user_data.get("id"))
                     user_role_names = []
                     for role in user_roles:
-                        id = role.get("role_id")
+                        id = user_roles[role]
                         if org_roles.get(id):
                             user_role_names.append(org_roles.get(id).get("name"))
 
