@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from database.db import db
-from datetime import datetime
+from datetime import datetime, time
 
 
 #PROJECTS
@@ -15,11 +15,16 @@ def create_projects(data):
     project_data = data.model_dump()
     project_id = str(uuid4())
     project_data["id"] = project_id
-    start_date = datetime.strptime(project_data["start_date"], '%Y-%m-%dT%H:%M:%S')
-    deadline_date = datetime.strptime(project_data["deadline_date"], '%Y-%m-%dT%H:%M:%S')
+
+    start_date = project_data.get("start_date")
+    start_date_iso = start_date.isoformat()
+
+    deadline_date = project_data.get("deadline_date")
+    deadline_date_iso = deadline_date.isoformat()
+
     db.create_project(name=project_data.get("name"),
-                      start_date=start_date,
-                      deadline_date=deadline_date,
+                      start_date=start_date_iso,
+                      deadline_date=deadline_date_iso,
                       status=project_data.get("status"),
                       period=project_data.get("period"),
                       description=project_data.get("description"),
@@ -56,14 +61,14 @@ def create_project_assignment(data):
     project_assignments_data["id"] = project_assignments_id
 
     db.create_project_assignment(proj_id=project_assignments_data.get("proj_id"),
-                      user_id=project_assignments_data.get("user_id"),
-                      proj_manager_id=project_assignments_data.get("proj_manager_id"),
-                      proposal=project_assignments_data.get("proposal"),
-                      deallocated=project_assignments_data.get("deallocated"),
-                      dealloc_reason=project_assignments_data.get("dealloc_reason"),
-                      work_hours=project_assignments_data.get("work_hours"),
-                      comment=project_assignments_data.get("comment"),
-                      project_assignments_id=project_assignments_id)
+                                 user_id=project_assignments_data.get("user_id"),
+                                 proj_manager_id=project_assignments_data.get("proj_manager_id"),
+                                 proposal=project_assignments_data.get("proposal"),
+                                 deallocated=project_assignments_data.get("deallocated"),
+                                 dealloc_reason=project_assignments_data.get("dealloc_reason"),
+                                 work_hours=project_assignments_data.get("work_hours"),
+                                 comment=project_assignments_data.get("comment"),
+                                 project_assignments_id=project_assignments_id)
 
     return project_assignments_data
 
@@ -103,7 +108,7 @@ def get_project_needed_roles():
 
 def create_project_needed_role(data):
     project_needed_role = data.model_dump()
-    db.create_project_needed_roles(proj_id=project_needed_role.get("user_id"),
+    db.create_project_needed_roles(proj_id=project_needed_role.get("proj_id"),
                                   role_id=project_needed_role.get("role_id"),
                                   count=project_needed_role.get("count"))
     return project_needed_role

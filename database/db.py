@@ -348,10 +348,10 @@ class DataBase:
 #PROJECTS===============================================================================================================
 
     @staticmethod
-    def create_project(id, org_id, name, period, start_date, deadline_date, status, description,tech_stack, created_at):
+    def create_project(project_id, org_id, name, period, start_date, deadline_date, status, description,tech_stack, created_at):
         with session_scope() as session:
             return create_project(session=session,
-                                  id=id,
+                                  project_id=project_id,
                                   org_id=org_id,
                                   name=name,
                                   period=period,
@@ -369,10 +369,10 @@ class DataBase:
 
     #PROJECT ASSIGNMENTS
     @staticmethod
-    def create_project_assignment(id, proj_id, user_id, proj_manager_id, proposal, deallocated, dealloc_reason, work_hours, comment):
+    def create_project_assignment(project_assignments_id, proj_id, user_id, proj_manager_id, proposal, deallocated, dealloc_reason, work_hours, comment):
         with session_scope() as session:
             return create_project_assignments(session=session,
-                                              id=id,
+                                              project_assignments_id=project_assignments_id,
                                               proj_id=proj_id,
                                               user_id=user_id,
                                               proj_manager_id=proj_manager_id,

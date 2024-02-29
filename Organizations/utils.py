@@ -94,6 +94,8 @@ def get_team_roles():
 
 def create_team_role(data):
     team_role_data = data.model_dump()
+    team_role_id = str(uuid4())
+    team_role_data["id"] = team_role_id
     db.create_team_role(id=team_role_data.get("id"),
                         org_id=team_role_data.get("org_id"),
                         name=team_role_data.get("name"))

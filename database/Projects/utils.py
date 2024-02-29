@@ -3,9 +3,9 @@ from sqlalchemy.exc import SQLAlchemyError
 from database.Projects.models import *
 
 #PROJECTS
-def create_project(session, id, org_id, name, period, start_date, deadline_date, status, description, tech_stack, created_at):
+def create_project(session, project_id, org_id, name, period, start_date, deadline_date, status, description, tech_stack, created_at):
     try:
-        obj = Projects(id=id,
+        obj = Projects(id=project_id,
                            org_id=org_id,
                            name=name,
                            period=period,
@@ -32,19 +32,19 @@ def get_projects(session):
         print(error)
         return error
 
-#PROJECT ASSIGNMENTS
 
-def create_project_assignments(session, id, user_id, proj_id, proj_manager_id, proposal, deallocated, dealloc_reason, work_hours, comment):
+#PROJECT ASSIGNMENTS
+def create_project_assignments(session, project_assignments_id, user_id, proj_id, proj_manager_id, proposal, deallocated, dealloc_reason, work_hours, comment):
     try:
-        obj = Projects(id=id,
-                       user_id=user_id,
-                       proj_id=proj_id,
-                       proj_manager_id=proj_manager_id,
-                       proposal=proposal,
-                       deallocated=deallocated,
-                       dealloc_reason=dealloc_reason,
-                       work_hours=work_hours,
-                       comment=comment)
+        obj = Project_assignmments(id=project_assignments_id,
+                                   user_id=user_id,
+                                   proj_id=proj_id,
+                                   proj_manager_id=proj_manager_id,
+                                   proposal=proposal,
+                                   deallocated=deallocated,
+                                   dealloc_reason=dealloc_reason,
+                                   work_hours=work_hours,
+                                   comment=comment)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
@@ -66,7 +66,7 @@ def get_project_assignments(session):
 
 def create_project_members(session, user_id, proj_id):
     try:
-        obj = Projects(user_id=user_id,
+        obj = Project_members(user_id=user_id,
                        proj_id=proj_id)
         session.add(obj)
         return obj

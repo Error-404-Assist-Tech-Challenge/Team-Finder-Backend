@@ -43,8 +43,8 @@ class Project_assignmments(Base):
     __tablename__ = "project_assignments"
 
     id = Column(UUID, primary_key=True, nullable=False)
-    proj_id = Column(UUID, ForeignKey("projects.id"),nullable=False)
-    org_id = Column(UUID, ForeignKey("organizations.id"), nullable=False)
+    proj_id = Column(UUID, ForeignKey("projects.id"), nullable=False)
+    user_id = Column(UUID, ForeignKey("users.id"), nullable=False)
     proj_manager_id = Column(UUID, nullable=False)
     proposal = Column(Boolean, nullable=False)
     deallocated = Column(Boolean, nullable=False)
@@ -56,10 +56,9 @@ class Project_assignmments(Base):
     def serialize_project_assignments(project_assignments):
         serialize_project_assignments = {}
         for project_assignment in project_assignments:
-            project_assignment[str(project_assignment.id)] = {
+            serialize_project_assignments[str(project_assignment.id)] = {
                 "id": str(project_assignment.id),
                 "proj_id": str(project_assignment.proj_id),
-                "org_id": str(project_assignment.org_id),
                 "proj_manager_id": str(project_assignment.proj_manager_id),
                 "proposal": str(project_assignment.proposal),
                 "deallocated": str(project_assignment.deallocated),
@@ -101,7 +100,7 @@ class  User_team_roles(Base):
         for user_team_role in user_team_roles:
             user_team_role = {
                 "user_id": str(user_team_role.user_id),
-                "proj_id": str(user_team_role.proj_id),
+                "role_id": str(user_team_role.role_id),
                 "proposal": str(user_team_role.proposal)
             }
             serialize_user_team_roles.append(user_team_role)
@@ -119,7 +118,7 @@ class Project_tech_stack_skills(Base):
         serialize_project_tech_stack_skill = []
         for project_tech_stack_skill in project_tech_stack_skills:
             project_tech_stack_skill = {
-                "skill_id": str(project_tech_stack_skill.user_id),
+                "skill_id": str(project_tech_stack_skill.skill_id),
                 "proj_id": str(project_tech_stack_skill.proj_id)
             }
             serialize_project_tech_stack_skill.append(project_tech_stack_skill)
