@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from uuid import UUID
-from datetime import datetime
+from datetime import datetime, time
+
 
 #PROJECTS
 
@@ -13,7 +14,7 @@ class Projects(BaseModel):
     status: str
     description: str
     tech_stack: list
-    created_at: datetime
+    created_at: datetime = datetime.now().isoformat()
 
 #PROJECTS MEMBERS
 
@@ -31,7 +32,7 @@ class Project_assignments(BaseModel):
     deallocated: bool
     dealloc_reason: str
     work_hours: int
-    comment: int
+    comment: str
 
 #USER TEAM ROLES
 
