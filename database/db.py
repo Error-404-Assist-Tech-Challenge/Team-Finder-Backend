@@ -10,6 +10,7 @@ from database.Skills.utils import *
 from database.Organizations.utils import *
 from database.Departments.utils import *
 from database.Users.utils import *
+from database.Projects.utils import *
 
 engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}')
 
@@ -33,7 +34,8 @@ Base.metadata.create_all(engine)
 
 class DataBase:
 
-    # USERS
+#USERS==================================================================================================================
+
     @staticmethod
     def create_admin(name, email, password, user_id, created_at, org_id):
         with session_scope() as session:
@@ -72,8 +74,38 @@ class DataBase:
                 returned_users[current_user.get("id")] = current_user
         return returned_users
 
+    #SIGNUP_TOKENS
+    @staticmethod
+    def create_signup_token(id, org_id, expires_at):
+        with session_scope() as session:
+            return create_signup_token(session=session,
+                                       id=id,
+                                       org_id=org_id,
+                                       expires_at=expires_at)
 
-    # ORGANIZATIONS
+    @staticmethod
+    def delete_signup_token(id):
+        with session_scope() as session:
+            return delete_signup_token(session=session, id=id)
+
+    @staticmethod
+    def get_signup_tokens():
+        with session_scope() as session:
+            return get_signup_tokens(session=session)
+
+    @staticmethod
+    def get_org_signup_tokens(org_id):
+        with session_scope() as session:
+            return get_org_signup_tokens(session=session, org_id=org_id)
+
+    @staticmethod
+    def get_signup_token(id):
+        with session_scope() as session:
+            return get_signup_token(session=session, id=id)
+
+
+#ORGANIZATIONS==========================================================================================================
+
     @staticmethod
     def create_organization(name, hq_address, organization_id, created_at):
         with session_scope() as session:
@@ -94,6 +126,25 @@ class DataBase:
         with session_scope() as session:
             return get_organization(session=session, id=id)
 
+
+    # USER ROLES
+    @staticmethod
+    def create_user_role(user_id, role_id):
+        with session_scope() as session:
+            return create_user_role(session=session, user_id=user_id, role_id=role_id)
+
+    @staticmethod
+    def user_roles_get(user_id):
+        with session_scope() as session:
+            user_roles = get_user_roles(session=session, user_id=user_id)
+            returned_user_roles = {}
+            for role in user_roles:
+                if role.get("user_id") == user_id:
+                    role_id = role.get("role_id")
+                    role[role_id] = role
+                    returned_user_roles[role_id] = user_id
+            return returned_user_roles
+
     #ORGANIZATION_ROLES
     @staticmethod
     def create_organization_role(id, name):
@@ -105,8 +156,23 @@ class DataBase:
         with session_scope() as session:
             return get_organization_roles(session=session)
 
+    #TEAM_ROLES
+    @staticmethod
+    def create_team_role(id, org_id, name):
+        with session_scope() as session:
+            return create_team_role(session=session,
+                                    id=id,
+                                    org_id=org_id,
+                                    name=name)
 
-    # DEPARTMENTS
+    @staticmethod
+    def get_team_roles():
+        with session_scope() as session:
+            return get_team_roles(session=session)
+
+
+#DEPARTMENTS============================================================================================================
+
     @staticmethod
     def create_department(name, org_id, manager_id, department_id, created_at):
         with session_scope() as session:
@@ -145,54 +211,8 @@ class DataBase:
         with session_scope() as session:
             return get_department_members(session=session)
 
+#SKILLS=================================================================================================================
 
-    # USER ROLES
-    @staticmethod
-    def create_user_role(user_id, role_id):
-        with session_scope() as session:
-            return create_user_role(session=session, user_id=user_id, role_id=role_id)
-
-
-    @staticmethod
-    def user_roles_get(user_id):
-        with session_scope() as session:
-            user_roles = get_user_roles(session=session, user_id=user_id)
-            returned_user_roles = {}
-            for role in user_roles:
-                if role.get("user_id") == user_id:
-                    role_id = role.get("role_id")
-                    role[role_id] = role
-                    returned_user_roles[role_id] = user_id
-            return returned_user_roles
-
-
-    #USER_SKILLS
-    @staticmethod
-    def create_user_skills(user_id, skill_id, level, experience, created_at):
-        with session_scope() as session:
-            return create_user_skills(session=session,
-                                      user_id=user_id,
-                                      skill_id=skill_id,
-                                      level=level,
-                                      created_at=created_at,
-                                      experience=experience)
-
-    @staticmethod
-    def get_user_skills():
-        with session_scope() as session:
-            return get_user_skills(session=session)
-
-    @staticmethod
-    def update_user_skill(user_id, level, experience, skill_id):
-        with session_scope() as session:
-            return update_user_skill(session=session,
-                                     user_id=user_id,
-                                     skill_id=skill_id,
-                                     level=level,
-                                     experience=experience)
-
-
-    #SKILLS
     @staticmethod
     def create_skill(category_id, name, description, created_at, skill_id, author_id, org_id):
         with session_scope() as session:
@@ -224,6 +244,30 @@ class DataBase:
                             returned_skills[current_skill_id]["dept_id"].append(dept_id)
             return returned_skills
 
+    #USER_SKILLS
+    @staticmethod
+    def create_user_skills(user_id, skill_id, level, experience, created_at):
+        with session_scope() as session:
+            return create_user_skills(session=session,
+                                      user_id=user_id,
+                                      skill_id=skill_id,
+                                      level=level,
+                                      created_at=created_at,
+                                      experience=experience)
+
+    @staticmethod
+    def get_user_skills():
+        with session_scope() as session:
+            return get_user_skills(session=session)
+
+    @staticmethod
+    def update_user_skill(user_id, level, experience, skill_id):
+        with session_scope() as session:
+            return update_user_skill(session=session,
+                                     user_id=user_id,
+                                     skill_id=skill_id,
+                                     level=level,
+                                     experience=experience)
 
     # SKILL_CATEGORIES
     @staticmethod
@@ -301,52 +345,104 @@ class DataBase:
             return update_department_skill(session=session, dept_id=dept_id, skill_id=skill_id, new_dept_id=new_dept_id,
                                            new_skill_id=new_skill_id)
 
-    #TEAM_ROLES
-    @staticmethod
-    def create_team_role(id, org_id, name):
-        with session_scope() as session:
-            return create_team_role(session=session,
-                                    id=id,
-                                    org_id=org_id,
-                                    name=name)
+#PROJECTS===============================================================================================================
 
     @staticmethod
-    def get_team_roles():
+    def create_project(id, org_id, name, period, start_date, deadline_date, status, description,tech_stack, created_at):
         with session_scope() as session:
-            return get_team_roles(session=session)
-
-
-    #SIGNUP_TOKENS
-    @staticmethod
-    def create_signup_token(id, org_id, expires_at):
-        with session_scope() as session:
-            return create_signup_token(session=session,
-                                       id=id,
-                                       org_id=org_id,
-                                       expires_at=expires_at)
-
-    @staticmethod
-    def delete_signup_token(id):
-        with session_scope() as session:
-            return delete_signup_token(session=session, id=id)
+            return create_project(session=session,
+                                  id=id,
+                                  org_id=org_id,
+                                  name=name,
+                                  period=period,
+                                  start_date=start_date,
+                                  deadline_date = deadline_date,
+                                  status= status,
+                                  description = description,
+                                  tech_stack = tech_stack,
+                                  created_at = created_at)
 
     @staticmethod
-    def get_signup_tokens():
+    def get_projects():
         with session_scope() as session:
-            return get_signup_tokens(session=session)
+            return get_projects(session=session)
+
+    #PROJECT ASSIGNMENTS
+    @staticmethod
+    def create_project_assignment(id, proj_id, user_id, proj_manager_id, proposal, deallocated, dealloc_reason, work_hours, comment):
+        with session_scope() as session:
+            return create_project_assignments(session=session,
+                                              id=id,
+                                              proj_id=proj_id,
+                                              user_id=user_id,
+                                              proj_manager_id=proj_manager_id,
+                                              proposal=proposal,
+                                              deallocated=deallocated,
+                                              dealloc_reason=dealloc_reason,
+                                              work_hours=work_hours,
+                                              comment=comment)
 
     @staticmethod
-    def get_org_signup_tokens(org_id):
+    def get_project_assignments():
         with session_scope() as session:
-            return get_org_signup_tokens(session=session, org_id=org_id)
+            return get_project_assignments(session=session)
+
+    #USER TEAM ROLES
+    @staticmethod
+    def create_user_team_role(user_id, role_id, proposal):
+        with session_scope() as session:
+            return create_user_team_role(session=session,
+                                          user_id=user_id,
+                                          role_id=role_id,
+                                          proposal=proposal)
+
 
     @staticmethod
-    def get_signup_token(id):
+    def get_user_team_roles():
         with session_scope() as session:
-            return get_signup_token(session=session, id=id)
+            return get_user_team_roles(session=session)
+
+    #PROJECT TECH STACK SKILLS
+    @staticmethod
+    def create_project_tech_stack_skills(proj_id, skill_id):
+        with session_scope() as session:
+            return create_project_tech_stack_skill(session=session,
+                                         proj_id=proj_id,
+                                         skill_id=skill_id)
 
 
+    @staticmethod
+    def get_project_tech_stack_skills():
+        with session_scope() as session:
+            return get_project_tech_stack_skills(session=session)
 
+    #PROJECT NEEDED ROLES
+    @staticmethod
+    def create_project_needed_roles(proj_id, role_id, count):
+        with session_scope() as session:
+            return create_project_needed_role(session=session,
+                                         proj_id=proj_id,
+                                         role_id=role_id,
+                                         count=count)
+    @staticmethod
+    def get_project_needed_roles():
+        with session_scope() as session:
+            return get_project_needed_roles(session=session)
+
+    # PROJECT MEMBERS
+    @staticmethod
+    def create_project_member(proj_id, user_id):
+        with session_scope() as session:
+            return create_project_members(session=session,
+                                          proj_id=proj_id,
+                                          user_id=user_id)
+
+    @staticmethod
+    def get_project_member():
+        with session_scope() as session:
+            return get_project_members(session=session)
+
+#CHAT GPT FEATURE=======================================================================================================
     @staticmethod
     def get_all_details():
         with session_scope() as session:
@@ -356,7 +452,7 @@ class DataBase:
             all_details['departments'] = get_department(session=session)
             all_details['department_members'] = get_department_members(session=session)
             all_details['user_roles'] = get_user_roles(session=session)
-
+            #Plus the rest of the database
             return all_details
 
 
