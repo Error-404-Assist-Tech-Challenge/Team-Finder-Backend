@@ -32,7 +32,7 @@ def protected(user_id=Depends(auth_handler.auth_wrapper)):
     return {"user_id": user_id}
 
 
-@user_router.post("/api/users/employee")
+@user_router.post("/api/users/employee", response_model=AuthResponse)
 def employee_create(user_data: EmployeeCreate):
     # Check if account exists with the provided email
     if not account_exists(user_data):

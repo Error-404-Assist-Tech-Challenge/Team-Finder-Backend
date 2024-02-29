@@ -28,7 +28,7 @@ class Department(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
     org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
     name = Column(String, nullable=False)
-    manager_id = Column(UUID(as_uuid=True), ForeignKey("Users.id"), nullable=False)
+    manager_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
 
     @staticmethod
