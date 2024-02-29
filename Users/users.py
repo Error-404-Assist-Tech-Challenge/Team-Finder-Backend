@@ -61,6 +61,3 @@ def user_login(user_data: UserLogin):
     return login_obj
 
 
-@user_router.get("/api/users")
-def users_get(user_id: str):
-    return get_users(user_id)

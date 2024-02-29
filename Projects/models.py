@@ -5,7 +5,6 @@ from datetime import datetime
 #PROJECTS
 
 class Projects(BaseModel):
-    id: UUID
     org_id: UUID
     name: str
     period: str
@@ -25,7 +24,6 @@ class Project_members(BaseModel):
 #PROJECT ASSIGNMENTS
 
 class Project_assignments(BaseModel):
-    id: UUID
     proj_id: UUID
     user_id: UUID
     proj_manager_id: UUID

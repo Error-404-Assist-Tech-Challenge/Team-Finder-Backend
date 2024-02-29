@@ -1,5 +1,8 @@
 from uuid import uuid4
+
 from database.db import db
+from datetime import datetime
+
 
 #PROJECTS
 
@@ -12,10 +15,11 @@ def create_projects(data):
     project_data = data.model_dump()
     project_id = str(uuid4())
     project_data["id"] = project_id
-
+    start_date = datetime.strptime(project_data["start_date"], '%Y-%m-%dT%H:%M:%S')
+    deadline_date = datetime.strptime(project_data["deadline_date"], '%Y-%m-%dT%H:%M:%S')
     db.create_project(name=project_data.get("name"),
-                      start_date=project_data.get("start_date"),
-                      deadline_date=project_data.get("deadline_date"),
+                      start_date=start_date,
+                      deadline_date=deadline_date,
                       status=project_data.get("status"),
                       period=project_data.get("period"),
                       description=project_data.get("description"),

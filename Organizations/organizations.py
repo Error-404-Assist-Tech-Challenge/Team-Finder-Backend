@@ -1,9 +1,12 @@
 from uuid import UUID
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from Organizations.models import Organization
 from Organizations.utils import *
+from Users.utils import get_users
+from auth import AuthHandler
 
+auth_handler = AuthHandler()
 organization_router = APIRouter()
 
 
@@ -18,8 +21,13 @@ def organization_get():
 
 
 @organization_router.get("/api/organizations/skills")
-def organization_get_skills(user_id):
+def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_organizations_skills(user_id)
+
+@organization_router.get("/api/organization/users")
+def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
+
+    return get_users(user_id)
 
 
 @organization_router.post("/api/organizations/signup_token")
