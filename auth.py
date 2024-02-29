@@ -8,7 +8,8 @@ from datetime import datetime, timedelta
 class AuthHandler():
     security = HTTPBearer()
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    secret = 'SECRET'
+    access_secret = 'SECRET'
+    refresh_secret = 'REFRESH'
 
     def get_password_hash(self, password):
         return self.pwd_context.hash(password)
@@ -16,37 +17,39 @@ class AuthHandler():
     def verify_password(self, plain_password, hashed_password):
         return self.pwd_context.verify(plain_password, hashed_password)
 
-    def encode_token(self, user_id):
+    def encode_token(self, user_id, secret, expires_delta):
         payload = {
-            'exp': datetime.utcnow() + timedelta(days=0, seconds=10),
+            'exp': datetime.utcnow() + expires_delta,
             'iat': datetime.utcnow(),
             'sub': user_id
         }
         return jwt.encode(
             payload,
-            self.secret,
+            secret,
             algorithm='HS256'
         )
 
-    def decode_token(self, token):
+    def decode_token(self, token, secret):
         try:
-            payload = jwt.decode(token, self.secret, algorithms=['HS256'])
+            payload = jwt.decode(token, secret, algorithms=['HS256'])
             return payload['sub']
         except jwt.ExpiredSignatureError:
-            raise HTTPException(status_code=401, detail='Signature has expired')
+            raise HTTPException(status_code=401, detail='Token has expired')
         except jwt.InvalidTokenError as e:
             raise HTTPException(status_code=401, detail='Invalid token')
 
     def auth_wrapper(self, auth: HTTPAuthorizationCredentials = Security(security)):
-        return self.decode_token(auth.credentials)
+        return self.decode_token(auth.credentials, self.access_secret)
 
-    def refresh_token(self, token):
-        try:
-            payload = jwt.decode(token, self.secret, algorithms=['HS256'], options={"verify_exp": False})
-            user_id = payload['sub']
-            return self.encode_token(user_id)
-        except jwt.InvalidTokenError as e:
-            raise HTTPException(status_code=401, detail='Invalid token')
+    def refresh_token(self, refresh_token):
+        return self.decode_token(refresh_token, self.refresh_secret)
+
+    def generate_tokens(self, user_id):
+        access_token = self.encode_token(user_id, self.access_secret, timedelta(seconds=20))
+        refresh_token = self.encode_token(user_id, self.refresh_secret, timedelta(seconds=40))
+        return access_token, refresh_token
 
     def refresh_auth_wrapper(self, auth: HTTPAuthorizationCredentials = Security(security)):
-        return self.refresh_token(auth.credentials)
+        user_id = self.refresh_token(auth.credentials)
+        access_token, _ = self.generate_tokens(user_id)
+        return access_token

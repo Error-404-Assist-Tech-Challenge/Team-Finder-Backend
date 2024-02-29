@@ -20,7 +20,8 @@ class AuthResponse(BaseModel):
     org_name: str
     hq_address: str
     roles: List[str]
-    token: str
+    access_token: str
+    refresh_token: str
 
 
 class EmployeeCreate(BaseModel):
@@ -33,3 +34,7 @@ class EmployeeCreate(BaseModel):
 class UserLogin(BaseModel):
     email: str
     password: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
