@@ -31,11 +31,11 @@ def get_skills_by_users_id(user_id):
     user_skills = db.get_user_skills()
     skills = db.get_skills(organization_id)
     user_skills_list = []
-    for key in user_skills:
-        user_skill = user_skills[key]
+    for user_skill in user_skills:
         if user_skill.get("user_id") == user_id:
             user_skill_id = user_skill.get("skill_id")
-            skill_name = skills.get(user_skill_id, {}).get("name")
+            skill = skills[user_skill_id]
+            skill_name = skill.get("name")
             user_skill["skill_name"] = skill_name
             user_skills_list.append(user_skill)
     user_skills_list.sort(key=lambda x: x.get("skill_name", "").lower())

@@ -26,12 +26,12 @@ def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
 
 @organization_router.get("/api/organization/users")
 def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
-
     return get_users(user_id)
 
 
 @organization_router.post("/api/organizations/signup_token")
 def signup_token_create(org_id: UUID):
+    print(org_id)
     return create_signup_token(org_id)
 
 
