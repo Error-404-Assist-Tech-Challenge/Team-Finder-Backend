@@ -36,7 +36,7 @@ class Skills(Base):
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
-    author_id = Column(UUID, ForeignKey("Users.id"), nullable=False)
+    author_id = Column(UUID, ForeignKey("users.id"), nullable=False)
     org_id = Column(UUID, ForeignKey("organizations.id"), nullable=False)
 
     @staticmethod
@@ -58,7 +58,7 @@ class Skills(Base):
 class UserSkills(Base):
     __tablename__ = "user_skills"
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("Users.id"), primary_key=True, nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), primary_key=True, nullable=False)
     skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"), primary_key=True, nullable=False)
     level = Column(Integer, nullable=False)
     experience = Column(Integer, nullable=False)

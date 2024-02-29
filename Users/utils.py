@@ -53,6 +53,10 @@ def create_admin(data):
         if org_roles[key].get("name") == "admin":
             db.create_user_role(user_id=user_id, role_id=org_roles[key].get("id"))
 
+    admin_obj["org_name"] = user_data.get("org_name")
+    admin_obj["hq_address"] = user_data.get("hq_address")
+    admin_obj["roles"] = ["admin"]
+
     return admin_obj, error
 
 
@@ -84,6 +88,11 @@ def create_employee(data):
     else:
         return False, "Sign up token invalid"
 
+    org_data = db.get_organization(org_id)
+    employee_obj["org_name"] = org_data.get("name")
+    employee_obj["hq_address"] = org_data.get("hq_address")
+    employee_obj["roles"] = ["employee"]
+
     return employee_obj, error
 
 
@@ -113,11 +122,11 @@ def login_user(data):
                     org_data = db.get_organization(user_data.get("org_id"))
                     org_roles = db.get_organization_roles()
                     user_roles = db.user_roles_get(user_data.get("id"))
+
                     user_role_names = []
-                    for role in user_roles:
-                        id = user_roles[role]
-                        if org_roles.get(id):
-                            user_role_names.append(org_roles.get(id).get("name"))
+                    for role_id in user_roles:
+                        if org_roles.get(role_id):
+                            user_role_names.append(org_roles.get(role_id).get("name"))
 
                     if not user_role_names:
                         user_role_names.append("employee")
