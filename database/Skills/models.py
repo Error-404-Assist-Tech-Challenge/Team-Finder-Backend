@@ -66,17 +66,16 @@ class UserSkills(Base):
 
     @staticmethod
     def serialize_user_skills(user_skills):
-        serialized_user_skills = {}
-        index = 0
+        serialized_user_skills = []
         for user_skill in user_skills:
-            serialized_user_skills[index] = {
+            user_skill = {
                 "user_id": str(user_skill.user_id),
                 "skill_id": str(user_skill.skill_id),
                 "level": str(user_skill.level),
                 "experience": str(user_skill.experience),
                 "created_at": str(user_skill.created_at)
             }
-            index += 1
+            serialized_user_skills.append(user_skill)
         return serialized_user_skills
 
 #DEPARTMENT_SKILLS
