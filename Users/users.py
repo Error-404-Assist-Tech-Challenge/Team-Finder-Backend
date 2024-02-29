@@ -21,7 +21,7 @@ def admin_create(user_data: AdminCreate):
         raise HTTPException(status_code=409, detail="User with this email already exists")
 
 
-@user_router.post("/api/users/refresh_token", response_model=TokenResponse)
+@user_router.get("/api/users/refresh_token", response_model=TokenResponse)
 def refresh_token(token: str = Depends(auth_handler.refresh_auth_wrapper)):
     if not token:
         raise HTTPException(status_code=401, detail="Invalid or missing refresh token")
