@@ -36,7 +36,6 @@ def create_admin(data):
     user_data["id"] = user_id
     created_at = datetime.utcnow()
     hashed_password = auth_handler.get_password_hash(user_data.get("password"))
-
     db.create_organization(organization_id=org_id,
                            name=user_data.get("org_name"),
                            hq_address=user_data.get("hq_address"),

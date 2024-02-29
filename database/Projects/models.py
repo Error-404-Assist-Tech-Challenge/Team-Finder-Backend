@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, TIMESTAMP, ForeignKey, INTEGER, Boolean
+from sqlalchemy import Column, String, DateTime, TIMESTAMP, ForeignKey, INTEGER, Boolean
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from database.db import Base
 
@@ -11,18 +11,18 @@ class Projects(Base):
     name = Column(String, nullable=False)
     org_id = Column(UUID, ForeignKey("organizations.id"), nullable=False)
     period = Column(String, nullable=False)
-    start_date = Column(TIMESTAMP, nullable=False)
-    deadline_date = Column(TIMESTAMP, nullable=False)
+    start_date = Column(DateTime, nullable=False)
+    deadline_date = Column(DateTime, nullable=False)
     status = Column(String, nullable=False)
     description = Column(String, nullable=False)
-    tech_stack = Column[ARRAY(String, dimensions=1)]
+    tech_stack = Column(ARRAY(String), nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
 
     @staticmethod
     def serialize_projects(projects):
-        serialize_projects = {}
+        serialized_projects = {}
         for project in projects:
-            project[str(project.id)] = {
+            serialized_projects[str(project.id)] = {
                 "id": str(project.id),
                 "name": str(project.name),
                 "org_id": str(project.org_id),
@@ -31,10 +31,11 @@ class Projects(Base):
                 "deadline_date": str(project.deadline_date),
                 "status": str(project.status),
                 "description": str(project.description),
-                "tech_stack": str(project.tech_stack),
+                "tech_stack": [str(tech) for tech in project.tech_stack],
                 "created_at": str(project.created_at)
             }
-        return serialize_projects
+        return serialized_projects
+
 
 #PROJECT ASSIGNMENTS
 
@@ -88,7 +89,7 @@ class Project_members(Base):
         return serialize_project_members
 
 #USER TEAM ROLES
-class User_team_roles(Base):
+class  User_team_roles(Base):
     __tablename__ = "user_team_roles"
 
     user_id = Column(UUID, ForeignKey("users.id"), primary_key=True, nullable=False)

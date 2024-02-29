@@ -5,7 +5,6 @@ from datetime import datetime
 #ORGANIZATIONS MODEL
 
 class Organization(BaseModel):
-    admin_id: UUID
     name: str
     hq_address: str
     created_at: datetime = datetime.now().isoformat()
