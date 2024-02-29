@@ -55,6 +55,7 @@ def create_admin(data):
     admin_obj["org_name"] = user_data.get("org_name")
     admin_obj["hq_address"] = user_data.get("hq_address")
     admin_obj["roles"] = ["admin"]
+    del admin_obj["created_at"], admin_obj["org_id"]
 
     return admin_obj, error
 
@@ -91,6 +92,7 @@ def create_employee(data):
     employee_obj["org_name"] = org_data.get("name")
     employee_obj["hq_address"] = org_data.get("hq_address")
     employee_obj["roles"] = ["employee"]
+    del employee_obj["created_at"], employee_obj["org_id"]
 
     return employee_obj, error
 
@@ -114,8 +116,8 @@ def login_user(data):
             user_data = users_data[key]
 
             if auth_handler.verify_password(login_data.get("password"), user_data.get("password")):
-                login_data["id"] = user_data.get("id")
                 login_data["name"] = user_data.get("name")
+                login_data["id"] = user_data.get("id")
 
                 if user_data.get("org_id"):
                     org_data = db.get_organization(user_data.get("org_id"))
@@ -131,7 +133,6 @@ def login_user(data):
                         user_role_names.append("employee")
 
                     login_data["roles"] = user_role_names
-                    login_data["org_id"] = user_data.get("org_id")
                     login_data["org_name"] = org_data.get("name")
                     login_data["hq_address"] = org_data.get("hq_address")
                     return login_data, False
@@ -141,3 +142,29 @@ def login_user(data):
                 return login_data, "Incorrect password"
 
     return login_data, "Incorrect email"
+
+
+def get_user(id):
+    users_data = db.get_users()
+    user_data = users_data.get(id)
+
+    org_roles = db.get_organization_roles()
+    user_roles = db.user_roles_get(user_data.get("id"))
+
+    user_role_names = []
+    for role_id in user_roles:
+        if org_roles.get(role_id):
+            user_role_names.append(org_roles.get(role_id).get("name"))
+
+    if not user_role_names:
+        user_role_names.append("employee")
+
+    org_data = db.get_organization(user_data.get("org_id"))
+
+    user_data["roles"] = user_role_names
+    user_data["org_name"] = org_data.get("name")
+    user_data["hq_address"] = org_data.get("hq_address")
+
+    del user_data["id"], user_data["password"], user_data["created_at"], user_data["org_id"]
+
+    return user_data

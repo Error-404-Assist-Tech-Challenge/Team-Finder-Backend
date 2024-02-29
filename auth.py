@@ -42,14 +42,11 @@ class AuthHandler():
         return self.decode_token(auth.credentials, self.access_secret)
 
     def refresh_token(self, refresh_token):
-        return self.decode_token(refresh_token, self.refresh_secret)
+        user_id = self.decode_token(refresh_token, self.refresh_secret)
+        access_token, _ = self.generate_tokens(user_id)
+        return access_token, user_id
 
     def generate_tokens(self, user_id):
-        access_token = self.encode_token(user_id, self.access_secret, timedelta(seconds=20))
-        refresh_token = self.encode_token(user_id, self.refresh_secret, timedelta(seconds=40))
+        access_token = self.encode_token(user_id, self.access_secret, timedelta(seconds=10))
+        refresh_token = self.encode_token(user_id, self.refresh_secret, timedelta(seconds=30))
         return access_token, refresh_token
-
-    def refresh_auth_wrapper(self, auth: HTTPAuthorizationCredentials = Security(security)):
-        user_id = self.refresh_token(auth.credentials)
-        access_token, _ = self.generate_tokens(user_id)
-        return access_token

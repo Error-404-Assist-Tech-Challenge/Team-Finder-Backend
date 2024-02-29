@@ -12,16 +12,12 @@ class AdminCreate(BaseModel):
 
 
 class AuthResponse(BaseModel):
-    id: UUID
     name: str
     email: str
-    password: str
-    org_id: UUID
     org_name: str
     hq_address: str
     roles: List[str]
     access_token: str
-    refresh_token: str
 
 
 class EmployeeCreate(BaseModel):
@@ -34,7 +30,3 @@ class EmployeeCreate(BaseModel):
 class UserLogin(BaseModel):
     email: str
     password: str
-
-
-class TokenResponse(BaseModel):
-    access_token: str
