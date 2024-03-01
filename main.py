@@ -27,7 +27,7 @@ from Projects.project_tech_stack_skills import project_tech_stack_skills_router
 
 app = FastAPI()
 
-origins = ["http://localhost:5173"]
+origins = ["http://localhost:5173", "https://jubilant-waffle-j9rp64qr47hp49r-5173.app.github.dev"]
 
 app.add_middleware(
     CORSMiddleware,
