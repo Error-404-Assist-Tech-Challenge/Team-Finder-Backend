@@ -41,13 +41,13 @@ def get_skills_by_users_id(user_id):
     user_skills_list.sort(key=lambda x: x.get("skill_name", "").lower())
     return user_skills_list
 
-def create_user_skills(data):
+def create_user_skills(data, user_id):
     user_skill_data = data.model_dump()
-    db.create_user_skills(user_id=user_skill_data.get("user_id"),
+    db.create_user_skills(user_id=user_id,
                     skill_id=user_skill_data.get("skill_id"),
-                    level=user_skill_data.get("level"),
+                    level="0",
                     created_at=user_skill_data.get("created_at"),
-                    experience=user_skill_data.get("experience"))
+                    experience="0")
 
     return user_skill_data
 
