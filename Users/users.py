@@ -65,6 +65,6 @@ def user_login(user_data: UserLogin, response: Response):
         access_token, refresh_token = auth_handler.generate_tokens(login_obj.get("id"))
         del login_obj["id"]
         login_obj["access_token"] = access_token
-        response.set_cookie(key="refresh_token", value=refresh_token, secure=True, httponly=True, domain="localhost", samesite="none")
+        response.set_cookie(key="refresh_token", value=refresh_token, secure=True, httponly=True, domain=".koyeb.app", path="/api", samesite=None)
 
     return login_obj
