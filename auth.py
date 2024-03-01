@@ -47,6 +47,6 @@ class AuthHandler():
         return access_token, user_id
 
     def generate_tokens(self, user_id):
-        access_token = self.encode_token(user_id, self.access_secret, timedelta(seconds=10))
-        refresh_token = self.encode_token(user_id, self.refresh_secret, timedelta(seconds=30))
+        access_token = self.encode_token(user_id, self.access_secret, timedelta(seconds=20))
+        refresh_token = self.encode_token(user_id, self.refresh_secret, timedelta(minutes=1))
         return access_token, refresh_token
