@@ -27,7 +27,7 @@ from Projects.project_tech_stack_skills import project_tech_stack_skills_router
 
 app = FastAPI()
 
-origins = ["http://localhost:5173"]
+origins = ["http://localhost:5173", "https://api-team-finder.koyeb.app"]
 
 app.add_middleware(
     CORSMiddleware,
