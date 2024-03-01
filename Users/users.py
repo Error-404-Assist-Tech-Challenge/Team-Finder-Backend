@@ -16,7 +16,7 @@ def admin_create(user_data: AdminCreate, response: Response):
         access_token, refresh_token = auth_handler.generate_tokens(admin_obj.get("id"))
         del admin_obj["id"]
         admin_obj["access_token"] = access_token
-        response.set_cookie(key="refresh_token", value=refresh_token, secure=True, httponly=True, samesite=None)
+        response.set_cookie(key="refresh_token", value=refresh_token, secure=True, httponly=True, domain=".koyeb.app", path="/api", samesite="none")
 
         return admin_obj
     else:
@@ -49,7 +49,7 @@ def employee_create(user_data: EmployeeCreate, response: Response):
         access_token, refresh_token = auth_handler.generate_tokens(employee_obj.get("id"))
         del employee_obj["id"]
         employee_obj["access_token"] = access_token
-        response.set_cookie(key="refresh_token", value=refresh_token, secure=True, httponly=True, samesite=None)
+        response.set_cookie(key="refresh_token", value=refresh_token, secure=True, httponly=True, domain=".koyeb.app", path="/api", samesite="none")
 
         return employee_obj
     else:
