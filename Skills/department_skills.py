@@ -1,7 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from Skills.models import Department_skills
 from Skills.utils import create_department_skill, get_department_skills, update_department_skills
+from auth import AuthHandler
 
+auth_handler = AuthHandler()
 department_skills_router = APIRouter()
 
 
