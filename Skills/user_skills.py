@@ -19,7 +19,7 @@ def user_skills_get(user_id: str = Depends(auth_handler.auth_wrapper)):
 
 
 @user_skills_router.put("/api/skills/user", response_model=UpdateSkills)
-def updating_user_skills(user_skill_data: List[UpdateSkills], user_id: str = Depends(auth_handler.auth_wrapper)):
+def updating_user_skills(user_skill_data: UpdateSkills, user_id: str = Depends(auth_handler.auth_wrapper)):
     return update_user_skills(user_skill_data, user_id)
 
 

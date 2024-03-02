@@ -56,14 +56,12 @@ def create_user_skills(data, user_id):
 
 
 def update_user_skills(data, user_id):
-    updated_user_skills = {}
-    for user_skill_data in data:
-        user_skill_dict = user_skill_data.model_dump()
-        db.update_user_skill(user_id=user_id,
-                             skill_id=user_skill_dict.get("skill_id"),
-                             level=user_skill_dict.get("level"),
-                             experience=user_skill_dict.get("experience"))
-        updated_user_skills = user_skill_dict
+    user_skill_data = data.model_dump()
+    db.update_user_skill(user_id=user_id,
+                         skill_id=user_skill_data.get("skill_id"),
+                         level=user_skill_data.get("level"),
+                         experience=user_skill_data.get("experience"))
+    updated_user_skills = user_skill_data
     return updated_user_skills
 
 #SKILL_CATEGORIES
