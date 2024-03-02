@@ -106,6 +106,7 @@ class SignUpTokens(Base):
         for token in tokens:
             serialized_tokens.append({
                 "id": str(token.id),
+                "org_id": str(token.org_id),
                 "expires_at": str(token.expires_at)
             })
 

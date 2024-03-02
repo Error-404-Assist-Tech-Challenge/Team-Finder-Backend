@@ -48,3 +48,10 @@ def signup_tokens_get(user_id: str = Depends(auth_handler.auth_wrapper)):
 
     return get_organization_signup_tokens(user_id)
 
+
+@organization_router.get("/api/organizations/verify_signup_token")
+def signup_token_verify(id: str):
+    response, error = verify_signup_token(id)
+    if error:
+        raise HTTPException(status_code=401, detail=error)
+    return response

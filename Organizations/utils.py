@@ -119,4 +119,24 @@ def create_signup_token(user_id):
 def get_organization_signup_tokens(user_id):
     user_data = db.get_user(user_id)
     tokens = db.get_org_signup_tokens(user_data.get("org_id"))
+    tokens = [{k: v for k, v in token.items() if k != 'org_id'} for token in tokens]
     return tokens
+
+
+def verify_signup_token(id):
+    tokens = db.get_signup_tokens()
+    format = "%Y-%m-%d %H:%M:%S"
+    current_time = datetime.utcnow()
+
+    for token in tokens:
+        token_expiry = datetime.strptime(token["expires_at"], format)
+        if token.get("id") == id:
+            if token_expiry > current_time:
+                org_data = db.get_organization(token.get("org_id"))
+                token["org_name"] = org_data.get("name")
+                del token["org_id"]
+                del token["expires_at"]
+                return token, None
+            else:
+                return None, "Expired token"
+    return None, "Invalid token"
