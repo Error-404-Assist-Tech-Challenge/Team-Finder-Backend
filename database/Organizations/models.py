@@ -102,11 +102,11 @@ class SignUpTokens(Base):
 
     @staticmethod
     def serialize_tokens(tokens):
-        serialized_tokens = {}
+        serialized_tokens = []
         for token in tokens:
-            serialized_tokens[str(token.id)] = {
-                "org_id": str(token.org_id),
+            serialized_tokens.append({
+                "id": str(token.id),
                 "expires_at": str(token.expires_at)
-            }
+            })
 
         return serialized_tokens

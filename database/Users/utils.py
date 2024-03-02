@@ -20,3 +20,13 @@ def get_users(session):
         error = str(e.__dict__['orig'])
         print(error)
         return []
+
+
+def get_user(session, id):
+    try:
+        user = session.query(Users).filter_by(id=id).first()
+        return user.serialize()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return []
