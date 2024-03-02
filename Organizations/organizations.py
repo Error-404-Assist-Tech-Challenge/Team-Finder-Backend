@@ -1,10 +1,9 @@
-from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
+from typing import List
 
 from auth import AuthHandler
-from Organizations.models import Organization
+from Organizations.models import Organization, OrganizationMember
 from Organizations.utils import *
-from Users.utils import get_users
 
 auth_handler = AuthHandler()
 organization_router = APIRouter()
@@ -25,9 +24,9 @@ def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_organizations_skills(user_id)
 
 
-@organization_router.get("/api/organization/users")
-def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
-    return get_users(user_id)
+@organization_router.get("/api/organization/users", response_model=List[OrganizationMember])
+def organization_get_skills(admin_id: str = Depends(auth_handler.auth_wrapper)):
+    return get_org_users(admin_id)
 
 
 @organization_router.post("/api/organizations/signup_token")
