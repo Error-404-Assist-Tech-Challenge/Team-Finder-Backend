@@ -8,26 +8,6 @@ auth_handler = AuthHandler()
 pwd_context = CryptContext(schemes=["bcrypt"])
 
 
-def get_users(user_id):
-    all_users = db.get_users()
-    organization_id = all_users[user_id].get("org_id")
-    users = db.get_organization_users(organization_id)
-    users_roles = db.user_roles_get(user_id)
-    organization_roles = db.get_organization_roles()
-    for key in users:
-        user = users[key]
-        user["user_roles"] = []
-        for user_role in users_roles:
-            current_role_id = user_role
-            current_role_user = users_roles[user_role]
-            if current_role_user == user.get("id"):
-                for organization_role in organization_roles:
-                    current_organ_role = organization_roles[organization_role]
-                    if current_organ_role.get("id") == current_role_id:
-                        user["user_roles"].append(current_organ_role.get("name"))
-    return users
-
-
 def create_admin(data):
     user_data = data.model_dump()
     org_roles = db.get_organization_roles()

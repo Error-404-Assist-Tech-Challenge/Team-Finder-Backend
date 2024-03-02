@@ -18,6 +18,34 @@ def create_user_role(data):
     return user_role_data
 
 
+#ORGANIZATION MEMBERS
+def get_org_users(admin_id):
+    admin = db.get_user(admin_id)
+    org_id = admin.get("org_id")
+    users = db.get_organization_users(org_id)
+    org_roles = db.get_organization_roles()
+    org_users = []
+
+    for key in users:
+        user = users[key]
+        del user["password"], user["org_id"]
+
+        user_roles = db.user_roles_get(user.get("id"))
+
+        user_role_names = []
+        for role_id in user_roles:
+            if org_roles.get(role_id):
+                user_role_names.append(org_roles.get(role_id).get("name"))
+
+        if not user_role_names:
+            user_role_names.append("employee")
+
+        user["roles"] = user_role_names
+        org_users.append(user)
+
+    return org_users
+
+
 #ORGANIZATIONS
 def get_organizations():
     organizations = db.get_organizations()
@@ -78,21 +106,26 @@ def get_organization_roles():
     return user_roles
 
 
-def create_organization_user_role(data, admin_id):
+def create_organization_user_role(data):
     role_data = data.model_dump()
-    admin_data = db.get_user(admin_id)
     org_roles = db.get_organization_roles()
     user_roles = db.user_roles_get(str(role_data.get("user_id")))
+
+    user_role_names = []
+    for role_id in user_roles:
+        if org_roles.get(role_id):
+            user_role_names.append(org_roles.get(role_id).get("name"))
 
     for key in org_roles:
         if org_roles[key].get("name") == role_data.get("role_name"):
             if not user_roles.get(key):
                 role_id = key
+                user_role_names.append(org_roles[key].get("name"))
                 db.create_user_role(user_id=role_data.get("user_id"), role_id=role_id)
             else:
                 return None, f"User already has the {role_data.get('role_name')} role"
 
-    return role_data, None
+    return {"user_id": role_data.get("user_id"), "roles": user_role_names}, None
 
 
 #TEAM_ROLES

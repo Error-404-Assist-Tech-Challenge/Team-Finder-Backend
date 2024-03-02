@@ -1,16 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from auth import AuthHandler
-from Organizations.models import RoleCreate, RoleData
+from Organizations.models import RoleCreate, RoleResponse
 from Organizations.utils import *
 
 auth_handler = AuthHandler()
 organization_roles_router = APIRouter()
 
 
-@organization_roles_router.post("/api/organizations/roles", response_model=RoleCreate)
+@organization_roles_router.post("/api/organizations/roles", response_model=RoleResponse)
 def organization_user_role_create(data: RoleCreate, admin_id: str = Depends(auth_handler.auth_wrapper)):
-    data, error = create_organization_user_role(data, admin_id)
+    data, error = create_organization_user_role(data)
     if error:
         raise HTTPException(status_code=409, detail=error)
     return data
