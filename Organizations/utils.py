@@ -37,9 +37,6 @@ def get_org_users(admin_id):
             if org_roles.get(role_id):
                 user_role_names.append(org_roles.get(role_id).get("name"))
 
-        if not user_role_names:
-            user_role_names.append("employee")
-
         user["roles"] = user_role_names
         org_users.append(user)
 
