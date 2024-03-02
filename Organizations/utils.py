@@ -134,6 +134,7 @@ def verify_signup_token(id):
             if token_expiry > current_time:
                 org_data = db.get_organization(token.get("org_id"))
                 token["org_name"] = org_data.get("name")
+                token["hq_address"] = org_data.get("hq_address")
                 del token["org_id"]
                 del token["expires_at"]
                 return token, None
