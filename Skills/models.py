@@ -22,8 +22,7 @@ class UserSkills(BaseModel):
     created_at: datetime = datetime.now().isoformat()
 
 class UpdateSkills(BaseModel):
-    user_id: str
-    skill_id: str
+    skill_id: UUID
     level: int
     experience: int
 

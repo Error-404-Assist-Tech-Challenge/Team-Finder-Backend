@@ -256,9 +256,14 @@ class DataBase:
                                       experience=experience)
 
     @staticmethod
-    def get_user_skills():
+    def get_user_skills(user_id):
         with session_scope() as session:
-            return get_user_skills(session=session)
+            all_user_skills = get_user_skills(session=session)
+            returned_user_skills = []
+            for user_skill in all_user_skills:
+                if user_skill.get("user_id") == user_id:
+                    returned_user_skills.append(user_skill)
+            return returned_user_skills
 
     @staticmethod
     def update_user_skill(user_id, level, experience, skill_id):

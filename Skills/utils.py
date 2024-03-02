@@ -3,8 +3,10 @@ from database.db import db
 
 #SKILLS
 
-def get_skills():
-    skills = db.get_skills()
+def get_skills(user_id):
+    users = db.get_users()
+    organization_id = users[user_id]
+    skills = db.get_skills(organization_id)
     return skills
 
 
@@ -28,16 +30,17 @@ def create_skills(data):
 def get_skills_by_users_id(user_id):
     all_users = db.get_users()
     organization_id = all_users[user_id].get("org_id")
-    user_skills = db.get_user_skills()
+    user_skills = db.get_user_skills(user_id)
     skills = db.get_skills(organization_id)
     user_skills_list = []
     for user_skill in user_skills:
         if user_skill.get("user_id") == user_id:
             user_skill_id = user_skill.get("skill_id")
-            skill = skills[user_skill_id]
-            skill_name = skill.get("name")
-            user_skill["skill_name"] = skill_name
-            user_skills_list.append(user_skill)
+            if skills[user_skill_id]:
+                skill = skills[user_skill_id]
+                skill_name = skill.get("name")
+                user_skill["skill_name"] = skill_name
+                user_skills_list.append(user_skill)
     user_skills_list.sort(key=lambda x: x.get("skill_name", "").lower())
     return user_skills_list
 
@@ -46,17 +49,16 @@ def create_user_skills(data, user_id):
     db.create_user_skills(user_id=user_id,
                     skill_id=user_skill_data.get("skill_id"),
                     level="0",
-                    created_at=user_skill_data.get("created_at"),
-                    experience="0")
+                    experience="0",
+                    created_at=user_skill_data.get("created_at"))
 
     return user_skill_data
 
 
-def update_user_skills(data):
+def update_user_skills(data, user_id):
     updated_user_skills = {}
     for user_skill_data in data:
         user_skill_dict = user_skill_data.model_dump()
-        user_id = user_skill_dict.get("user_id")
         db.update_user_skill(user_id=user_id,
                              skill_id=user_skill_dict.get("skill_id"),
                              level=user_skill_dict.get("level"),
