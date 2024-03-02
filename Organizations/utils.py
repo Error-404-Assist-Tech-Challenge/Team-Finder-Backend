@@ -104,15 +104,19 @@ def create_team_role(data):
 
 
 #SIGNUP_TOKENS
-def create_signup_token(org_id):
+def create_signup_token(user_id):
+    user_data = db.get_user(user_id)
     format = "%Y-%m-%d %H:%M:%S"
     current_time = datetime.utcnow().strftime(format)
     expires_at = datetime.strptime(current_time, format) + timedelta(hours=12)
     id = secrets.token_urlsafe(16)
-    token = db.create_signup_token(id, org_id, expires_at)
-    return token
+
+    token, error = db.create_signup_token(id, user_data.get("org_id"), expires_at)
+
+    return token, error
 
 
-def get_organization_signup_tokens(org_id):
-    tokens = db.get_org_signup_tokens(org_id)
+def get_organization_signup_tokens(user_id):
+    user_data = db.get_user(user_id)
+    tokens = db.get_org_signup_tokens(user_data.get("org_id"))
     return tokens

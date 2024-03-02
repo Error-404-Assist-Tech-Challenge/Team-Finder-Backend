@@ -64,6 +64,11 @@ class DataBase:
             return get_users(session=session)
 
     @staticmethod
+    def get_user(id):
+        with session_scope() as session:
+            return get_user(session=session, id=id)
+
+    @staticmethod
     def get_organization_users(organization_id):
         returned_users = {}
         users = db.get_users()
