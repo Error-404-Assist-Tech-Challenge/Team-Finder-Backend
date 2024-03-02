@@ -52,6 +52,10 @@ def get_skills_by_users_id(user_id):
                 skill_description = skill.get("description")
                 user_skill["skill_description"] = skill_description
 
+                # Put author in user skills
+                skill_author = skill.get("author_id")
+                user_skill["skill_author"] = all_users[skill_author].get("name")
+
                 user_skills_list.append(user_skill)
     user_skills_list.sort(key=lambda x: x.get("skill_name", "").lower())
     return user_skills_list
