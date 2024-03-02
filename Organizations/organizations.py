@@ -1,10 +1,9 @@
 from uuid import UUID
-
 from fastapi import APIRouter, Depends, HTTPException
+from auth import AuthHandler
 from Organizations.models import Organization
 from Organizations.utils import *
 from Users.utils import get_users
-from auth import AuthHandler
 
 auth_handler = AuthHandler()
 organization_router = APIRouter()
