@@ -32,14 +32,26 @@ def get_skills_by_users_id(user_id):
     organization_id = all_users[user_id].get("org_id")
     user_skills = db.get_user_skills(user_id)
     skills = db.get_skills(organization_id)
+    skill_categories = get_skill_categories(organization_id)
     user_skills_list = []
     for user_skill in user_skills:
         if user_skill.get("user_id") == user_id:
             user_skill_id = user_skill.get("skill_id")
             if skills[user_skill_id]:
                 skill = skills[user_skill_id]
+
+                #Put skill category in user skills
+                for skill_category in skill_categories:
+                    current_skill_category = skill_categories[skill_category]
+                    if current_skill_category.get("id") == skill.get("category_id"):
+                        user_skill["category_name"] = current_skill_category.get("name")
+                # Put name in user skills
                 skill_name = skill.get("name")
                 user_skill["skill_name"] = skill_name
+                # Put description in user skills
+                skill_description = skill.get("description")
+                user_skill["skill_description"] = skill_description
+
                 user_skills_list.append(user_skill)
     user_skills_list.sort(key=lambda x: x.get("skill_name", "").lower())
     return user_skills_list
@@ -66,8 +78,8 @@ def update_user_skills(data, user_id):
 
 #SKILL_CATEGORIES
 
-def get_skill_categories(user_id):
-    skill_categories = db.get_skill_categories(user_id)
+def get_skill_categories(organization_id):
+    skill_categories = db.get_skill_categories(organization_id)
     return skill_categories
 
 
