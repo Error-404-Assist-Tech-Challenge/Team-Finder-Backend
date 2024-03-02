@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Literal
 from uuid import UUID
 from datetime import datetime
 
@@ -17,9 +18,13 @@ class UserRole(BaseModel):
     role_id: UUID
 
 #ORGANIZATION_ROLES MODEL
-class Organization_roles(BaseModel):
+class RoleData(BaseModel):
     id: UUID
     name: str
+
+class RoleCreate(BaseModel):
+    user_id: UUID
+    role_name: Literal['admin', 'dept_manager', 'proj_manager']
 
 #TEAM_ROLES
 class Team_roles(BaseModel):

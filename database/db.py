@@ -150,6 +150,7 @@ class DataBase:
                     returned_user_roles[role_id] = user_id
             return returned_user_roles
 
+
     #ORGANIZATION_ROLES
     @staticmethod
     def create_organization_role(id, name):

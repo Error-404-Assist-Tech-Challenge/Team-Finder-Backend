@@ -78,12 +78,21 @@ def get_organization_roles():
     return user_roles
 
 
-def create_organization_role(data):
-    organization_role_data = data.model_dump()
-    db.create_organization_role(id=organization_role_data.get("id"),
-                        name=organization_role_data.get("name"))
+def create_organization_user_role(data, admin_id):
+    role_data = data.model_dump()
+    admin_data = db.get_user(admin_id)
+    org_roles = db.get_organization_roles()
+    user_roles = db.user_roles_get(str(role_data.get("user_id")))
 
-    return organization_role_data
+    for key in org_roles:
+        if org_roles[key].get("name") == role_data.get("role_name"):
+            if not user_roles.get(key):
+                role_id = key
+                db.create_user_role(user_id=role_data.get("user_id"), role_id=role_id)
+            else:
+                return None, f"User already has the {role_data.get('role_name')} role"
+
+    return role_data, None
 
 
 #TEAM_ROLES
