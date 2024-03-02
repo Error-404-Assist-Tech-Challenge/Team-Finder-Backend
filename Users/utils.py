@@ -70,11 +70,11 @@ def create_employee(data):
     signup_token = db.get_signup_token(token)
 
     if signup_token:
-        org_id = signup_token[token].get("org_id")
+        org_id = signup_token[0].get("org_id")
         format = "%Y-%m-%d %H:%M:%S"
         current_time = datetime.utcnow()
 
-        if datetime.strptime(signup_token[token].get("expires_at"), format) > current_time:
+        if datetime.strptime(signup_token[0].get("expires_at"), format) > current_time:
             employee_obj, error = db.create_employee(name=user_data.get("name"),
                                                      email=user_data.get("email"),
                                                      password=hashed_password,
