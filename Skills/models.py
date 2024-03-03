@@ -26,6 +26,9 @@ class UpdateSkills(BaseModel):
     level: int
     experience: int
 
+class RemoveSkill(BaseModel):
+    skill_id: UUID
+
 #SKILL_CATEGORIES
 
 class Skill_categories(BaseModel):

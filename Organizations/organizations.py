@@ -24,6 +24,11 @@ def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_organizations_skills(user_id)
 
 
+@organization_router.get("/api/organizations/skills/unused")
+def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
+    return get_unused_organization_skills(user_id)
+
+
 @organization_router.get("/api/organization/users", response_model=List[OrganizationMember])
 def organization_get_skills(admin_id: str = Depends(auth_handler.auth_wrapper)):
     return get_org_users(admin_id)

@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends
-from Skills.models import UserSkills, UpdateSkills
-from Skills.utils import create_user_skills, get_skills_by_users_id, update_user_skills
+from Skills.models import UserSkills, UpdateSkills, RemoveSkill
+from Skills.utils import create_user_skills, get_skills_by_users_id, update_user_skills, remove_user_skill
 from auth import AuthHandler
 
 auth_handler = AuthHandler()
@@ -16,6 +16,11 @@ def create_user_skill_route(user_skill_data: UserSkills, user_id: str = Depends(
 @user_skills_router.get("/api/skills/user")
 def user_skills_get(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_skills_by_users_id(user_id)
+
+
+@user_skills_router.delete("/api/skills/user")
+def user_skills_get(user_skill_data: RemoveSkill, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return remove_user_skill(user_skill_data, user_id)
 
 
 @user_skills_router.put("/api/skills/user", response_model=UpdateSkills)
