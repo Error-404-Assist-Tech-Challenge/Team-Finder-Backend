@@ -64,12 +64,16 @@ def create_user_skills(data, user_id):
     user_skill_data = data.model_dump()
     db.create_user_skills(user_id=user_id,
                     skill_id=user_skill_data.get("skill_id"),
-                    level="0",
-                    experience="0",
+                    level="1",
+                    experience="1",
                     created_at=user_skill_data.get("created_at"))
 
     return user_skill_data
 
+def remove_user_skill(data, user_id):
+    skill_data = data.model_dump()
+    db.remove_user_skill(user_id=user_id,
+                         skill_id=skill_data.get("skill_id"))
 
 def update_user_skills(data, user_id):
     user_skill_data = data.model_dump()

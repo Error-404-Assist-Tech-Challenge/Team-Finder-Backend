@@ -279,6 +279,13 @@ class DataBase:
                                      skill_id=skill_id,
                                      level=level,
                                      experience=experience)
+    @staticmethod
+    def remove_user_skill(user_id, skill_id):
+        with session_scope() as session:
+            return remove_user_skill(session=session,
+                                     user_id=user_id,
+                                     skill_id=skill_id)
+
 
     # SKILL_CATEGORIES
     @staticmethod
