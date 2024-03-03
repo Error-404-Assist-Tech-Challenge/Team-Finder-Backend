@@ -19,12 +19,9 @@ class OrganizationMember(BaseModel):
     roles: List[str]
 
 class ModifiedSkill(BaseModel):
-    dept_id: UUID
     category_id: UUID
-    org_id: UUID
     name: str
     description: str
-    author_id: UUID
     created_at: datetime = datetime.now().isoformat()
 
 
