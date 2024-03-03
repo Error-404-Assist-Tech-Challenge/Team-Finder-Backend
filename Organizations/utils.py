@@ -52,6 +52,26 @@ def get_organizations():
     return organizations
 
 
+def get_unused_organization_skills(user_id):
+    already_owned_skills = set()
+    unused_skills = []
+
+    users = db.get_users()
+    organization_id = users[user_id].get("org_id")
+    all_org_skills = db.get_skills(organization_id)
+    user_skills = db.get_user_skills(user_id)
+
+    for user_skill in user_skills:
+        skill_id = user_skill.get("skill_id")
+        already_owned_skills.add(skill_id)
+
+    for skill_id, skill_info in all_org_skills.items():
+        if skill_id not in already_owned_skills:
+            unused_skills.append({"value": skill_id, "label": skill_info.get("name")})
+
+    return unused_skills
+
+
 def get_organizations_skills(user_id):
     returned_skills = []
     users = db.get_users()
