@@ -120,6 +120,20 @@ class DataBase:
                                        created_at=created_at,
                                        organization_id=organization_id)
 
+
+    @staticmethod
+    def update_organization_skill(dept_id, category_id, org_id, name, description, author_id, created_at):
+        with session_scope() as session:
+            return update_organization_skill(session=session,
+                                       dept_id=dept_id,
+                                       category_id=category_id,
+                                       org_id=org_id,
+                                       name=name,
+                                       description=description,
+                                       author_id=author_id,
+                                       created_at=created_at)
+
+
     @staticmethod
     def get_organizations():
         with session_scope() as session:
