@@ -36,15 +36,13 @@ def create_organization(session, name, hq_address, created_at, organization_id):
         print(error)
         return error
 
-def update_organization_skill(session, dept_id, category_id, org_id, name, description, author_id, created_at):
+def update_organization_skill(session, category_id, name,org_id, description, created_at):
     try:
         modified_skill = session.query(Skills).filter(Skills.org_id == org_id).first()
         if modified_skill:
-            modified_skill.dept_id = dept_id
             modified_skill.category_id = category_id
             modified_skill.name = name
             modified_skill.description = description
-            modified_skill.author_id = author_id
             modified_skill.created_at = created_at
             session.commit()
             return modified_skill
