@@ -81,8 +81,7 @@ def update_user_skills(data, user_id):
                          skill_id=user_skill_data.get("skill_id"),
                          level=user_skill_data.get("level"),
                          experience=user_skill_data.get("experience"))
-    updated_user_skills = user_skill_data
-    return updated_user_skills
+    return user_skill_data
 
 #SKILL_CATEGORIES
 
