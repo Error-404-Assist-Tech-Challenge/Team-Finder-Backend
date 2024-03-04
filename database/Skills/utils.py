@@ -72,7 +72,6 @@ def update_user_skill(session, user_id, level, experience, skill_id):
 def remove_user_skill(session, user_id, skill_id):
     try:
         user_skill = session.query(UserSkills).filter(UserSkills.user_id == user_id, UserSkills.skill_id == skill_id).first()
-        print(user_skill)
         if user_skill:
             session.delete(user_skill)
             session.commit()

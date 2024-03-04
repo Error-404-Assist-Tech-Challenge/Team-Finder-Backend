@@ -162,12 +162,16 @@ class DataBase:
                     returned_user_roles[role_id] = user_id
             return returned_user_roles
 
+    @staticmethod
+    def remove_user_role(user_id, role_id):
+        with session_scope() as session:
+            return remove_user_role(session=session, user_id=user_id, role_id=role_id)
 
     #ORGANIZATION_ROLES
     @staticmethod
-    def create_organization_role(id, name):
+    def create_organization_role(organization_role_id, name):
         with session_scope() as session:
-            return create_organization_role(session=session, id=id, name=name)
+            return create_organization_role(session=session, organization_role_id=organization_role_id, name=name)
 
     @staticmethod
     def get_organization_roles():
