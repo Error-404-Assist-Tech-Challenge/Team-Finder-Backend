@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import secrets
 
 
-#USER_ROLES
+# USER_ROLES
 def get_user_roles(user_id):
     user_roles = db.user_roles_get(user_id)
     return user_roles
@@ -18,7 +18,7 @@ def create_user_role(data):
     return user_role_data
 
 
-#ORGANIZATION MEMBERS
+# ORGANIZATION MEMBERS
 def get_org_users(admin_id):
     admin = db.get_user(admin_id)
     org_id = admin.get("org_id")
@@ -43,7 +43,7 @@ def get_org_users(admin_id):
     return org_users
 
 
-#ORGANIZATIONS
+# ORGANIZATIONS
 def get_organizations():
     organizations = db.get_organizations()
     return organizations
@@ -127,7 +127,7 @@ def create_organization(data):
     return organization_data
 
 
-#ORGANIZATION_ROLES
+# ORGANIZATION_ROLES
 def get_organization_roles():
     user_roles = db.get_organization_roles()
     return user_roles
@@ -155,7 +155,7 @@ def create_organization_user_role(data):
     return {"user_id": role_data.get("user_id"), "roles": user_role_names}, None
 
 
-#TEAM_ROLES
+# TEAM_ROLES
 def get_team_roles():
     team_roles = db.get_team_roles()
     return team_roles
@@ -172,7 +172,7 @@ def create_team_role(data):
     return team_role_data
 
 
-#SIGNUP_TOKENS
+# SIGNUP_TOKENS
 def create_signup_token(user_id):
     user_data = db.get_user(user_id)
     format = "%Y-%m-%d %H:%M:%S"

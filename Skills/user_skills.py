@@ -19,7 +19,7 @@ def user_skills_get(user_id: str = Depends(auth_handler.auth_wrapper)):
 
 
 @user_skills_router.delete("/api/skills/user")
-def user_skills_get(user_skill_data: RemoveSkill, user_id: str = Depends(auth_handler.auth_wrapper)):
+def user_skills_delete(user_skill_data: RemoveSkill, user_id: str = Depends(auth_handler.auth_wrapper)):
     return remove_user_skill(user_skill_data, user_id)
 
 

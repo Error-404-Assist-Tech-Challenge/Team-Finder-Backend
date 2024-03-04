@@ -372,7 +372,10 @@ class DataBase:
     @staticmethod
     def skill_department_update(dept_id, skill_id, new_dept_id, new_skill_id):
         with session_scope() as session:
-            return update_department_skill(session=session, dept_id=dept_id, skill_id=skill_id, new_dept_id=new_dept_id,
+            return update_department_skill(session=session,
+                                           dept_id=dept_id,
+                                           skill_id=skill_id,
+                                           new_dept_id=new_dept_id,
                                            new_skill_id=new_skill_id)
 
 #PROJECTS===============================================================================================================
