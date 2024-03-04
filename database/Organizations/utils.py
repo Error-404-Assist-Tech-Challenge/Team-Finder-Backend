@@ -4,9 +4,9 @@ from database.Organizations.models import *
 from database.Skills.models import Skills
 
 #ORGANIZATION_ROLES
-def create_organization_role(session, id, name):
+def create_organization_role(session, organization_role_id, name):
     try:
-        obj = Organization_roles(id=id, name=name)
+        obj = Organization_roles(id=organization_role_id, name=name)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
@@ -14,18 +14,16 @@ def create_organization_role(session, id, name):
         print(error)
         return error
 
-
 def get_organization_roles(session):
     try:
-        roles = session.query(Organization_roles).all()
-        return Organization_roles.serialize_organization_roles(roles)
+        organization_roles = session.query(Organization_roles).all()
+        return Organization_roles.serialize_organization_roles(organization_roles)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
         return error
 
-
-#ORGANIZATIONS
+# ORGANIZATIONS
 def create_organization(session, name, hq_address, created_at, organization_id):
     try:
         obj = Organization(name=name, hq_address=hq_address, created_at=created_at, id=organization_id)
@@ -35,6 +33,7 @@ def create_organization(session, name, hq_address, created_at, organization_id):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
 
 def update_organization_skill(session, category_id, name,org_id, description, created_at):
     try:
@@ -52,7 +51,6 @@ def update_organization_skill(session, category_id, name,org_id, description, cr
         error = str(e.__dict__['orig'])
         print(error)
         return error
-
 
 
 def get_organizations(session):
@@ -75,8 +73,7 @@ def get_organization(session, id):
         return error
 
 
-
-#USER_ROLES
+# USER_ROLES
 def create_user_role(session, user_id, role_id):
     try:
         obj = UserRole(user_id=user_id, role_id=role_id)
@@ -98,7 +95,21 @@ def get_user_roles(session, user_id):
         return error
 
 
-#TEAM_ROLES
+def remove_user_role(session, user_id, role_id):
+    try:
+        removed_role = session.query(UserRole).filter(UserRole.user_id == user_id,
+                                                      UserRole.role_id == role_id).first()
+        session.delete(removed_role)
+        session.commit()
+        return removed_role
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+
+# TEAM_ROLES
 def create_team_role(session, id, name, org_id):
     try:
         obj = TeamRoles(id=id, name=name, org_id=org_id)
@@ -108,6 +119,7 @@ def create_team_role(session, id, name, org_id):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
 
 def get_team_roles(session):
     try:
@@ -119,7 +131,7 @@ def get_team_roles(session):
         return error
 
 
-#SIGNUP_TOKENS
+# SIGNUP_TOKENS
 def create_signup_token(session, id, org_id, expires_at):
     try:
         token = SignUpTokens(id=id, org_id=org_id, expires_at=expires_at)

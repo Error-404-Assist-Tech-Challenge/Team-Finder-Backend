@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 
 from auth import AuthHandler
-from Organizations.models import Organization, OrganizationMember, ModifiedSkill
+from Organizations.models import Organization, OrganizationMember, ModifiedSkill, RemoveRole
 from Organizations.utils import *
 
 auth_handler = AuthHandler()

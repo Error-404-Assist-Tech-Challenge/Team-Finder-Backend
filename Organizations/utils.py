@@ -17,6 +17,11 @@ def create_user_role(data):
 
     return user_role_data
 
+def delete_user_role(data):
+    removed_data = data.model_dump()
+    db.remove_user_role(user_id=removed_data.get("user_id"),
+                        role_id=removed_data.get("role_id"))
+    return removed_data
 
 # ORGANIZATION MEMBERS
 def get_org_users(admin_id):
