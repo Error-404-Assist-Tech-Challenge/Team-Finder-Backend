@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 
 from auth import AuthHandler
-from Organizations.models import Organization, OrganizationMember
+from Organizations.models import Organization, OrganizationMember, ModifiedSkill
 from Organizations.utils import *
 
 auth_handler = AuthHandler()
@@ -19,9 +19,23 @@ def organization_get():
     return get_organizations()
 
 
+# ORGANIZATION SKILL ENDPOINTS
 @organization_router.get("/api/organizations/skills")
 def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_organizations_skills(user_id)
+
+
+@organization_router.get("/api/organizations/skills/unused")
+def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
+    return get_unused_organization_skills(user_id)
+
+
+@organization_router.put("/api/organizations/skills")
+def organization_get_skills(modified_skill_data: ModifiedSkill, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return update_organization_skill(modified_skill_data, user_id)
+
+
+# ORGANIZATION USERS
 
 
 @organization_router.get("/api/organization/users", response_model=List[OrganizationMember])

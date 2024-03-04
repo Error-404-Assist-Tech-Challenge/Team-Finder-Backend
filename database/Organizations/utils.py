@@ -1,7 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
 
 from database.Organizations.models import *
-
+from database.Skills.models import Skills
 
 #ORGANIZATION_ROLES
 def create_organization_role(session, id, name):
@@ -35,6 +35,24 @@ def create_organization(session, name, hq_address, created_at, organization_id):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
+def update_organization_skill(session, category_id, name,org_id, description, created_at):
+    try:
+        modified_skill = session.query(Skills).filter(Skills.org_id == org_id).first()
+        if modified_skill:
+            modified_skill.category_id = category_id
+            modified_skill.name = name
+            modified_skill.description = description
+            modified_skill.created_at = created_at
+            session.commit()
+            return modified_skill
+        else:
+            return None
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
 
 
 def get_organizations(session):

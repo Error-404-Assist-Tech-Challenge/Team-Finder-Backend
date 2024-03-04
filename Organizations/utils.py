@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import secrets
 
 
-#USER_ROLES
+# USER_ROLES
 def get_user_roles(user_id):
     user_roles = db.user_roles_get(user_id)
     return user_roles
@@ -18,7 +18,7 @@ def create_user_role(data):
     return user_role_data
 
 
-#ORGANIZATION MEMBERS
+# ORGANIZATION MEMBERS
 def get_org_users(admin_id):
     admin = db.get_user(admin_id)
     org_id = admin.get("org_id")
@@ -43,11 +43,41 @@ def get_org_users(admin_id):
     return org_users
 
 
-#ORGANIZATIONS
+# ORGANIZATIONS
 def get_organizations():
     organizations = db.get_organizations()
     return organizations
 
+
+def get_unused_organization_skills(user_id):
+    already_owned_skills = set()
+    unused_skills = []
+
+    users = db.get_users()
+    organization_id = users[user_id].get("org_id")
+    all_org_skills = db.get_skills(organization_id)
+    user_skills = db.get_user_skills(user_id)
+
+    for user_skill in user_skills:
+        skill_id = user_skill.get("skill_id")
+        already_owned_skills.add(skill_id)
+
+    for skill_id, skill_info in all_org_skills.items():
+        if skill_id not in already_owned_skills:
+            unused_skills.append({"value": skill_id, "label": skill_info.get("name")})
+
+    return unused_skills
+
+def update_organization_skill(data, user_id):
+    modified_skill_data = data.model_dump()
+    users = db.get_users()
+    organization_id = users[user_id]
+    db.update_organization_skill(category_id=modified_skill_data.get("category_id"),
+                                 name=modified_skill_data.get("name"),
+                                 org_id=organization_id,
+                                 description=modified_skill_data.get("description"),
+                                 created_at=modified_skill_data.get("created_at"))
+    return modified_skill_data
 
 def get_organizations_skills(user_id):
     returned_skills = []
@@ -97,7 +127,7 @@ def create_organization(data):
     return organization_data
 
 
-#ORGANIZATION_ROLES
+# ORGANIZATION_ROLES
 def get_organization_roles():
     user_roles = db.get_organization_roles()
     return user_roles
@@ -125,7 +155,7 @@ def create_organization_user_role(data):
     return {"user_id": role_data.get("user_id"), "roles": user_role_names}, None
 
 
-#TEAM_ROLES
+# TEAM_ROLES
 def get_team_roles():
     team_roles = db.get_team_roles()
     return team_roles
@@ -142,7 +172,7 @@ def create_team_role(data):
     return team_role_data
 
 
-#SIGNUP_TOKENS
+# SIGNUP_TOKENS
 def create_signup_token(user_id):
     user_data = db.get_user(user_id)
     format = "%Y-%m-%d %H:%M:%S"

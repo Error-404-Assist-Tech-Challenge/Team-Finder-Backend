@@ -1,7 +1,8 @@
 from uuid import uuid4
 from database.db import db
 
-#SKILLS
+# SKILLS
+
 
 def get_skills(user_id):
     users = db.get_users()
@@ -25,7 +26,7 @@ def create_skills(data):
 
     return skill_data
 
-#USER_SKILLS
+# USER_SKILLS
 
 def get_skills_by_users_id(user_id):
     all_users = db.get_users()
@@ -40,7 +41,7 @@ def get_skills_by_users_id(user_id):
             if skills[user_skill_id]:
                 skill = skills[user_skill_id]
 
-                #Put skill category in user skills
+                # Put skill category in user skills
                 for skill_category in skill_categories:
                     current_skill_category = skill_categories[skill_category]
                     if current_skill_category.get("id") == skill.get("category_id"):
@@ -60,15 +61,23 @@ def get_skills_by_users_id(user_id):
     user_skills_list.sort(key=lambda x: x.get("skill_name", "").lower())
     return user_skills_list
 
+
 def create_user_skills(data, user_id):
     user_skill_data = data.model_dump()
     db.create_user_skills(user_id=user_id,
                     skill_id=user_skill_data.get("skill_id"),
-                    level="0",
-                    experience="0",
+                    level="1",
+                    experience="1",
                     created_at=user_skill_data.get("created_at"))
 
     return user_skill_data
+
+
+def remove_user_skill(data, user_id):
+    skill_data = data.model_dump()
+    db.remove_user_skill(user_id=user_id,
+                         skill_id=skill_data.get("skill_id"))
+    return skill_data
 
 
 def update_user_skills(data, user_id):
@@ -77,10 +86,10 @@ def update_user_skills(data, user_id):
                          skill_id=user_skill_data.get("skill_id"),
                          level=user_skill_data.get("level"),
                          experience=user_skill_data.get("experience"))
-    updated_user_skills = user_skill_data
-    return updated_user_skills
+    return user_skill_data
 
-#SKILL_CATEGORIES
+# SKILL_CATEGORIES
+
 
 def get_skill_categories(organization_id):
     skill_categories = db.get_skill_categories(organization_id)
@@ -99,6 +108,7 @@ def create_skill_categories(data):
 
     return skill_categories_data
 
+
 def update_skill_category(data):
     user_skill_category_dict = data.model_dump()
     db.update_skill_category(id=user_skill_category_dict.get("id"),
@@ -107,8 +117,7 @@ def update_skill_category(data):
                          modified_at=user_skill_category_dict.get("modified_at"))
     return user_skill_category_dict
 
-#DEPARTMENT_SKILLS
-
+# DEPARTMENT_SKILLS
 def get_department_skills():
     department_skills = db.get_department_skills()
     return department_skills
@@ -117,14 +126,8 @@ def get_department_skills():
 def create_department_skill(data):
     department_skills_data = data.model_dump()
 
-    db.skill_department_create(dept_id=department_skills_data.get("dept_id"), skill_id=department_skills_data.get("skill_id"))
+    db.create_department_skill(dept_id=department_skills_data.get("dept_id"),
+                               skill_id=department_skills_data.get("skill_id"))
 
     return department_skills_data
 
-def update_department_skills(data):
-    department_skills_data = data.model_dump()
-    db.skill_department_update(dept_id=department_skills_data.get("dept_id"),
-                               skill_id=department_skills_data.get("skill_id"),
-                               new_dept_id=department_skills_data.get("new_dept_id"),
-                               new_skill_id=department_skills_data.get("new_skill_id"))
-    return department_skills_data

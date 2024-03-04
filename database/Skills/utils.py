@@ -69,6 +69,22 @@ def update_user_skill(session, user_id, level, experience, skill_id):
         print(error)
         return error
 
+def remove_user_skill(session, user_id, skill_id):
+    try:
+        user_skill = session.query(UserSkills).filter(UserSkills.user_id == user_id, UserSkills.skill_id == skill_id).first()
+        print(user_skill)
+        if user_skill:
+            session.delete(user_skill)
+            session.commit()
+            return user_skill
+        else:
+            return None
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
 #DEPARTMENT_SKILLS
 def create_department_skill(session, dept_id, skill_id):
     try:
@@ -90,7 +106,6 @@ def get_department_skills(session):
         print(error)
         return error
 
-
 def update_department_skill(session, dept_id, skill_id, new_dept_id, new_skill_id):
     try:
         department_skill = session.query(Department_skills).filter(
@@ -99,12 +114,12 @@ def update_department_skill(session, dept_id, skill_id, new_dept_id, new_skill_i
         ).first()
 
         if department_skill:
-            if(not(dept_id == new_dept_id)):
+            if dept_id != new_dept_id:
                 department_skill.dept_id = new_dept_id
-            if (not (skill_id == new_skill_id)):
+            if skill_id != new_skill_id:
                 department_skill.skill_id = new_skill_id
+
             session.commit()
-            session.rollback()
             return department_skill
         else:
             return None
@@ -113,6 +128,7 @@ def update_department_skill(session, dept_id, skill_id, new_dept_id, new_skill_i
         session.rollback()
         print(error)
         return error
+
 
 
 

@@ -3,7 +3,7 @@ from uuid import UUID
 from datetime import datetime
 
 
-#SKILLS MODELS
+# SKILLS MODELS
 
 class Skills(BaseModel):
     dept_id: UUID
@@ -15,23 +15,30 @@ class Skills(BaseModel):
     created_at: datetime = datetime.now().isoformat()
 
 
-#USER_SKILLS MODELS
+# USER_SKILLS MODELS
 
 class UserSkills(BaseModel):
     skill_id: UUID
     created_at: datetime = datetime.now().isoformat()
+
 
 class UpdateSkills(BaseModel):
     skill_id: UUID
     level: int
     experience: int
 
-#SKILL_CATEGORIES
+
+class RemoveSkill(BaseModel):
+    skill_id: UUID
+
+# SKILL_CATEGORIES
+
 
 class Skill_categories(BaseModel):
     dept_id: UUID
     name: str
     created_at: datetime = datetime.now().isoformat()
+
 
 class Update_skill_category(BaseModel):
     id: UUID
@@ -39,10 +46,17 @@ class Update_skill_category(BaseModel):
     name: str
     modified_at: datetime = datetime.now().isoformat()
 
-#DEPARTMENT_SKILLS
+# DEPARTMENT_SKILLS
+
 
 class Department_skills(BaseModel):
     skill_id: UUID
     dept_id: UUID
     new_dept_id: UUID
     new_skill_id: UUID
+
+
+class AddDepartment(BaseModel):
+    skill_id: UUID
+    dept_id: UUID
+
