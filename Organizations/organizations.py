@@ -31,8 +31,8 @@ def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
 
 
 @organization_router.put("/api/organizations/skills")
-def organization_get_skills(modified_skill_data: ModifiedSkill, user_id: str = Depends(auth_handler.auth_wrapper)):
-    return update_organization_skill(modified_skill_data, user_id)
+def organization_get_skills(modified_skill_data: ModifiedSkill):
+    return update_organization_skill(modified_skill_data)
 
 
 # ORGANIZATION USERS

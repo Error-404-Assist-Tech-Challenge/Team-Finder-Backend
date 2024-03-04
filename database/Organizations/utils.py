@@ -35,9 +35,9 @@ def create_organization(session, name, hq_address, created_at, organization_id):
         return error
 
 
-def update_organization_skill(session, category_id, name,org_id, description, created_at):
+def update_organization_skill(session, category_id, name, description, created_at, skill_id):
     try:
-        modified_skill = session.query(Skills).filter(Skills.org_id == org_id).first()
+        modified_skill = session.query(Skills).filter(Skills.skill_id == skill_id).first()
         if modified_skill:
             modified_skill.category_id = category_id
             modified_skill.name = name

@@ -5,5 +5,3 @@ USER = os.environ["USER"]
 PASSWORD = os.environ["PASSWORD"]
 HOST = os.environ["HOST"]
 DB_PORT = os.environ["DB_PORT"]
-
-

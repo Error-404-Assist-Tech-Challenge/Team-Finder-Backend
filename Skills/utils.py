@@ -91,7 +91,9 @@ def update_user_skills(data, user_id):
 # SKILL_CATEGORIES
 
 
-def get_skill_categories(organization_id):
+def get_skill_categories(user_id):
+    users = db.get_users()
+    organization_id = users[user_id].get("org_id")
     skill_categories = db.get_skill_categories(organization_id)
     return skill_categories
 
@@ -102,11 +104,35 @@ def create_skill_categories(data):
     skill_categories_data["id"] = skill_categories_id
 
     db.create_skill_categories(name=skill_categories_data.get("name"),
-                           org_id=skill_categories_data.get("org_id"),
-                           created_at=skill_categories_data.get("created_at"),
-                           skill_categories_id=skill_categories_id)
+                               org_id=skill_categories_data.get("org_id"),
+                               created_at=skill_categories_data.get("created_at"),
+                               skill_categories_id=skill_categories_id)
 
     return skill_categories_data
+
+
+def get_unused_skill_categories(user_id):
+    returned_skill_categories = []
+    already_used_skill_categories = []
+    users = db.get_users()
+    organization_id = users[user_id].get("org_id")
+
+    org_skills = db.get_skills(organization_id)
+    org_skill_categories = db.get_skill_categories(organization_id)
+
+    for skill in org_skills:
+        current_skill = org_skills[skill]
+        already_used_skill_categories.append(current_skill.get("category_id"))
+
+    for skill_category in org_skill_categories:
+        if skill_category not in already_used_skill_categories:
+            current_skill_category = org_skill_categories[skill_category]
+            returned_custom_body = {
+                "value": skill_category,
+                "label": current_skill_category.get("name")
+            }
+            returned_skill_categories.append(returned_custom_body)
+    return returned_skill_categories
 
 
 def update_skill_category(data):

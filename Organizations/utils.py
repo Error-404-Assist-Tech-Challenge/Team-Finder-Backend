@@ -73,13 +73,11 @@ def get_unused_organization_skills(user_id):
 
     return unused_skills
 
-def update_organization_skill(data, user_id):
+def update_organization_skill(data):
     modified_skill_data = data.model_dump()
-    users = db.get_users()
-    organization_id = users[user_id]
     db.update_organization_skill(category_id=modified_skill_data.get("category_id"),
+                                 skill_id=modified_skill_data.get("skill_id"),
                                  name=modified_skill_data.get("name"),
-                                 org_id=organization_id,
                                  description=modified_skill_data.get("description"),
                                  created_at=modified_skill_data.get("created_at"))
     return modified_skill_data
