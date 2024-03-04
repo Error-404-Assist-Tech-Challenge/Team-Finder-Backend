@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from Skills.models import Department_skills
-from Skills.utils import create_department_skill, get_department_skills, update_department_skills
+from Skills.utils import create_department_skill, get_department_skills
 from auth import AuthHandler
 
 auth_handler = AuthHandler()
@@ -17,6 +17,4 @@ def department_skills_get():
     return get_department_skills()
 
 
-@department_skills_router.put("/api/skills/department")
-def department_skills_update(department_skill_data: Department_skills):
-    return update_department_skills(department_skill_data)
+

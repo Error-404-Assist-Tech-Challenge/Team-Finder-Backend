@@ -3,8 +3,8 @@ from typing import Literal, List
 from uuid import UUID
 from datetime import datetime
 
-#ORGANIZATIONS
 
+# ORGANIZATIONS
 class Organization(BaseModel):
     name: str
     hq_address: str
@@ -18,6 +18,7 @@ class OrganizationMember(BaseModel):
     created_at: datetime
     roles: List[str]
 
+
 class ModifiedSkill(BaseModel):
     category_id: UUID
     name: str
@@ -25,13 +26,13 @@ class ModifiedSkill(BaseModel):
     created_at: datetime = datetime.now().isoformat()
 
 
-#USER_ROLES
+# USER_ROLES
 class UserRole(BaseModel):
     user_id: UUID
     role_id: UUID
 
 
-#ORGANIZATION_ROLES
+# ORGANIZATION_ROLES
 class RoleData(BaseModel):
     id: UUID
     name: str
@@ -47,7 +48,7 @@ class RoleResponse(BaseModel):
     roles: List[str]
 
 
-#TEAM_ROLES
+# TEAM_ROLES
 class Team_roles(BaseModel):
     org_id: UUID
     name: str
