@@ -2,8 +2,10 @@ from uuid import uuid4
 from database.db import db
 
 #DEPARTMENTS
-def get_departments():
-    departments = db.get_department()
+def get_departments(user_id):
+    users = db.get_users()
+    organization_id = users[user_id]
+    departments = db.get_department(organization_id)
     return departments
 
 
