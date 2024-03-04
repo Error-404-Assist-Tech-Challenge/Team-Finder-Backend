@@ -35,7 +35,7 @@ class RemoveSkill(BaseModel):
 
 
 class Skill_categories(BaseModel):
-    dept_id: UUID
+    org_id: UUID
     name: str
     created_at: datetime = datetime.now().isoformat()
 

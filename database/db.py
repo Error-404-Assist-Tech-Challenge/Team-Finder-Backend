@@ -122,12 +122,12 @@ class DataBase:
 
 
     @staticmethod
-    def update_organization_skill(category_id, name, org_id, description, created_at):
+    def update_organization_skill(category_id, name, skill_id, description, created_at):
         with session_scope() as session:
             return update_organization_skill(session=session,
                                              category_id=category_id,
+                                             skill_id=skill_id,
                                              name=name,
-                                             org_id=org_id,
                                              description=description,
                                              created_at=created_at)
 

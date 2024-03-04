@@ -20,6 +20,7 @@ class OrganizationMember(BaseModel):
 
 
 class ModifiedSkill(BaseModel):
+    skill_id: UUID
     category_id: UUID
     name: str
     description: str
