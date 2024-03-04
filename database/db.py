@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from contextlib import contextmanager
 
-from database.config import USER, PASSWORD, HOST, PORT, DB_NAME
+from database.config import USER, PASSWORD, HOST, DB_PORT, DB_NAME
 
 Base = declarative_base()
 
@@ -12,7 +12,7 @@ from database.Departments.utils import *
 from database.Users.utils import *
 from database.Projects.utils import *
 
-engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}')
+engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{DB_PORT}/{DB_NAME}')
 
 
 @contextmanager
