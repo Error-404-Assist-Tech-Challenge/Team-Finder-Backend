@@ -217,17 +217,26 @@ class DataBase:
 
     # DEPARTMENT_MEMBERS
     @staticmethod
-    def create_department_member(dept_id, user_id, department_member_id):
+    def create_department_member(dept_id, user_id):
         with session_scope() as session:
             return create_department_member(session=session,
                                             dept_id=dept_id,
-                                            user_id=user_id,
-                                            department_member_id=department_member_id)
+                                            user_id=user_id)
 
     @staticmethod
-    def get_department_members():
+    def get_department_members(org_id):
         with session_scope() as session:
-            return get_department_members(session=session)
+            returned_members = []
+            all_department_members = get_department_members(session=session)
+            org_departments = db.get_department(org_id)
+            users = db.get_users()
+            for member in all_department_members:
+                member_dept_id = member.get("dept_id")
+                member_user_id = member.get("user_id")
+                if org_departments[member_dept_id].get("org_id") == org_id:
+                    member["user_name"] = users[member_user_id].get("name")
+                    returned_members.append(member)
+            return returned_members
 
 #SKILLS=================================================================================================================
 

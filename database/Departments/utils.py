@@ -24,9 +24,9 @@ def get_department(session):
         return error
 
 #DEPARTMENT_MEMBERS
-def create_department_member(session, dept_id, user_id, department_member_id):
+def create_department_member(session, dept_id, user_id):
     try:
-        obj = Department_members(dept_id=dept_id, user_id=user_id, id=department_member_id)
+        obj = Department_members(dept_id=dept_id, user_id=user_id)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
