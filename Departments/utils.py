@@ -9,6 +9,7 @@ def get_departments(user_id):
 
     departments = db.get_department(organization_id)
     all_dep_members = db.get_department_members(organization_id)
+    returned_departments = []
     for department in departments:
         current_department = departments[department]
         department_members = []
@@ -18,7 +19,8 @@ def get_departments(user_id):
                 department_members.append(dep_member.get("user_name"))
         current_department["department_members"] = department_members
         current_department["manager_name"] = users[current_department.get("manager_id")].get("name")
-    return departments
+        returned_departments.append(current_department)
+    return returned_departments
 
 
 def create_department(data):
