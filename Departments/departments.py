@@ -6,11 +6,17 @@ from auth import AuthHandler
 departments_router = APIRouter()
 auth_handler = AuthHandler()
 
+
 @departments_router.post("/api/departments", response_model=Department)
-def create_department_route(department_data: Department):
-    return create_department(department_data)
+def create_department_route(department_data: Department, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return create_department(department_data, user_id)
 
 
 @departments_router.get("/api/departments")
 def departments_get(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_departments(user_id)
+
+
+@departments_router.get("/api/departments/managers")
+def departments_get_managers(user_id: str = Depends(auth_handler.auth_wrapper)):
+    return get_departments_managers(user_id)

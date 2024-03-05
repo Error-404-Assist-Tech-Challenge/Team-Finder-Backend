@@ -20,6 +20,7 @@ def organization_user_role_create(data: RoleCreate, admin_id: str = Depends(auth
 def organization_roles_get():
     return get_organization_roles()
 
+
 @organization_roles_router.delete("/api/organizations/roles")
 def user_role_delete(removed_data: RemoveRole):
     return delete_user_role(removed_data)

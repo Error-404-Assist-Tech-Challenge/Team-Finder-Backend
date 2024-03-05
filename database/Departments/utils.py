@@ -2,10 +2,11 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from database.Departments.models import *
 
-#DEPARTMENTS
-def create_department(session, org_id, name, manager_id, created_at, department_id):
+
+# DEPARTMENTS
+def create_department(session, org_id, name, created_at, department_id):
     try:
-        obj = Department(org_id=org_id, name=name, manager_id=manager_id, created_at=created_at, id=department_id)
+        obj = Department(org_id=org_id, name=name, created_at=created_at, id=department_id)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:

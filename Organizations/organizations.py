@@ -5,6 +5,7 @@ from auth import AuthHandler
 from Organizations.models import Organization, OrganizationMember, ModifiedSkill, RemoveRole
 from Organizations.utils import *
 
+
 auth_handler = AuthHandler()
 organization_router = APIRouter()
 
