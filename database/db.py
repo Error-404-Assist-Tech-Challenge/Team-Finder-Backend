@@ -59,6 +59,17 @@ class DataBase:
                                user_id=user_id)
 
     @staticmethod
+    def create_dummy(name, email, password, created_at, org_id):
+        with session_scope() as session:
+            return create_user(session=session,
+                               name=name,
+                               email=email,
+                               password=password,
+                               created_at=created_at,
+                               org_id=org_id,
+                               user_id=zero_id)
+
+    @staticmethod
     def get_users():
         with session_scope() as session:
             return get_users(session=session)
@@ -230,10 +241,11 @@ class DataBase:
             return returned_departments
 
     @staticmethod
-    def update_department(name, dept_id):
+    def update_department(name, dept_id, manager_id):
         with session_scope() as session:
             return update_department(session=session,
                                      name=name,
+                                     manager_id=manager_id,
                                      dept_id=dept_id)
 
     @staticmethod
@@ -352,15 +364,19 @@ class DataBase:
     @staticmethod
     def get_skill_categories(organization_id):
         with session_scope() as session:
-            organization_skills = {}
+            organization_skills = []
 
             skill_categories = get_skill_categories(session=session)
 
             for skill_category in skill_categories:
                 current_category = skill_categories[skill_category]
                 if current_category.get("org_id") == organization_id:
-                    current_category_id = current_category.get("id")
-                    organization_skills[current_category_id] = current_category
+                    returned_body = {
+                        "label": current_category.get("name"),
+                        "value": current_category.get("id")
+                    }
+                    organization_skills.append(returned_body)
+
             return organization_skills
 
     @staticmethod

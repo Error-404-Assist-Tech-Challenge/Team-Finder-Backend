@@ -1,6 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
-
 from database.Departments.models import *
+from database.config import zero_id
 
 
 # DEPARTMENTS
@@ -25,14 +25,17 @@ def get_department(session):
         return error
 
 
-def update_department(session, dept_id, name):
+def update_department(session, dept_id, name, manager_id):
     try:
         department_info = session.query(Department).filter(
             Department.id == dept_id
         ).first()
-
-        if department_info:
+        if department_info == "":
             department_info.name = name
+            if manager_id:
+                department_info.manager_id = manager_id
+            else:
+                department_info.manager_id = zero_id
             session.commit()
             return department_info
         else:

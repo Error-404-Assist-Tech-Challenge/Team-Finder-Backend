@@ -38,7 +38,6 @@ def organization_get_skills(modified_skill_data: ModifiedSkill):
 
 # ORGANIZATION USERS
 
-
 @organization_router.get("/api/organization/users", response_model=List[OrganizationMember])
 def organization_get_skills(admin_id: str = Depends(auth_handler.auth_wrapper)):
     return get_org_users(admin_id)

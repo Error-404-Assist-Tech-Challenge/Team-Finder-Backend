@@ -130,7 +130,7 @@ def create_organization(data):
     organization_data = data.model_dump()
     organization_id = str(uuid4())
     organization_data["id"] = organization_id
-
+    db.create_dummy(name="DUMMY", email="email@gmail.com", password="12345", org_id=organization_id, created_at=organization_data.get("created_at"))
     db.create_organization(name=organization_data.get("name"),
                            hq_address=organization_data.get("hq_address"),
                            created_at=organization_data.get("created_at"),
