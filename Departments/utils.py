@@ -81,7 +81,6 @@ def get_available_department_members(user_id):
     users = db.get_users()
     organization_id = users[user_id]
 
-    for
 
     org_dep_members = db.get_department_members()
 
