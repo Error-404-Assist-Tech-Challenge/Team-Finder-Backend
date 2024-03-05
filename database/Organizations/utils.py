@@ -121,9 +121,35 @@ def create_team_role(session, id, name, org_id):
         return error
 
 
-def get_team_roles(session):
+def update_team_role(session, id, name):
     try:
-        team_roles = session.query(TeamRoles).all()
+        team_role = session.query(TeamRoles).filter_by(id=id).first()
+        if team_role:
+            team_role.name = name
+            return team_role
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def delete_team_role(session, id):
+    try:
+        team_role = session.query(TeamRoles).filter_by(id=id).first()
+        if team_role:
+            session.delete(team_role)
+        else:
+            return None, "Team role not found"
+        return "Team role deleted", None
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def get_team_roles(session, org_id):
+    try:
+        team_roles = session.query(TeamRoles).filter_by(org_id=org_id).all()
         return TeamRoles.serialize_team_roles(team_roles)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])

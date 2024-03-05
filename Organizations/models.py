@@ -55,6 +55,13 @@ class RoleResponse(BaseModel):
 
 
 # TEAM_ROLES
-class Team_roles(BaseModel):
-    org_id: UUID
+class TeamRole(BaseModel):
     name: str
+
+
+class TeamRoleUpdate(BaseModel):
+    id: UUID
+    name: str
+
+class TeamRoleDelete(BaseModel):
+    id: UUID

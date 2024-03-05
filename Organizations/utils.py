@@ -17,6 +17,7 @@ def create_user_role(data):
 
     return user_role_data
 
+
 def delete_user_role(data):
     removed_data = data.model_dump()
     all_org_roles = db.get_organization_roles()
@@ -27,6 +28,7 @@ def delete_user_role(data):
             db.remove_user_role(user_id=removed_data.get("user_id"),
                                 role_id=role_id)
     return removed_data
+
 
 # ORGANIZATION MEMBERS
 def get_org_users(admin_id):
@@ -78,6 +80,7 @@ def get_unused_organization_skills(user_id):
 
     return unused_skills
 
+
 def update_organization_skill(data):
     modified_skill_data = data.model_dump()
     db.update_organization_skill(category_id=modified_skill_data.get("category_id"),
@@ -86,6 +89,7 @@ def update_organization_skill(data):
                                  description=modified_skill_data.get("description"),
                                  created_at=modified_skill_data.get("created_at"))
     return modified_skill_data
+
 
 def get_organizations_skills(user_id):
     returned_skills = []
@@ -164,20 +168,40 @@ def create_organization_user_role(data):
 
 
 # TEAM_ROLES
-def get_team_roles():
-    team_roles = db.get_team_roles()
+def get_team_roles(admin_id):
+    user_data = db.get_user(admin_id)
+    team_roles = db.get_team_roles(user_data.get("org_id"))
+
+    for key in team_roles:
+        team_roles[key].pop("org_id")
+
     return team_roles
 
 
-def create_team_role(data):
+def create_team_role(data, admin_id):
     team_role_data = data.model_dump()
+    user_data = db.get_user(admin_id)
     team_role_id = str(uuid4())
-    team_role_data["id"] = team_role_id
-    db.create_team_role(id=team_role_data.get("id"),
-                        org_id=team_role_data.get("org_id"),
+    db.create_team_role(id=team_role_id,
+                        org_id=user_data.get("org_id"),
                         name=team_role_data.get("name"))
 
     return team_role_data
+
+
+def update_team_role(data):
+    team_role_data = data.model_dump()
+    db.update_team_role(id=team_role_data.get("id"),
+                        name=team_role_data.get("name"))
+
+    return team_role_data
+
+
+def delete_team_role(data):
+    team_role_data = data.model_dump()
+    response, error = db.delete_team_role(id=team_role_data.get("id"))
+
+    return response, error
 
 
 # SIGNUP_TOKENS

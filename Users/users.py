@@ -35,8 +35,6 @@ def refresh_token(refresh_token: str | None = Cookie(None)):
 
 @user_router.get("/api/users/protected")
 def protected(user_id: str = Depends(auth_handler.auth_wrapper)):
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Authentication failed")
     return {"user_id": user_id}
 
 
