@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from Organizations.models import UserRole, RemoveRole
+from Organizations.models import UserRole
 from Organizations.utils import *
 
 user_roles_router = APIRouter()
@@ -13,8 +13,3 @@ def create_user_role_route(user_role_data: UserRole):
 @user_roles_router.get("/api/organizations/user_roles")
 def user_roles_get(user_id):
     return get_user_roles(user_id)
-
-
-@user_roles_router.delete("/api/organizations/user_roles")
-def user_role_delete(removed_data: RemoveRole):
-    return delete_user_role(removed_data)

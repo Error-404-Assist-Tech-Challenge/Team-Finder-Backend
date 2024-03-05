@@ -228,16 +228,15 @@ class DataBase:
                                             user_id=user_id)
 
     @staticmethod
-    def get_department_members(org_id):
+    def get_department_members(dept_id):
         with session_scope() as session:
             returned_members = []
             all_department_members = get_department_members(session=session)
-            org_departments = db.get_department(org_id)
             users = db.get_users()
             for member in all_department_members:
                 member_dept_id = member.get("dept_id")
                 member_user_id = member.get("user_id")
-                if org_departments[member_dept_id].get("org_id") == org_id:
+                if member_dept_id == dept_id:
                     member["user_name"] = users[member_user_id].get("name")
                     returned_members.append(member)
             return returned_members

@@ -8,16 +8,10 @@ def get_departments(user_id):
     organization_id = users[user_id].get("org_id")
 
     departments = db.get_department(organization_id)
-    all_dep_members = db.get_department_members(organization_id)
     returned_departments = []
     for department in departments:
         current_department = departments[department]
-        department_members = []
-        for dep_member in all_dep_members:
-            member_dept_id = dep_member.get("dept_id")
-            if member_dept_id == department:
-                department_members.append(dep_member.get("user_name"))
-        current_department["department_members"] = department_members
+        current_department["department_members"] = db.get_department_members(department)
         current_department["manager_name"] = users[current_department.get("manager_id")].get("name")
         returned_departments.append(current_department)
     return returned_departments
@@ -40,8 +34,12 @@ def create_department(data):
 def get_department_members(user_id):
     users = db.get_users()
     organization_id = users[user_id].get("org_id")
-    members = db.get_department_members(organization_id)
-    return members
+    departments = db.get_department(organization_id)
+    for department in departments:
+        current_department = departments[department]
+        if current_department.get("manager_id") == user_id:
+            return db.get_department_members(department)
+
 
 
 def create_department_member(data):

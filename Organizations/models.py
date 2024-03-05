@@ -32,15 +32,16 @@ class UserRole(BaseModel):
     user_id: UUID
     role_id: UUID
 
-class RemoveRole(BaseModel):
-    user_id: UUID
-    role_id: UUID
-
 
 # ORGANIZATION_ROLES
 class RoleData(BaseModel):
     id: UUID
     name: str
+
+
+class RemoveRole(BaseModel):
+    user_id: UUID
+    role_name: Literal['admin', 'dept_manager', 'proj_manager']
 
 
 class RoleCreate(BaseModel):
