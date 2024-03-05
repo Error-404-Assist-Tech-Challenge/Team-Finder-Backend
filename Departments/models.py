@@ -11,13 +11,13 @@ class Department(BaseModel):
     created_at: datetime = datetime.now().isoformat()
 
 
-class Modified_department(BaseModel):
-    manager_id: Optional[str]
+class DepartmentUpdate(BaseModel):
+    manager_id: Optional[UUID]
     dept_id: UUID
     name: str
 
 
 # DEPARTMENT_MEMBERS
-class Department_member(BaseModel):
+class DepartmentMember(BaseModel):
     dept_id: UUID
     user_id: UUID

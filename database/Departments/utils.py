@@ -27,19 +27,13 @@ def get_department(session):
 
 def update_department(session, dept_id, name, manager_id):
     try:
-        department_info = session.query(Department).filter(
+        department = session.query(Department).filter(
             Department.id == dept_id
         ).first()
-        if department_info == "":
-            department_info.name = name
-            if manager_id:
-                department_info.manager_id = manager_id
-            else:
-                department_info.manager_id = zero_id
-            session.commit()
-            return department_info
-        else:
-            return None
+        department.name = name
+        department.manager_id = manager_id
+
+        return department.serialize()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         session.rollback()

@@ -31,6 +31,15 @@ class Department(Base):
     manager_id = Column(UUID, ForeignKey("users.id"))
     created_at = Column(TIMESTAMP, nullable=False)
 
+    def serialize(self):
+        return {
+                "id": self.id,
+                "org_id": self.org_id,
+                "name": self.name,
+                "manager_id": self.manager_id,
+                "created_at": self.created_at
+            }
+
     @staticmethod
     def serialize_departments(departments):
         serialize_department = {}
