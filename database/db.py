@@ -281,6 +281,13 @@ class DataBase:
         with session_scope() as session:
             return delete_department_members(session=session, dept_id=dept_id)
 
+
+    @staticmethod
+    def delete_department_member(dept_id, user_id):
+        with session_scope() as session:
+            return delete_department_member(session=session, dept_id=dept_id, user_id=user_id)
+
+
     #SKILLS=================================================================================================================
 
     @staticmethod

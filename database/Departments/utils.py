@@ -91,3 +91,17 @@ def delete_department_members(session, dept_id):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
+
+def delete_department_member(session, dept_id, user_id):
+    try:
+        member = session.query(Department_members).filter(Department_members.dept_id == dept_id,
+                                                          Department_members.user_id == user_id).first()
+        if member:
+            session.delete(member)
+            session.commit()
+        return member
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
