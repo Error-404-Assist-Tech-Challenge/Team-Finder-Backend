@@ -36,13 +36,22 @@ def create_department(data, user_id):
     department_data = data.model_dump()
     department_id = str(uuid4())
     department_data["id"] = department_id
-
-    db.create_department(name=department_data.get("name"),
+    name = department_data.get("name")
+    created_at = department_data.get("created_at")
+    db.create_department(name=name,
                          org_id=organization_id,
-                         created_at=department_data.get("created_at"),
+                         created_at=created_at,
                          department_id=department_id)
-
-    return department_data
+    returned_department = {
+        "name": name,
+        "id": department_id,
+        "org_id": organization_id,
+        "manager_id": "",
+        "department_members": [],
+        "manager_name": "",
+        "created_at": created_at,
+    }
+    return returned_department
 
 
 def update_department(data, user_id):
@@ -62,6 +71,7 @@ def delete_department(data):
     db.delete_department_members(dept_id=removed_department)
     db.delete_department_skills(dept_id=removed_department)
     return removed_department
+
 
 def get_departments_managers(user_id):
     managers_with_department = []
@@ -114,11 +124,16 @@ def get_available_department_members(user_id):
     return available_users
 
 
-def create_department_member(data):
+def create_department_member(data, user_id):
     department_member_data = data.model_dump()
-
-    db.create_department_member(dept_id=department_member_data.get("dept_id"),
-                                user_id=department_member_data.get("user_id"))
+    member_id = data.model_dump().get("user_id")
+    organization_id = db.get_user(user_id).get("org_id")
+    org_departments = db.get_department(organization_id)
+    for department in org_departments:
+        current_department = org_departments[department]
+        if current_department.get("manager_id") == user_id:
+            db.create_department_member(dept_id=current_department.get("id"),
+                                        user_id=member_id)
     return department_member_data
 
 
