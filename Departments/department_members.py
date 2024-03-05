@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from Departments.models import Department_member
+from Departments.models import DepartmentMember
 from Departments.utils import create_department_member, get_department_members, get_available_department_members
 from auth import AuthHandler
 
@@ -7,8 +7,8 @@ auth_handler = AuthHandler()
 department_members_router = APIRouter()
 
 
-@department_members_router.post("/api/departments/members", response_model=Department_member)
-def create_department_member_route(department_member_data: Department_member):
+@department_members_router.post("/api/departments/members", response_model=DepartmentMember)
+def create_department_member_route(department_member_data: DepartmentMember):
     return create_department_member(department_member_data)
 
 

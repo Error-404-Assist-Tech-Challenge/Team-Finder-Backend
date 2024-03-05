@@ -43,13 +43,14 @@ def create_department(data, user_id):
     return department_data
 
 
-def update_department(data):
+def update_department(data, user_id):
     department_data = data.model_dump()
 
-    db.update_department(name=department_data.get("name"),
-                         manager_id=department_data.get("manager_id"),
-                         dept_id=department_data.get("dept_id"))
-    return department_data
+    updated_dept = db.update_department(name=department_data.get("name"),
+                                        manager_id=department_data.get("manager_id"),
+                                        dept_id=department_data.get("dept_id"))
+
+    return updated_dept
 
 
 def delete_department(user_id):
