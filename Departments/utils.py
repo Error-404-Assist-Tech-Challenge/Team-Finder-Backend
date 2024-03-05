@@ -128,3 +128,20 @@ def create_department_member(data):
                                 user_id=department_member_data.get("user_id"))
     return department_member_data
 
+
+def delete_department_member(data, user_id):
+    user_info = data.model_dump()
+    delete_user = user_info.get("user_id")
+
+    organization_id = db.get_user(user_id).get("org_id")
+    org_departments = db.get_department(organization_id)
+
+    for department in org_departments:
+        current_department = org_departments[department]
+        department_members = db.get_department_members(current_department.get("id"))
+        for member in department_members:
+            member_id = member.get("user_id")
+            if member_id == str(delete_user):
+                db.delete_department_member(user_id=member_id,
+                                            dept_id=member.get("dept_id"))
+                return user_info
