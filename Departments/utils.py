@@ -79,10 +79,8 @@ def get_department_members(user_id):
 def get_available_department_members(user_id):
     unavailable_users = []
     available_users = []
-
     users = db.get_users()
     organization_id = users[user_id].get("org_id")
-
     org_users = db.get_organization_users(organization_id)
     org_departments = db.get_department(organization_id)
     for department in org_departments:
