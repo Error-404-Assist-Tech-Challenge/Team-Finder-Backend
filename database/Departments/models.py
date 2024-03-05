@@ -7,8 +7,8 @@ from database.db import Base
 class Department_members(Base):
     __tablename__ = "department_members"
 
-    dept_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False, primary_key=True)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    dept_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, primary_key=True)
     @staticmethod
     def serialize_department_members(members):
         returned_members = []
@@ -20,14 +20,15 @@ class Department_members(Base):
             returned_members.append(serialize_department_members)
         return returned_members
 
-#DEPARTMENTS
+
+# DEPARTMENTS
 class Department(Base):
     __tablename__ = "departments"
 
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
     org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
     name = Column(String, nullable=False)
-    manager_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    manager_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     created_at = Column(TIMESTAMP, nullable=False)
 
     @staticmethod

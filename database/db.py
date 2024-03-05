@@ -196,12 +196,11 @@ class DataBase:
 #DEPARTMENTS============================================================================================================
 
     @staticmethod
-    def create_department(name, org_id, manager_id, department_id, created_at):
+    def create_department(name, org_id, department_id, created_at):
         with session_scope() as session:
             return create_department(session=session,
                                      org_id=org_id,
                                      name=name,
-                                     manager_id=manager_id,
                                      created_at=created_at,
                                      department_id=department_id)
 
