@@ -8,8 +8,8 @@ department_members_router = APIRouter()
 
 
 @department_members_router.post("/api/departments/members", response_model=DepartmentMember)
-def create_department_member_route(department_member_data: DepartmentMember):
-    return create_department_member(department_member_data)
+def create_department_member_route(department_member_data: DepartmentMember, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return create_department_member(department_member_data, user_id)
 
 
 @department_members_router.get("/api/departments/members")

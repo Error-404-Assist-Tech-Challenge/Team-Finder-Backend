@@ -27,5 +27,4 @@ class Delete_member(BaseModel):
 
 # DEPARTMENT_MEMBERS
 class DepartmentMember(BaseModel):
-    dept_id: UUID
     user_id: UUID
