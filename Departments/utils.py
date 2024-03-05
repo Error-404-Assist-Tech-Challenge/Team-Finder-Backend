@@ -84,7 +84,6 @@ def get_available_department_members(user_id):
 
     org_dep_members = db.get_department_members()
 
-
 def create_department_member(data):
     department_member_data = data.model_dump()
 
