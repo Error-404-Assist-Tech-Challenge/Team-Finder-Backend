@@ -49,6 +49,15 @@ def get_departments_managers(user_id):
 
     for user in org_users:
         current_user = org_users[user]
+        if current_user.get("id") not in managers_with_department:
+            returned_body = {
+                "label": current_user.get("id"),
+                "value": current_user.get("name")
+            }
+            managers_available.append(returned_body)
+    return managers_available
+
+
 
 # DEPARTMENT_MEMBERS
 def get_department_members(user_id):
