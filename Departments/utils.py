@@ -65,9 +65,9 @@ def delete_department(user_id):
             department_id = current_department.get("id")
             db.delete_department(dept_id=department_id)
             db.delete_department_members(dept_id=department_id)
-            skills = db.delete_department_skills(dept_id=department_id)
-            print(skills)
+            db.delete_department_skills(dept_id=department_id)
             return department_id
+
 def get_departments_managers(user_id):
     managers_with_department = []
     managers_available = []
