@@ -109,8 +109,6 @@ def login_user(data):
                         if org_roles.get(role_id):
                             user_role_names.append(org_roles.get(role_id).get("name"))
 
-                    if not user_role_names:
-                        user_role_names.append("employee")
 
                     login_data["roles"] = user_role_names
                     login_data["org_name"] = org_data.get("name")
