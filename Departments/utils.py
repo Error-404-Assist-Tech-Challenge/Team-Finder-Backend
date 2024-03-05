@@ -24,7 +24,9 @@ def get_departments(user_id):
 
         returned_departments.append(department_info)
 
-    return returned_departments
+    sorted_departments = sorted(returned_departments, key=lambda x: x['name'])
+
+    return sorted_departments
 
 
 def create_department(data, user_id):
