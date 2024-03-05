@@ -43,6 +43,34 @@ def create_department(data, user_id):
     return department_data
 
 
+def update_department(data, user_id):
+    department_data = data.model_dump()
+
+    users = db.get_users()
+    organization_id = users[user_id].get("org_id")
+    departments = db.get_department(organization_id)
+    for department in departments:
+        current_department = departments[department]
+        if current_department.get("manager_id") == user_id:
+            department_id = current_department.get("id")
+            db.update_department(name=department_data.get("name"),
+                                 dept_id=department_id)
+            return department_data
+
+def delete_department(user_id):
+    users = db.get_users()
+    organization_id = users[user_id].get("org_id")
+
+    departments = db.get_department(organization_id)
+
+    for department in departments:
+        current_department = departments[department]
+        if current_department.get("manager_id") == user_id:
+            department_id = current_department.get("id")
+            db.delete_department(dept_id=department_id)
+            db.delete_department_members(dept_id=department_id)
+            skills = db.delete_department_skills(dept_id=department_id)
+            return department_id
 def get_departments_managers(user_id):
     managers_with_department = []
     managers_available = []
