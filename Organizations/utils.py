@@ -101,7 +101,6 @@ def get_organizations_skills(user_id):
     departments = db.get_department_skills_names(organization_id)
 
     for skill in skills:
-
         modified_skill = skills[skill]
         modified_skill["dept_name"] = []
         for user in users:
@@ -118,10 +117,9 @@ def get_organizations_skills(user_id):
                     modified_skill["dept_name"].append(current_department.get("dept_name"))
 
         for skill_category in skill_categories:
-            current_skill_category = skill_categories[skill_category]
-            current_skill_category_id = skill_categories[skill_category].get("id")
+            current_skill_category_id = skill_category.get("value")
             if modified_skill.get("category_id") == current_skill_category_id:
-                modified_skill["category_name"] = current_skill_category.get("name")
+                modified_skill["category_name"] = skill_category.get("label")
         returned_skills.append(modified_skill)
     return returned_skills
 
