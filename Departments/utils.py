@@ -39,7 +39,7 @@ def get_department_members(user_id):
         current_department = departments[department]
         if current_department.get("manager_id") == user_id:
             return db.get_department_members(department)
-        
+
 
 
 def create_department_member(data):
