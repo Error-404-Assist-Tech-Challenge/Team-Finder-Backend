@@ -9,15 +9,21 @@ def get_departments(user_id):
 
     departments = db.get_department(organization_id)
     returned_departments = []
-    for department in departments:
-        current_department = departments[department]
-        current_department_manager = current_department.get("manager_id")
-        current_department["department_members"] = db.get_department_members(department)
-        if current_department_manager is None:
-            current_department["manager_name"] = users[current_department_manager].get("name")
+
+    for department_id, department_info in departments.items():
+        department_members = db.get_department_members(department_id)
+        manager_id = department_info.get("manager_id")
+
+        if manager_id is not None:
+            manager_name = users.get(manager_id, {}).get("name", "")
         else:
-            current_department["manager_name"] = {}
-        returned_departments.append(current_department)
+            manager_name = ""
+
+        department_info["department_members"] = department_members
+        department_info["manager_name"] = manager_name
+
+        returned_departments.append(department_info)
+
     return returned_departments
 
 
@@ -69,6 +75,15 @@ def get_department_members(user_id):
         if current_department.get("manager_id") == user_id:
             return db.get_department_members(department)
 
+def get_available_department_members(user_id):
+    unavailable_users = []
+    available_users = []
+    users = db.get_users()
+    organization_id = users[user_id]
+
+    for
+
+    org_dep_members = db.get_department_members()
 
 
 def create_department_member(data):
