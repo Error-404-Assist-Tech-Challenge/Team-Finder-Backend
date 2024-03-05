@@ -42,6 +42,7 @@ def create_department(data, user_id):
 
     return department_data
 
+
 def get_departments_managers(user_id):
     managers_with_department = []
     managers_available = []
@@ -57,12 +58,11 @@ def get_departments_managers(user_id):
         current_user = org_users[user]
         if current_user.get("id") not in managers_with_department:
             returned_body = {
-                "label": current_user.get("id"),
-                "value": current_user.get("name")
+                "value": current_user.get("id"),
+                "label": current_user.get("name")
             }
             managers_available.append(returned_body)
     return managers_available
-
 
 
 # DEPARTMENT_MEMBERS
@@ -74,6 +74,7 @@ def get_department_members(user_id):
         current_department = departments[department]
         if current_department.get("manager_id") == user_id:
             return db.get_department_members(department)
+
 
 def get_available_department_members(user_id):
     unavailable_users = []
@@ -91,6 +92,7 @@ def get_available_department_members(user_id):
         if current_user.get("id") not in unavailable_users:
             available_users.append(current_user)
     return available_users
+
 
 def create_department_member(data):
     department_member_data = data.model_dump()
