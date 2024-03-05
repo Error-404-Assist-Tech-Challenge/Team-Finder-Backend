@@ -55,20 +55,13 @@ def update_department(data, user_id):
     return updated_dept
 
 
-def delete_department(user_id):
-    users = db.get_users()
-    organization_id = users[user_id].get("org_id")
+def delete_department(data):
+    removed_department = data.model_dump().get("dept_id")
 
-    departments = db.get_department(organization_id)
-
-    for department in departments:
-        current_department = departments[department]
-        if current_department.get("manager_id") == user_id:
-            department_id = current_department.get("id")
-            db.delete_department(dept_id=department_id)
-            db.delete_department_members(dept_id=department_id)
-            db.delete_department_skills(dept_id=department_id)
-            return department_id
+    db.delete_department(dept_id=removed_department)
+    db.delete_department_members(dept_id=removed_department)
+    db.delete_department_skills(dept_id=removed_department)
+    return removed_department
 
 def get_departments_managers(user_id):
     managers_with_department = []

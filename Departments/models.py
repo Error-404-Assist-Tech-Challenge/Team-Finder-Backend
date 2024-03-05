@@ -17,6 +17,10 @@ class DepartmentUpdate(BaseModel):
     name: str
 
 
+class Remove_department(BaseModel):
+    dept_id: UUID
+
+
 class Delete_member(BaseModel):
     user_id: UUID
 
