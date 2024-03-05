@@ -43,9 +43,8 @@ def get_skills_by_users_id(user_id):
 
                 # Put skill category in user skills
                 for skill_category in skill_categories:
-                    current_skill_category = skill_categories[skill_category]
-                    if current_skill_category.get("id") == skill.get("category_id"):
-                        user_skill["category_name"] = current_skill_category.get("name")
+                    if skill_category.get("value") == skill.get("category_id"):
+                        user_skill["category_name"] = skill_category.get("label")
                 # Put name in user skills
                 skill_name = skill.get("name")
                 user_skill["skill_name"] = skill_name
