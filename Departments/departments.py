@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from Departments.models import Department
-from Departments.utils import create_department, get_departments
+from Departments.utils import create_department, get_departments, get_departments_managers
 from auth import AuthHandler
 
 departments_router = APIRouter()
