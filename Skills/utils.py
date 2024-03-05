@@ -33,7 +33,7 @@ def get_skills_by_users_id(user_id):
     organization_id = all_users[user_id].get("org_id")
     user_skills = db.get_user_skills(user_id)
     skills = db.get_skills(organization_id)
-    skill_categories = get_skill_categories(organization_id)
+    skill_categories = get_skill_categories(user_id)
     user_skills_list = []
     for user_skill in user_skills:
         if user_skill.get("user_id") == user_id:
