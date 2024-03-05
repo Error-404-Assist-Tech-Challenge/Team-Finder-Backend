@@ -75,23 +75,15 @@ def get_department_members(user_id):
         if current_department.get("manager_id") == user_id:
             return db.get_department_members(department)
 
-
 def get_available_department_members(user_id):
     unavailable_users = []
     available_users = []
     users = db.get_users()
-    organization_id = users[user_id].get("org_id")
-    org_users = db.get_organization_users(organization_id)
-    org_departments = db.get_department(organization_id)
-    for department in org_departments:
-        dep_members = db.get_department_members(department)
-        for member in dep_members:
-            unavailable_users.append(member.get("user_id"))
-    for user in org_users:
-        current_user = org_users[user]
-        if current_user.get("id") not in unavailable_users:
-            available_users.append(current_user)
-    return available_users
+    organization_id = users[user_id]
+
+    for
+
+    org_dep_members = db.get_department_members()
 
 def create_department_member(data):
     department_member_data = data.model_dump()
