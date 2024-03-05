@@ -10,9 +10,7 @@ class Department(BaseModel):
 
 
 class Modified_department(BaseModel):
-    manager_id: UUID
     name: str
-    created_at: datetime = datetime.now().isoformat()
 
 # DEPARTMENT_MEMBERS
 class Department_member(BaseModel):

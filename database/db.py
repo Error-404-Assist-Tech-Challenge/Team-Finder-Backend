@@ -217,6 +217,18 @@ class DataBase:
                     returned_departments[current_department_id] = current_department
             return returned_departments
 
+    @staticmethod
+    def update_department(name, dept_id):
+        with session_scope() as session:
+            return update_department(session=session,
+                                     name=name,
+                                     dept_id=dept_id)
+
+    @staticmethod
+    def delete_department(dept_id):
+        with session_scope() as session:
+            return delete_department(session=session,
+                                     dept_id=dept_id)
 
     # DEPARTMENT_MEMBERS
     @staticmethod
@@ -239,6 +251,11 @@ class DataBase:
                     member["user_name"] = users[member_user_id].get("name")
                     returned_members.append(member)
             return returned_members
+
+    @staticmethod
+    def delete_department_members(dept_id):
+        with session_scope() as session:
+            return delete_department_members(session=session, dept_id=dept_id)
 
     #SKILLS=================================================================================================================
 
@@ -388,6 +405,11 @@ class DataBase:
                                            skill_id=skill_id,
                                            new_dept_id=new_dept_id,
                                            new_skill_id=new_skill_id)
+    @staticmethod
+    def delete_department_skills(dept_id):
+        with session_scope() as session:
+            return delete_department_skills(session=session,
+                                            dept_id=dept_id)
 
 #PROJECTS===============================================================================================================
 

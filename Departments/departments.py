@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from Departments.models import Department, Modified_department
-from Departments.utils import create_department, get_departments, get_departments_managers
+from Departments.utils import create_department, get_departments, get_departments_managers, update_department, delete_department
 from auth import AuthHandler
 
 departments_router = APIRouter()
@@ -16,9 +16,14 @@ def create_department_route(department_data: Department, user_id: str = Depends(
 def departments_get(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_departments(user_id)
 
+
 @departments_router.put("/api/departments")
-def departments_get(department_data: Department, user_id: str = Depends(auth_handler.auth_wrapper)):
-    return get_departments(user_id)
+def departments_update(department_data: Modified_department, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return update_department(department_data, user_id)
+
+@departments_router.delete("/api/departments")
+def departments_delete(user_id: str = Depends(auth_handler.auth_wrapper)):
+    return delete_department(user_id)
 
 
 @departments_router.get("/api/departments/managers")

@@ -128,7 +128,20 @@ def update_department_skill(session, dept_id, skill_id, new_dept_id, new_skill_i
         print(error)
         return error
 
-
+def delete_department_skills(session, dept_id):
+    try:
+        department_skills = session.query(Department_skills).filter(Department_skills.dept_id == dept_id).all()
+        if department_skills:
+            for skill in department_skills:
+                session.delete(skill)
+                session.commit()
+            return department_skills
+        else:
+            return None
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
 
 
 #SKILL_CATEGORIES
