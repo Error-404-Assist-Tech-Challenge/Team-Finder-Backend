@@ -75,7 +75,6 @@ def get_department_members(user_id):
         if current_department.get("manager_id") == user_id:
             return db.get_department_members(department)
 
-
 def get_available_department_members(user_id):
     unavailable_users = []
     available_users = []
