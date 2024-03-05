@@ -18,8 +18,9 @@ def departments_get(user_id: str = Depends(auth_handler.auth_wrapper)):
 
 
 @departments_router.put("/api/departments")
-def departments_update(department_data: Modified_department, user_id: str = Depends(auth_handler.auth_wrapper)):
-    return update_department(department_data, user_id)
+def departments_update(department_data: Modified_department):
+    return update_department(department_data)
+
 
 @departments_router.delete("/api/departments")
 def departments_delete(user_id: str = Depends(auth_handler.auth_wrapper)):
