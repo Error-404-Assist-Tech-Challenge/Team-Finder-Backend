@@ -188,9 +188,21 @@ class DataBase:
                                     name=name)
 
     @staticmethod
-    def get_team_roles():
+    def update_team_role(id, name):
         with session_scope() as session:
-            return get_team_roles(session=session)
+            return update_team_role(session=session,
+                                    id=id,
+                                    name=name)
+
+    @staticmethod
+    def delete_team_role(id):
+        with session_scope() as session:
+            return delete_team_role(session=session, id=id)
+
+    @staticmethod
+    def get_team_roles(org_id):
+        with session_scope() as session:
+            return get_team_roles(session=session, org_id=org_id)
 
 
 #DEPARTMENTS============================================================================================================

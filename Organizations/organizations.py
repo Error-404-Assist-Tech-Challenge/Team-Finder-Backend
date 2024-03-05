@@ -46,8 +46,6 @@ def organization_get_skills(admin_id: str = Depends(auth_handler.auth_wrapper)):
 
 @organization_router.post("/api/organizations/signup_token")
 def signup_token_create(user_id: str = Depends(auth_handler.auth_wrapper)):
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Authentication failed")
     token, error = create_signup_token(user_id)
 
     if error:
@@ -57,9 +55,6 @@ def signup_token_create(user_id: str = Depends(auth_handler.auth_wrapper)):
 
 @organization_router.get("/api/organizations/signup_tokens")
 def signup_tokens_get(user_id: str = Depends(auth_handler.auth_wrapper)):
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Authentication failed")
-
     return get_organization_signup_tokens(user_id)
 
 
