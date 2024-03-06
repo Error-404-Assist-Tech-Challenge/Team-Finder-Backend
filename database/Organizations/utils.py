@@ -95,6 +95,16 @@ def get_user_roles(session, user_id):
         return error
 
 
+def get_all_user_roles(session):
+    try:
+        user_roles = session.query(UserRole).all()
+        return UserRole.serialize_user_roles(user_roles)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
 def remove_user_role(session, user_id, role_id):
     try:
         removed_role = session.query(UserRole).filter(UserRole.user_id == user_id,
