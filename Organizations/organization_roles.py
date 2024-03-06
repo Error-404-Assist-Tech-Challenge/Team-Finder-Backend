@@ -23,4 +23,7 @@ def organization_roles_get():
 
 @organization_roles_router.delete("/api/organizations/roles", response_model=List[OrganizationMember])
 def user_role_delete(removed_data: RemoveRole, admin_id: str = Depends(auth_handler.auth_wrapper)):
-    return delete_user_role(removed_data, admin_id)
+    returned_data, error = delete_user_role(removed_data, admin_id)
+    if error:
+        raise HTTPException(status_code=409, detail=error)
+    return returned_data

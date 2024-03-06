@@ -101,7 +101,9 @@ def get_skill_categories(user_id):
     users = db.get_users()
     organization_id = users[user_id].get("org_id")
     skill_categories = db.get_skill_categories(organization_id)
-    return skill_categories
+
+    sorted_data = sorted(skill_categories, key=lambda x: x['label'])
+    return sorted_data
 
 
 def create_skill_category(data, user_id):
