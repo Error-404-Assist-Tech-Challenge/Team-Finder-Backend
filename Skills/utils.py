@@ -65,12 +65,22 @@ def create_user_skills(data, user_id):
     user_skill_data = data.model_dump()
     db.create_user_skills(user_id=user_id,
                           skill_id=user_skill_data.get("skill_id"),
-                          level=user_skill_data.get("level"),
-                          experience=user_skill_data.get("experience"),
+                          level="1",
+                          experience="1",
                           created_at=user_skill_data.get("created_at"))
 
-    returned_data = get_skills_by_users_id(user_id)
+    # Logic skill proposal
 
+    skill_id = user_skill_data.get("skill_id")
+    department_id = db.get_department_skill(skill_id)
+    db.propose_skill(skill_id=skill_id,
+                     user_id=user_id,
+                     proposal=False,
+                     dept_id=department_id,
+                     level=user_skill_data.get("level"),
+                     experience=user_skill_data.get("experience"))
+
+    returned_data = get_skills_by_users_id(user_id)
     return returned_data
 
 
@@ -184,3 +194,25 @@ def create_department_skill(data):
 
     return department_skills_data
 
+# SKILLS PROPOSALS
+
+
+def update_skill_proposal(data):
+    update_data = data.model_dump()
+    proposal = update_data.get("proposal")
+    user_id = update_data.get("user_id")
+    skill_id = update_data.get("skill_id")
+    if proposal:
+        proposed_skills = db.get_skill_proposals()
+        for skill in proposed_skills:
+            current_skill = proposed_skills[skill]
+            if current_skill.get("user_id") == str(user_id) and current_skill.get("skill_id") == str(skill_id):
+                level = current_skill.get("level")
+                experience = current_skill.get("experience")
+                db.update_user_skill(user_id=user_id, skill_id=skill_id, level=level, experience=experience)
+                db.delete_proposed_skill(user_id=user_id, skill_id=skill_id)
+                return current_skill
+
+
+def get_skill_proposals(user_id):
+    return db.get_skill_proposals()
