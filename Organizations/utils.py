@@ -28,11 +28,19 @@ def delete_user_role(data, admin_id):
         current_role = all_org_roles[role]
         if removed_data.get("role_name") == current_role.get("name"):
             role_id = current_role.get("id")
+
+            if current_role.get("name") == "admin":
+                org_users = get_org_users(admin_id)
+                admin_count = sum(1 for user in org_users if 'admin' in user['roles'])
+
+                if admin_count == 1:
+                    return None, "Deletion cannot proceed, the organization requires at least one administrator."
+
             db.remove_user_role(user_id=removed_data.get("user_id"),
                                 role_id=role_id)
 
     returned_data = get_org_users(admin_id)
-    return returned_data
+    return returned_data, None
 
 
 # ORGANIZATION MEMBERS
@@ -47,6 +55,9 @@ def get_org_users(admin_id):
         user = users[key]
         del user["password"], user["org_id"]
 
+        if user.get("id") == admin_id:
+            user["name"] = "You"
+
         user_roles = db.user_roles_get(user.get("id"))
 
         user_role_names = []
@@ -57,7 +68,15 @@ def get_org_users(admin_id):
         user["roles"] = user_role_names
         org_users.append(user)
 
-    return org_users
+    def custom_sort(item):
+        if item['name'] == 'You':
+            return 'A'
+        else:
+            return item['name']
+
+    sorted_data = sorted(org_users, key=custom_sort)
+
+    return sorted_data
 
 
 # ORGANIZATIONS
