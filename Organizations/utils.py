@@ -74,7 +74,6 @@ def get_unused_organization_skills(user_id):
     organization_id = users[user_id].get("org_id")
     all_org_skills = db.get_skills(organization_id)
     user_skills = db.get_user_skills(user_id)
-
     for user_skill in user_skills:
         skill_id = user_skill.get("skill_id")
         already_owned_skills.add(skill_id)

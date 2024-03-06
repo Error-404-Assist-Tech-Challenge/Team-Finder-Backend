@@ -28,6 +28,7 @@ class SkillsResponse(BaseModel):
 
 # USER_SKILLS MODELS
 
+
 class UserSkills(BaseModel):
     skill_id: UUID
     level: int

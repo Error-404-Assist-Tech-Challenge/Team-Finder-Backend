@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from typing import List
 from Departments.models import Department, DepartmentUpdate, Remove_department, DepartmentResponse
-from Departments.utils import create_department, get_departments, get_departments_managers, update_department, delete_department
+from Departments.utils import create_department, get_departments, get_departments_managers, update_department, delete_department, get_projects_department
 from auth import AuthHandler
 
 departments_router = APIRouter()
@@ -31,3 +31,7 @@ def departments_delete(removed_dept: Remove_department, user_id: str = Depends(a
 @departments_router.get("/api/departments/managers")
 def departments_get_managers(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_departments_managers(user_id)
+
+@departments_router.get("/api/department/projects")
+def departments_get_projects(user_id: str = Depends(auth_handler.auth_wrapper)):
+    return get_projects_department(user_id)
