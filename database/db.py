@@ -493,6 +493,17 @@ class DataBase:
                     returned_projects.append(project)
             return returned_projects
 
+    @staticmethod
+    def get_projects_id(proj_id):
+        with session_scope() as session:
+            returned_projects = []
+            projects = get_projects(session=session)
+            for project in projects:
+                current_project = projects[project]
+                if current_project.get("id") == proj_id:
+                    returned_projects.append(current_project)
+            return returned_projects
+
     # PROJECT ASSIGNMENTS
     @staticmethod
     def create_project_assignment(project_assignments_id, proj_id, user_id, proj_manager_id, proposal, deallocated, dealloc_reason, work_hours, comment):
@@ -564,7 +575,7 @@ class DataBase:
                                           user_id=user_id)
 
     @staticmethod
-    def get_project_member():
+    def get_project_members():
         with session_scope() as session:
             return get_project_members(session=session)
 

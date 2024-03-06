@@ -97,6 +97,29 @@ def get_departments_managers(user_id):
     return managers_available
 
 
+def get_projects_department(user_id): # Endpoint where department manager can see the projects if one of  his members are on the project
+    returned_projects = []
+    department_members = []
+    user = db.get_user(user_id)
+    organization_id = user.get("org_id")
+    departments = db.get_department(organization_id)
+    for department in departments:
+        current_department = departments[department]
+        if current_department.get("manager_id") == user_id:
+            current_department_members = db.get_department_members(current_department.get("id"))
+            for member in current_department_members:
+                department_members.append(member.get("user_id"))
+
+    project_members = db.get_project_members()
+    for member in project_members:
+        if member.get("user_id") in department_members:
+            returned_projects.append(db.get_projects_id(member.get("proj_id")))
+
+    return returned_projects
+
+
+
+
 # DEPARTMENT_MEMBERS
 def get_department_members(user_id):
     users = db.get_users()
