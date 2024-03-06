@@ -49,11 +49,6 @@ class RoleCreate(BaseModel):
     role_name: Literal['admin', 'dept_manager', 'proj_manager']
 
 
-class RoleResponse(BaseModel):
-    user_id: UUID
-    roles: List[str]
-
-
 # TEAM_ROLES
 class TeamRole(BaseModel):
     name: str
