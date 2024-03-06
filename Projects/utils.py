@@ -6,9 +6,16 @@ from datetime import datetime, time
 
 # PROJECTS
 
-def get_projects():
-    projects = db.get_projects()
-    return projects
+def get_projects(user_id):
+    returned_user_projects = []
+    user = db.get_user(user_id)
+    organization_id = user[user_id].get("org_id")
+    projects = db.get_org_projects(organization_id)
+    for project in projects:
+        current_project = projects[project]
+        if current_project.get("manager_id") == user_id:
+            returned_user_projects.append(current_project)
+    return returned_user_projects
 
 
 def create_projects(data):
