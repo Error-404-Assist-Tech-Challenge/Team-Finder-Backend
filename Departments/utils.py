@@ -41,35 +41,34 @@ def create_department(data, user_id):
                          org_id=organization_id,
                          created_at=created_at,
                          department_id=department_id)
-    returned_department = {
-        "name": name,
-        "id": department_id,
-        "org_id": organization_id,
-        "manager_id": "",
-        "department_members": [],
-        "manager_name": "",
-        "created_at": created_at,
-    }
-    return returned_department
+
+    returned_data = get_departments(user_id)
+
+    return returned_data
 
 
 def update_department(data, user_id):
     department_data = data.model_dump()
 
-    updated_dept = db.update_department(name=department_data.get("name"),
-                                        manager_id=department_data.get("manager_id"),
-                                        dept_id=department_data.get("dept_id"))
+    db.update_department(name=department_data.get("name"),
+                         manager_id=department_data.get("manager_id"),
+                         dept_id=department_data.get("dept_id"))
 
-    return updated_dept
+    returned_data = get_departments(user_id)
+
+    return returned_data
 
 
-def delete_department(data):
+def delete_department(data, user_id):
     removed_department = data.model_dump().get("dept_id")
 
     db.delete_department(dept_id=removed_department)
     db.delete_department_members(dept_id=removed_department)
     db.delete_department_skills(dept_id=removed_department)
-    return removed_department
+
+    returned_data = get_departments(user_id)
+
+    return returned_data
 
 
 def get_departments_managers(user_id):
