@@ -28,7 +28,7 @@ class Skill_categories(Base):
 
 #SKILLS
 
-class Skills(Base):
+class Skill(Base):
     __tablename__ = "skills"
 
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)

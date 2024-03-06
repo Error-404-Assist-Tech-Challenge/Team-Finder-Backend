@@ -131,6 +131,21 @@ class DataBase:
                                        created_at=created_at,
                                        organization_id=organization_id)
 
+    @staticmethod
+    def create_organization_skill(category_id, author_id, org_id, name, description, created_at):
+        with session_scope() as session:
+            return create_organization_skill(session=session,
+                                             category_id=category_id,
+                                             author_id=author_id,
+                                             org_id=org_id,
+                                             name=name,
+                                             description=description,
+                                             created_at=created_at)
+
+    @staticmethod
+    def delete_organization_skill(skill_id):
+        with session_scope() as session:
+            return delete_organization_skill(session=session, skill_id=skill_id)
 
     @staticmethod
     def update_organization_skill(category_id, name, skill_id, description, created_at):

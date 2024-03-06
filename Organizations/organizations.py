@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 
 from auth import AuthHandler
-from Organizations.models import Organization, OrganizationMember, ModifiedSkill, RemoveRole
+from Organizations.models import Organization, OrganizationMember, UpdateSkill, Skill, CreateSkill, DeleteSkill
 from Organizations.utils import *
 
 
@@ -21,7 +21,7 @@ def organization_get():
 
 
 # ORGANIZATION SKILL ENDPOINTS
-@organization_router.get("/api/organizations/skills")
+@organization_router.get("/api/organizations/skills", response_model=List[Skill])
 def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_organizations_skills(user_id)
 
@@ -31,9 +31,19 @@ def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_unused_organization_skills(user_id)
 
 
-@organization_router.put("/api/organizations/skills")
-def organization_get_skills(modified_skill_data: ModifiedSkill):
-    return update_organization_skill(modified_skill_data)
+@organization_router.post("/api/organizations/skills", response_model=List[Skill])
+def organization_create_skill(modified_skill_data: CreateSkill, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return create_organization_skill(modified_skill_data, user_id)
+
+
+@organization_router.put("/api/organizations/skills", response_model=List[Skill])
+def organization_update_skill(modified_skill_data: UpdateSkill, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return update_organization_skill(modified_skill_data, user_id)
+
+
+@organization_router.delete("/api/organizations/skills", response_model=List[Skill])
+def organization_update_skill(modified_skill_data: DeleteSkill, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return delete_organization_skill(modified_skill_data, user_id)
 
 
 # ORGANIZATION USERS

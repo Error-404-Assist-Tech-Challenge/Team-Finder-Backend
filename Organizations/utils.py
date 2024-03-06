@@ -104,14 +104,45 @@ def get_unused_organization_skills(user_id):
     return unused_skills
 
 
-def update_organization_skill(data):
+def create_organization_skill(data, user_id):
+    skill_data = data.model_dump()
+    user_data = db.get_user(user_id)
+    org_id = user_data.get("org_id")
+    current_time = datetime.utcnow()
+
+    db.create_organization_skill(category_id=skill_data.get("category_id"),
+                                 author_id=user_id,
+                                 org_id=org_id,
+                                 name=skill_data.get("name"),
+                                 description=skill_data.get("description"),
+                                 created_at=current_time)
+
+    returned_data = get_organizations_skills(user_id)
+
+    return returned_data
+
+
+def delete_organization_skill(data, user_id):
+    skill_data = data.model_dump()
+    db.delete_organization_skill(skill_data.get("id"))
+
+    returned_data = get_organizations_skills(user_id)
+
+    return returned_data
+
+
+def update_organization_skill(data, user_id):
     modified_skill_data = data.model_dump()
+    current_time = datetime.utcnow()
     db.update_organization_skill(category_id=modified_skill_data.get("category_id"),
                                  skill_id=modified_skill_data.get("skill_id"),
                                  name=modified_skill_data.get("name"),
                                  description=modified_skill_data.get("description"),
-                                 created_at=modified_skill_data.get("created_at"))
-    return modified_skill_data
+                                 created_at=current_time)
+
+    returned_data = get_organizations_skills(user_id)
+
+    return returned_data
 
 
 def get_organizations_skills(user_id):
@@ -143,8 +174,12 @@ def get_organizations_skills(user_id):
             current_skill_category_id = skill_category.get("value")
             if modified_skill.get("category_id") == current_skill_category_id:
                 modified_skill["category_name"] = skill_category.get("label")
+
+        del modified_skill["org_id"], modified_skill["created_at"]
         returned_skills.append(modified_skill)
-    return returned_skills
+
+    sorted_data = sorted(returned_skills, key=lambda x: x['name'])
+    return sorted_data
 
 
 def create_organization(data):
