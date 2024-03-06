@@ -21,7 +21,7 @@ def create_user_role(data):
     return user_role_data
 
 
-def delete_user_role(data):
+def delete_user_role(data, admin_id):
     removed_data = data.model_dump()
     all_org_roles = db.get_organization_roles()
     for role in all_org_roles:
@@ -30,7 +30,9 @@ def delete_user_role(data):
             role_id = current_role.get("id")
             db.remove_user_role(user_id=removed_data.get("user_id"),
                                 role_id=role_id)
-    return removed_data
+
+    returned_data = get_org_users(admin_id)
+    return returned_data
 
 
 # ORGANIZATION MEMBERS
@@ -146,7 +148,7 @@ def get_organization_roles():
     return user_roles
 
 
-def create_organization_user_role(data):
+def create_organization_user_role(data, admin_id):
     role_data = data.model_dump()
     org_roles = db.get_organization_roles()
     user_roles = db.user_roles_get(str(role_data.get("user_id")))
@@ -165,7 +167,8 @@ def create_organization_user_role(data):
             else:
                 return None, f"User already has the {role_data.get('role_name')} role"
 
-    return {"user_id": role_data.get("user_id"), "roles": user_role_names}, None
+    returned_data = get_org_users(admin_id)
+    return returned_data, None
 
 
 # TEAM_ROLES
