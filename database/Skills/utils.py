@@ -69,6 +69,7 @@ def update_user_skill(session, user_id, level, experience, skill_id):
         print(error)
         return error
 
+
 def remove_user_skill(session, user_id, skill_id):
     try:
         user_skill = session.query(UserSkills).filter(UserSkills.user_id == user_id, UserSkills.skill_id == skill_id).first()
@@ -82,6 +83,46 @@ def remove_user_skill(session, user_id, skill_id):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
+# SKILL PROPOSALS
+
+
+def propose_skill(session, user_id, skill_id, dept_id, level, experience, proposal):
+    try:
+        obj = Skill_proposals(user_id=user_id, skill_id=skill_id, level=level, experience=experience, dept_id=dept_id, proposal=proposal)
+        session.add(obj)
+        return obj
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def get_proposed_skills(session):
+    try:
+        skill_proposals = session.query(Skill_proposals).all()
+        return Skill_proposals.serialize_skill_proposals(skill_proposals)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+def delete_proposed_skill(session, user_id, skill_id):
+    try:
+        proposed_skill = session.query(Skill_proposals).filter(Skill_proposals.user_id == user_id,
+                                                               Skill_proposals.skill_id == skill_id).first()
+        if proposed_skill:
+            session.delete(proposed_skill)
+            session.commit()
+            return proposed_skill
+        else:
+            return None
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
 
 
 #DEPARTMENT_SKILLS

@@ -32,6 +32,7 @@ def departments_delete(removed_dept: Remove_department, user_id: str = Depends(a
 def departments_get_managers(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_departments_managers(user_id)
 
+
 @departments_router.get("/api/department/projects")
 def departments_get_projects(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_projects_department(user_id)

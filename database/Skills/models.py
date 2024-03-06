@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, TIMESTAMP, ForeignKey, Integer
+from sqlalchemy import Column, String, TIMESTAMP, ForeignKey, Integer, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
@@ -32,7 +32,7 @@ class Skill(Base):
     __tablename__ = "skills"
 
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-    category_id = Column(UUID, ForeignKey("skill_categories.id"),nullable=False)
+    category_id = Column(UUID, ForeignKey("skill_categories.id"), nullable=False)
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
@@ -94,3 +94,29 @@ class Department_skills(Base):
                 "skill_id": str(department_skill.skill_id)
             }
         return serialize_department_skills
+
+# SKILL PROPOSALS
+
+class Skill_proposals(Base):
+    __tablename__ = "skill_proposals"
+
+    dept_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False, primary_key=True)
+    skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"), nullable=False)
+    proposal = Column(Boolean, nullable=False)
+    level = Column(Integer, nullable=False)
+    experience = Column(Integer, nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+
+    @staticmethod
+    def serialize_skill_proposals(skill_proposals):
+        serialize_skill_proposals = {}
+        for skill_proposal in skill_proposals:
+            serialize_skill_proposals[str(skill_proposal.dept_id)] = {
+                "dept_id": str(skill_proposal.dept_id),
+                "skill_id": str(skill_proposal.skill_id),
+                "level": str(skill_proposal.level),
+                "experience": str(skill_proposal.experience),
+                "user_id": str(skill_proposal.user_id),
+                "proposal": str(skill_proposal.proposal)
+            }
+        return serialize_skill_proposals

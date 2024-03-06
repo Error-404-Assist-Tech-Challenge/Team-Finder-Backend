@@ -81,3 +81,10 @@ class AddDepartment(BaseModel):
     skill_id: UUID
     dept_id: UUID
 
+# SKILLS PROPOSALS
+
+
+class Update_skill(BaseModel):
+    user_id: UUID
+    skill_id: UUID
+    proposal: bool

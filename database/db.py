@@ -366,7 +366,7 @@ class DataBase:
             all_user_skills = get_user_skills(session=session)
             returned_user_skills = []
             for user_skill in all_user_skills:
-                if user_skill.get("user_id") == user_id:
+                if user_skill.get("user_id") == str(user_id):
                     returned_user_skills.append(user_skill)
             return returned_user_skills
 
@@ -384,6 +384,29 @@ class DataBase:
             return remove_user_skill(session=session,
                                      user_id=user_id,
                                      skill_id=skill_id)
+
+    # SKILL PROPOSALS
+
+    @staticmethod
+    def propose_skill(skill_id, user_id, dept_id, level, experience, proposal):
+        with session_scope() as session:
+            return propose_skill(session=session,
+                                 dept_id=dept_id,
+                                 user_id=user_id,
+                                 skill_id=skill_id,
+                                 level=level,
+                                 proposal=proposal,
+                                 experience=experience)
+
+    @staticmethod
+    def get_skill_proposals():
+        with session_scope() as session:
+            return get_proposed_skills(session=session)
+
+    @staticmethod
+    def delete_proposed_skill(user_id, skill_id):
+        with session_scope() as session:
+            return delete_proposed_skill(session=session, user_id=user_id, skill_id=skill_id)
 
 
     # SKILL_CATEGORIES
@@ -442,6 +465,15 @@ class DataBase:
     def get_department_skills():
         with session_scope() as session:
             return get_department_skills(session=session)
+
+    @staticmethod
+    def get_department_skill(skill_id):
+        with session_scope() as session:
+            department_skills = get_department_skills(session=session)
+            for department in department_skills:
+                current_department = department_skills[department]
+                if current_department.get("skill_id") == str(skill_id):
+                    return department
 
     @staticmethod
     def get_department_skills_names(organization_id):
