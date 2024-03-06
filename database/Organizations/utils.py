@@ -67,7 +67,7 @@ def delete_organization_skill(session, skill_id):
 
 def update_organization_skill(session, category_id, name, description, created_at, skill_id):
     try:
-        modified_skill = session.query(Skill).filter(Skill.skill_id == skill_id).first()
+        modified_skill = session.query(Skill).filter(Skill.id == skill_id).first()
         if modified_skill:
             modified_skill.category_id = category_id
             modified_skill.name = name
