@@ -483,11 +483,17 @@ class DataBase:
                                   created_at = created_at)
 
     @staticmethod
-    def get_projects():
+    def get_org_projects(org_id):
         with session_scope() as session:
-            return get_projects(session=session)
+            returned_projects = []
+            all_projects = get_projects(session=session)
+            for project in all_projects:
+                current_project = all_projects[project]
+                if current_project.get("org_id") == org_id:
+                    returned_projects.append(project)
+            return returned_projects
 
-    #PROJECT ASSIGNMENTS
+    # PROJECT ASSIGNMENTS
     @staticmethod
     def create_project_assignment(project_assignments_id, proj_id, user_id, proj_manager_id, proposal, deallocated, dealloc_reason, work_hours, comment):
         with session_scope() as session:
