@@ -17,9 +17,9 @@ def skill_categories_get(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_skill_categories(user_id)
 
 
-@skill_categories_router.get("/api/skills/categories/unused")
-def unused_skill_categories_get(user_id: str = Depends(auth_handler.auth_wrapper)):
-    return get_unused_skill_categories(user_id)
+# @skill_categories_router.get("/api/skills/categories/unused")
+# def unused_skill_categories_get(user_id: str = Depends(auth_handler.auth_wrapper)):
+#     return get_unused_skill_categories(user_id)
 
 
 @skill_categories_router.put("/api/skills/categories", response_model=Update_skill_category)

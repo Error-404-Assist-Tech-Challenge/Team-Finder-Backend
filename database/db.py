@@ -173,6 +173,19 @@ class DataBase:
                     returned_user_roles[role_id] = user_id
             return returned_user_roles
 
+
+    @staticmethod
+    def get_org_user_roles(org_id):
+        with session_scope() as session:
+            all_user_roles = get_all_user_roles(session=session)
+            org_user_roles = []
+            users = db.get_organization_users(org_id)
+            for role in all_user_roles:
+                for user in users:
+                    if user == role.get("user_id"):
+                        org_user_roles.append(role)
+            return org_user_roles
+
     @staticmethod
     def remove_user_role(user_id, role_id):
         with session_scope() as session:

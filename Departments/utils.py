@@ -1,7 +1,6 @@
 from uuid import uuid4
 from database.db import db
 
-
 # DEPARTMENTS
 def get_departments(user_id):
     users = db.get_users()
@@ -74,22 +73,26 @@ def delete_department(data):
 
 
 def get_departments_managers(user_id):
+    dep_role = "fa124499-1762-4f3b-8a61-712307e1677a"
     managers_with_department = []
     managers_available = []
+
     users = db.get_users()
     organization_id = users[user_id].get("org_id")
-    org_users = db.get_organization_users(organization_id)
+
+    org_user_roles = db.get_org_user_roles(organization_id)
     org_departments = db.get_department(organization_id)
+
     for department in org_departments:
         current_department = org_departments[department]
         managers_with_department.append(current_department.get("manager_id"))
 
-    for user in org_users:
-        current_user = org_users[user]
-        if current_user.get("id") not in managers_with_department:
+    for user in org_user_roles:
+        if (user.get("user_id") not in managers_with_department) and user.get("role_id") == dep_role:
+            user_name = users[user.get("user_id")].get("name")
             returned_body = {
-                "value": current_user.get("id"),
-                "label": current_user.get("name")
+                "value": user.get("user_id"),
+                "label": user_name
             }
             managers_available.append(returned_body)
     return managers_available
