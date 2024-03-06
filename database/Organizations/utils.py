@@ -1,7 +1,8 @@
 from sqlalchemy.exc import SQLAlchemyError
 
 from database.Organizations.models import *
-from database.Skills.models import Skills
+from database.Skills.models import Skill
+
 
 #ORGANIZATION_ROLES
 def create_organization_role(session, organization_role_id, name):
@@ -14,6 +15,7 @@ def create_organization_role(session, organization_role_id, name):
         print(error)
         return error
 
+
 def get_organization_roles(session):
     try:
         organization_roles = session.query(Organization_roles).all()
@@ -22,6 +24,7 @@ def get_organization_roles(session):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
 
 # ORGANIZATIONS
 def create_organization(session, name, hq_address, created_at, organization_id):
@@ -35,9 +38,36 @@ def create_organization(session, name, hq_address, created_at, organization_id):
         return error
 
 
+def create_organization_skill(session, category_id, author_id, org_id, name, description, created_at):
+    try:
+        obj = Skill(name=name,
+                    description=description,
+                    category_id=category_id,
+                    author_id= author_id,
+                    org_id=org_id,
+                    created_at=created_at)
+        session.add(obj)
+        return obj
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def delete_organization_skill(session, skill_id):
+    try:
+        removed_skill = session.query(Skill).filter(Skill.id == skill_id).first()
+        session.delete(removed_skill)
+        return removed_skill
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
 def update_organization_skill(session, category_id, name, description, created_at, skill_id):
     try:
-        modified_skill = session.query(Skills).filter(Skills.skill_id == skill_id).first()
+        modified_skill = session.query(Skill).filter(Skill.skill_id == skill_id).first()
         if modified_skill:
             modified_skill.category_id = category_id
             modified_skill.name = name
@@ -116,7 +146,6 @@ def remove_user_role(session, user_id, role_id):
         error = str(e.__dict__['orig'])
         print(error)
         return error
-
 
 
 # TEAM_ROLES

@@ -19,12 +19,34 @@ class OrganizationMember(BaseModel):
     roles: List[str]
 
 
-class ModifiedSkill(BaseModel):
+# SKILLS
+class Skill(BaseModel):
+    id: UUID
+    category_id: UUID
+    author_id: UUID
+    dept_id: List[UUID]
+    dept_name: List[str]
+    author_name: str
+    category_name: str
+    name: str
+    description: str
+
+
+class CreateSkill(BaseModel):
+    category_id: UUID
+    name: str
+    description: str
+
+
+class DeleteSkill(BaseModel):
+    id: UUID
+
+
+class UpdateSkill(BaseModel):
     skill_id: UUID
     category_id: UUID
     name: str
     description: str
-    created_at: datetime = datetime.now().isoformat()
 
 
 # USER_ROLES

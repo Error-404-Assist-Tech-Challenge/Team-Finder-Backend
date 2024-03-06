@@ -5,13 +5,13 @@ from database.Skills.models import *
 
 def create_skill(session, category_id, name, description, skill_id, created_at, author_id, org_id):
     try:
-        obj = Skills(category_id=category_id,
-                     name=name,
-                     description=description,
-                     created_at=created_at,
-                     author_id=author_id,
-                     org_id=org_id,
-                     id=skill_id)
+        obj = Skill(category_id=category_id,
+                    name=name,
+                    description=description,
+                    created_at=created_at,
+                    author_id=author_id,
+                    org_id=org_id,
+                    id=skill_id)
         session.add(obj)
         session.commit()
         return obj
@@ -23,8 +23,8 @@ def create_skill(session, category_id, name, description, skill_id, created_at, 
 
 def get_skills(session):
     try:
-        skills = session.query(Skills).all()
-        return Skills.serialize_skills(skills)
+        skills = session.query(Skill).all()
+        return Skill.serialize_skills(skills)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
