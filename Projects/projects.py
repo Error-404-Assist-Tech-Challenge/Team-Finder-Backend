@@ -14,3 +14,8 @@ def create_projects_route(projects_data: Projects):
 @projects_router.get("/api/projects")
 def projects_get(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_projects(user_id)
+
+
+@projects_router.get("/api/project")
+def projects_get(user_id: str = Depends(auth_handler.auth_wrapper)):
+    return get_projects(user_id)

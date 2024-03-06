@@ -30,6 +30,8 @@ class SkillsResponse(BaseModel):
 
 class UserSkills(BaseModel):
     skill_id: UUID
+    level: int
+    experience: int
     created_at: datetime = datetime.now().isoformat()
 
 
