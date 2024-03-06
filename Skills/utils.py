@@ -97,13 +97,13 @@ def get_skill_categories(user_id):
     return skill_categories
 
 
-def create_skill_categories(data):
+def create_skill_categories(data, user_id):
     skill_categories_data = data.model_dump()
     skill_categories_id = str(uuid4())
     skill_categories_data["id"] = skill_categories_id
-
+    organization_id = db.get_user(user_id).get("org_id")
     db.create_skill_categories(name=skill_categories_data.get("name"),
-                               org_id=skill_categories_data.get("org_id"),
+                               org_id=organization_id,
                                created_at=skill_categories_data.get("created_at"),
                                skill_categories_id=skill_categories_id)
 
