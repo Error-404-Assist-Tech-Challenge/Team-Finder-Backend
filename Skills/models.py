@@ -15,6 +15,17 @@ class Skills(BaseModel):
     created_at: datetime = datetime.now().isoformat()
 
 
+class SkillsResponse(BaseModel):
+    user_id: UUID
+    skill_id: UUID
+    level: int
+    experience: int
+    created_at: str
+    category_name: str
+    skill_name: str
+    skill_description: str
+    skill_author: str
+
 # USER_SKILLS MODELS
 
 class UserSkills(BaseModel):
@@ -31,17 +42,25 @@ class UpdateSkills(BaseModel):
 class RemoveSkill(BaseModel):
     skill_id: UUID
 
+
 # SKILL_CATEGORIES
 
+class SkillCategoriesResponse(BaseModel):
+    label: str
+    value: UUID
 
-class Skill_categories(BaseModel):
+
+class SkillCategory(BaseModel):
     name: str
     created_at: datetime = datetime.now().isoformat()
 
 
-class Update_skill_category(BaseModel):
+class DeleteSkillCategory(BaseModel):
     id: UUID
-    org_id: UUID
+
+
+class UpdateSkillCategory(BaseModel):
+    id: UUID
     name: str
     modified_at: datetime = datetime.now().isoformat()
 

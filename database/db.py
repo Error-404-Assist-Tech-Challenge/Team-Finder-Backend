@@ -373,13 +373,19 @@ class DataBase:
 
     # SKILL_CATEGORIES
     @staticmethod
-    def create_skill_categories(name, org_id, created_at, skill_categories_id):
+    def create_skill_category(name, org_id, created_at, skill_category_id):
         with session_scope() as session:
-            return create_skill_categories(session=session,
-                                           name=name,
-                                           org_id=org_id,
-                                           created_at=created_at,
-                                           skill_categories_id=skill_categories_id)
+            return create_skill_category(session=session,
+                                         name=name,
+                                         org_id=org_id,
+                                         created_at=created_at,
+                                         skill_category_id=skill_category_id)
+
+    @staticmethod
+    def delete_skill_category(skill_category_id):
+        with session_scope() as session:
+            return delete_skill_category(session=session,
+                                         skill_category_id=skill_category_id)
 
     @staticmethod
     def get_skill_categories(organization_id):

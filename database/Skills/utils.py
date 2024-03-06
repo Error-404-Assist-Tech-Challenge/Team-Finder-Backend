@@ -146,11 +146,25 @@ def delete_department_skills(session, dept_id):
 
 #SKILL_CATEGORIES
 
-def create_skill_categories(session, org_id, name, created_at, skill_categories_id):
+def create_skill_category(session, org_id, name, created_at, skill_category_id):
     try:
-        obj = Skill_categories(org_id=org_id, name=name, created_at=created_at, id=skill_categories_id)
+        obj = Skill_categories(org_id=org_id, name=name, created_at=created_at, id=skill_category_id)
         session.add(obj)
         return obj
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def delete_skill_category(session, skill_category_id):
+    try:
+        skill_category = session.query(Skill_categories).filter(Skill_categories.id == skill_category_id).first()
+        if skill_category:
+            session.delete(skill_category)
+            return skill_category
+        else:
+            return None
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
@@ -165,6 +179,7 @@ def get_skill_categories(session):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
 
 def update_skill_category(session, id, org_id, name, modified_at):
     try:
