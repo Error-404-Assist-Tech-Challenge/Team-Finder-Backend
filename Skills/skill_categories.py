@@ -8,8 +8,8 @@ skill_categories_router = APIRouter()
 
 
 @skill_categories_router.post("/api/skills/categories", response_model=Skill_categories)
-def create_skill_categories_route(skill_categories_data: Skill_categories):
-    return create_skill_categories(skill_categories_data)
+def create_skill_categories_route(skill_categories_data: Skill_categories, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return create_skill_categories(skill_categories_data, user_id)
 
 
 @skill_categories_router.get("/api/skills/categories")
