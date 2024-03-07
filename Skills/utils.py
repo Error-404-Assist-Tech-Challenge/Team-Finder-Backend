@@ -39,7 +39,7 @@ def get_skills_by_users_id(user_id):
     for user_skill in user_skills:
         if user_skill.get("user_id") == user_id:
             user_skill_id = user_skill.get("skill_id")
-            if skills[user_skill_id]:
+            if user_skill_id in skills:
                 skill = skills[user_skill_id]
 
                 # Put skill category in user skills
