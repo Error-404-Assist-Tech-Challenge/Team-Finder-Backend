@@ -124,7 +124,7 @@ def update_user_skills(data, user_id):
 
 def get_skill_categories(user_id):
     users = db.get_users()
-    organization_id = users[user_id].get("org_id")
+    organization_id = users[str(user_id)].get("org_id")
     skill_categories = db.get_skill_categories(organization_id)
 
     sorted_data = sorted(skill_categories, key=lambda x: x['label'])
@@ -220,7 +220,7 @@ def update_skill_proposal(data):
     if proposal:
         proposed_skills = db.get_skill_proposals()
         for skill in proposed_skills:
-            current_skill = proposed_skills[skill]
+            current_skill = skill
             if current_skill.get("user_id") == str(user_id) and current_skill.get("skill_id") == str(skill_id):
                 level = current_skill.get("level")
                 experience = current_skill.get("experience")
@@ -247,7 +247,8 @@ def update_skill_proposal(data):
 def get_skill_proposals(user_id):
     skill_proposals = db.get_skill_proposals()
     for skill_proposal in skill_proposals:
-        skill_proposal["user_name"] = db.get_user(user_id).get("name")
+        user_data = db.get_user(skill_proposal.get("user_id"))
+        skill_proposal["user_name"] = user_data.get("name")
 
         org_skills = db.get_skills(db.get_user(user_id).get("org_id"))
         users_skills = get_skills_by_users_id(skill_proposal.get("user_id"))
