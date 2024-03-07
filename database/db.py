@@ -296,11 +296,14 @@ class DataBase:
             returned_members = []
             all_department_members = get_department_members(session=session)
             users = db.get_users()
+
             for member in all_department_members:
                 member_dept_id = member.get("dept_id")
                 member_user_id = member.get("user_id")
+
                 if member_dept_id == dept_id:
-                    member["user_name"] = users[member_user_id].get("name")
+                    member["name"] = users[member_user_id].get("name")
+                    member["email"] = users[member_user_id].get("email")
                     returned_members.append(member)
             return returned_members
 
