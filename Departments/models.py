@@ -8,16 +8,17 @@ from datetime import datetime
 # DEPARTMENT_MEMBERS
 class DepartmentMember(BaseModel):
     user_id: UUID
+    email: str
+    name: str
+    skills: List[str]
 
 
-class Delete_member(BaseModel):
+class CreateMember(BaseModel):
     user_id: UUID
 
 
-class DepartmentMemberResponse(BaseModel):
+class DeleteMember(BaseModel):
     user_id: UUID
-    dept_id: UUID
-    user_name: str
 
 
 # DEPARTMENTS
@@ -27,7 +28,7 @@ class DepartmentResponse(BaseModel):
     name: str
     manager_id: Optional[UUID]
     created_at: str
-    department_members: List[DepartmentMemberResponse]
+    department_members: List[DepartmentMember]
     manager_name: str
 
     @validator('manager_id', pre=True)

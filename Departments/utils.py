@@ -11,6 +11,7 @@ def get_departments(user_id):
 
     for department_id, department_info in departments.items():
         department_members = db.get_department_members(department_id)
+
         manager_id = department_info.get("manager_id")
 
         if manager_id is not None:
@@ -118,17 +119,31 @@ def get_projects_department(user_id): # Endpoint where department manager can se
     return returned_projects
 
 
-
-
 # DEPARTMENT_MEMBERS
 def get_department_members(user_id):
-    users = db.get_users()
-    organization_id = users[user_id].get("org_id")
-    departments = db.get_department(organization_id)
+    user_data = db.get_user(user_id)
+    org_id = user_data.get("org_id")
+    departments = db.get_department(org_id)
+
     for department in departments:
         current_department = departments[department]
         if current_department.get("manager_id") == user_id:
-            return db.get_department_members(department)
+            department_members = db.get_department_members(department)
+
+            for member in department_members:
+                member_skill_names = []
+                member_skills = db.get_user_skills(member.get("user_id"))
+                org_skills = db.get_skills(org_id)
+
+                for skill in member_skills:
+                    org_skill = org_skills.get(skill.get("skill_id"))
+
+                    if org_skill:
+                        member_skill_names.append(org_skill.get("name"))
+
+                member["skills"] = member_skill_names
+
+            return department_members
 
 
 def get_available_department_members(user_id):
@@ -150,8 +165,8 @@ def get_available_department_members(user_id):
 
 
 def create_department_member(data, user_id):
-    department_member_data = data.model_dump()
-    member_id = data.model_dump().get("user_id")
+    member_data = data.model_dump()
+    member_id = member_data.get("user_id")
     organization_id = db.get_user(user_id).get("org_id")
     org_departments = db.get_department(organization_id)
     for department in org_departments:
@@ -159,7 +174,9 @@ def create_department_member(data, user_id):
         if current_department.get("manager_id") == user_id:
             db.create_department_member(dept_id=current_department.get("id"),
                                         user_id=member_id)
-    return department_member_data
+
+    returned_data = get_department_members(user_id)
+    return returned_data
 
 
 def delete_department_member(data, user_id):
@@ -177,4 +194,7 @@ def delete_department_member(data, user_id):
             if member_id == str(delete_user):
                 db.delete_department_member(user_id=member_id,
                                             dept_id=member.get("dept_id"))
-                return user_info
+
+                returned_data = get_department_members(user_id)
+                return returned_data
+

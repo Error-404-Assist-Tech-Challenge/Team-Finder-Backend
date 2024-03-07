@@ -26,8 +26,8 @@ def create_skills(data):
 
     return skill_data
 
-# USER_SKILLS
 
+# USER_SKILLS
 def get_skills_by_users_id(user_id):
     all_users = db.get_users()
     organization_id = all_users[user_id].get("org_id")
