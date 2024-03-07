@@ -25,6 +25,8 @@ from Projects.project_needed_roles import project_needed_roles_router
 from Projects.user_team_roles import user_team_roles_router
 from Projects.project_tech_stack_skills import project_tech_stack_skills_router
 
+from scheduler import scheduler
+
 app = FastAPI()
 
 origins = ["http://localhost:5173", "https://localhost:5174"]
@@ -56,7 +58,10 @@ app.include_router(project_needed_roles_router)
 app.include_router(user_team_roles_router)
 app.include_router(project_tech_stack_skills_router)
 
+
 if __name__ == "__main__":
     import uvicorn
+
+    scheduler.start()
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
