@@ -48,5 +48,9 @@ class DepartmentUpdate(BaseModel):
     name: str
 
 
-class Remove_department(BaseModel):
+class RemoveDepartment(BaseModel):
     dept_id: UUID
+
+
+class ManagedDepartment(BaseModel):
+    name: str
