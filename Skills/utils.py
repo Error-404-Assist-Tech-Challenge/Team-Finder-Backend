@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import uuid4
 from database.db import db
 
@@ -63,19 +64,13 @@ def get_skills_by_users_id(user_id):
 
 def create_user_skills(data, user_id):
     user_skill_data = data.model_dump()
-    db.create_user_skills(user_id=user_id,
-                          skill_id=user_skill_data.get("skill_id"),
-                          level="1",
-                          experience="1",
-                          created_at=user_skill_data.get("created_at"))
 
     # Logic skill proposal
 
     skill_id = user_skill_data.get("skill_id")
-    department_id = db.get_department_skill(skill_id)
+    department_id = db.get_department_user(user_id)
     db.propose_skill(skill_id=skill_id,
                      user_id=user_id,
-                     proposal=False,
                      dept_id=department_id,
                      level=user_skill_data.get("level"),
                      experience=user_skill_data.get("experience"))
@@ -96,10 +91,15 @@ def remove_user_skill(data, user_id):
 
 def update_user_skills(data, user_id):
     user_skill_data = data.model_dump()
-    db.update_user_skill(user_id=user_id,
-                         skill_id=user_skill_data.get("skill_id"),
-                         level=user_skill_data.get("level"),
-                         experience=user_skill_data.get("experience"))
+
+    skill_id = user_skill_data.get("skill_id")
+    department_id = db.get_department_user(user_id)
+    db.propose_skill(skill_id=skill_id,
+                     user_id=user_id,
+                     proposal=False,
+                     dept_id=department_id,
+                     level=user_skill_data.get("level"),
+                     experience=user_skill_data.get("experience"))
 
     returned_data = get_skills_by_users_id(user_id)
 
@@ -209,10 +209,26 @@ def update_skill_proposal(data):
             if current_skill.get("user_id") == str(user_id) and current_skill.get("skill_id") == str(skill_id):
                 level = current_skill.get("level")
                 experience = current_skill.get("experience")
-                db.update_user_skill(user_id=user_id, skill_id=skill_id, level=level, experience=experience)
+                user_skill_exists = db.verify_user_skill(user_id=user_id,
+                                                         skill_id=skill_id)
+                if user_skill_exists:
+                    db.update_user_skill(user_id=user_id,
+                                         skill_id=skill_id,
+                                         level=level,
+                                         experience=experience)
+                else:
+                    db.create_user_skills(user_id=user_id,
+                                          skill_id=skill_id,
+                                          level=level,
+                                          experience=experience,
+                                          created_at=datetime.now().isoformat())
                 db.delete_proposed_skill(user_id=user_id, skill_id=skill_id)
                 return current_skill
+    else:
+        db.delete_proposed_skill(user_id=user_id, skill_id=skill_id)
+        return update_data
 
 
 def get_skill_proposals(user_id):
     return db.get_skill_proposals()
+

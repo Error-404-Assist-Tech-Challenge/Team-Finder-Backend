@@ -102,7 +102,6 @@ class Skill_proposals(Base):
 
     dept_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False, primary_key=True)
     skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"), nullable=False)
-    proposal = Column(Boolean, nullable=False)
     level = Column(Integer, nullable=False)
     experience = Column(Integer, nullable=False)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
@@ -116,7 +115,6 @@ class Skill_proposals(Base):
                 "skill_id": str(skill_proposal.skill_id),
                 "level": str(skill_proposal.level),
                 "experience": str(skill_proposal.experience),
-                "user_id": str(skill_proposal.user_id),
-                "proposal": str(skill_proposal.proposal)
+                "user_id": str(skill_proposal.user_id)
             }
         return serialize_skill_proposals

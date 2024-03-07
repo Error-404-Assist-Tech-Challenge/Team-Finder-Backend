@@ -87,9 +87,9 @@ def remove_user_skill(session, user_id, skill_id):
 # SKILL PROPOSALS
 
 
-def propose_skill(session, user_id, skill_id, dept_id, level, experience, proposal):
+def propose_skill(session, user_id, skill_id, dept_id, level, experience):
     try:
-        obj = Skill_proposals(user_id=user_id, skill_id=skill_id, level=level, experience=experience, dept_id=dept_id, proposal=proposal)
+        obj = Skill_proposals(user_id=user_id, skill_id=skill_id, level=level, experience=experience, dept_id=dept_id)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
