@@ -110,7 +110,6 @@ def update_user_skills(data, user_id):
     if department_id:
         db.propose_skill(skill_id=skill_id,
                          user_id=user_id,
-                         proposal=False,
                          dept_id=department_id,
                          level=user_skill_data.get("level"),
                          experience=user_skill_data.get("experience"))
@@ -119,8 +118,8 @@ def update_user_skills(data, user_id):
     else:
         return {"error": "Department not found for the user"}, 409
 
-# SKILL_CATEGORIES
 
+# SKILL_CATEGORIES
 
 def get_skill_categories(user_id):
     users = db.get_users()
