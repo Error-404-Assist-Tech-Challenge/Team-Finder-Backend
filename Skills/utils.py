@@ -68,15 +68,28 @@ def create_user_skills(data, user_id):
     # Logic skill proposal
 
     skill_id = user_skill_data.get("skill_id")
-    department_id = db.get_department_user(user_id)
-    db.propose_skill(skill_id=skill_id,
-                     user_id=user_id,
-                     dept_id=department_id,
-                     level=user_skill_data.get("level"),
-                     experience=user_skill_data.get("experience"))
 
-    returned_data = get_skills_by_users_id(user_id)
-    return returned_data
+    # Search if user exists in a department
+    department_id = db.get_department_user(user_id)
+
+    # Search if user is manager to a department
+    if not department_id:
+        departments = db.get_department(db.get_user(user_id).get("org_id"))
+        for department in departments:
+            current_department = departments[department]
+            if current_department.get("manager_id") == user_id:
+                department_id = current_department.get("id")
+
+    if department_id:
+        db.propose_skill(skill_id=skill_id,
+                         user_id=user_id,
+                         dept_id=department_id,
+                         level=user_skill_data.get("level"),
+                         experience=user_skill_data.get("experience"))
+        returned_data = get_skills_by_users_id(user_id)
+        return returned_data
+    else:
+        return {"error": "Department not found for the user"}, 409
 
 
 def remove_user_skill(data, user_id):
@@ -94,16 +107,18 @@ def update_user_skills(data, user_id):
 
     skill_id = user_skill_data.get("skill_id")
     department_id = db.get_department_user(user_id)
-    db.propose_skill(skill_id=skill_id,
-                     user_id=user_id,
-                     proposal=False,
-                     dept_id=department_id,
-                     level=user_skill_data.get("level"),
-                     experience=user_skill_data.get("experience"))
+    if department_id:
+        db.propose_skill(skill_id=skill_id,
+                         user_id=user_id,
+                         proposal=False,
+                         dept_id=department_id,
+                         level=user_skill_data.get("level"),
+                         experience=user_skill_data.get("experience"))
+        returned_data = get_skills_by_users_id(user_id)
+        return returned_data
+    else:
+        return {"error": "Department not found for the user"}, 409
 
-    returned_data = get_skills_by_users_id(user_id)
-
-    return returned_data
 # SKILL_CATEGORIES
 
 
@@ -223,12 +238,27 @@ def update_skill_proposal(data):
                                           experience=experience,
                                           created_at=datetime.now().isoformat())
                 db.delete_proposed_skill(user_id=user_id, skill_id=skill_id)
-                return current_skill
+                return data
     else:
         db.delete_proposed_skill(user_id=user_id, skill_id=skill_id)
-        return update_data
+        return data
 
 
 def get_skill_proposals(user_id):
-    return db.get_skill_proposals()
+    skill_proposals = db.get_skill_proposals()
 
+    for skill_proposal in skill_proposals:
+        skill_proposal["user_name"] = db.get_user(user_id).get("name")
+
+        org_skills = db.get_skills(db.get_user(user_id).get("org_id"))
+        users_skills = get_skills_by_users_id(skill_proposal.get("user_id"))
+        if users_skills:
+            skill_proposal["type"] = "post"
+        else:
+            skill_proposal["type"] = "put"
+
+        for skill in org_skills:
+            current_skill = org_skills[skill]
+            if current_skill.get("id") == skill_proposal.get("skill_id"):
+                skill_proposal["skill_name"] = current_skill.get("name")
+                return skill_proposals

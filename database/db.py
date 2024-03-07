@@ -314,7 +314,6 @@ class DataBase:
             for member in all_department_members:
                 member_dept_id = member.get("dept_id")
                 member_user_id = member.get("user_id")
-
                 if member_user_id == user_id:
                     return member_dept_id
 
@@ -329,7 +328,7 @@ class DataBase:
             return delete_department_member(session=session, dept_id=dept_id, user_id=user_id)
 
 
-    #SKILLS=================================================================================================================
+# SKILLS=================================================================================================================
 
     @staticmethod
     def create_skill(category_id, name, description, created_at, skill_id, author_id, org_id):
@@ -361,6 +360,7 @@ class DataBase:
                             dept_id = current_department_skill.get("dept_id")
                             returned_skills[current_skill_id]["dept_id"].append(dept_id)
             return returned_skills
+
 
     #USER_SKILLS
     @staticmethod

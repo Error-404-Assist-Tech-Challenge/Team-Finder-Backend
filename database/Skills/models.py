@@ -100,21 +100,21 @@ class Department_skills(Base):
 class Skill_proposals(Base):
     __tablename__ = "skill_proposals"
 
-    dept_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False, primary_key=True)
-    skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"), nullable=False)
+    dept_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False)
+    skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"), nullable=False, primary_key=True)
     level = Column(Integer, nullable=False)
     experience = Column(Integer, nullable=False)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, primary_key=True)
 
     @staticmethod
     def serialize_skill_proposals(skill_proposals):
-        serialize_skill_proposals = {}
+        serialized_skill_proposals = []
         for skill_proposal in skill_proposals:
-            serialize_skill_proposals[str(skill_proposal.dept_id)] = {
-                "dept_id": str(skill_proposal.dept_id),
+            serialized_skill = {
                 "skill_id": str(skill_proposal.skill_id),
                 "level": str(skill_proposal.level),
                 "experience": str(skill_proposal.experience),
                 "user_id": str(skill_proposal.user_id)
             }
-        return serialize_skill_proposals
+            serialized_skill_proposals.append(serialized_skill)
+        return serialized_skill_proposals
