@@ -64,7 +64,7 @@ def get_skills_by_users_id(user_id, skill_id):
 
 def create_user_skills(data, user_id):
     user_skill_data = data.model_dump()
-
+    is_manager = False
     # Logic skill proposal
 
     skill_id = user_skill_data.get("skill_id")
@@ -79,8 +79,9 @@ def create_user_skills(data, user_id):
             current_department = departments[department]
             if current_department.get("manager_id") == user_id:
                 department_id = current_department.get("id")
+                is_manager = True
 
-    if department_id:
+    if department_id and not is_manager:
         db.propose_skill(skill_id=skill_id,
                          user_id=user_id,
                          dept_id=department_id,
@@ -88,6 +89,13 @@ def create_user_skills(data, user_id):
                          experience=user_skill_data.get("experience"))
         returned_data = get_skills_by_users_id(user_id)
         return returned_data
+    elif is_manager:
+        db.create_user_skills(skill_id=skill_id,
+                              user_id=user_id,
+                              level=user_skill_data.get("level"),
+                              experience=user_skill_data.get("experience"),
+                              created_at=datetime.now().isoformat())
+        return get_skills_by_users_id(user_id=user_id, skill_id=skill_id)
     else:
         return {"error": "Department not found for the user"}, 409
 
@@ -251,7 +259,6 @@ def get_skill_proposals(user_id):
 
         org_skills = db.get_skills(db.get_user(user_id).get("org_id"))
         users_skills = get_skills_by_users_id(skill_proposal.get("user_id"), skill_proposal.get("skill_id"))
-        print(users_skills)
         if users_skills:
             skill_proposal["type"] = "put"
         else:
