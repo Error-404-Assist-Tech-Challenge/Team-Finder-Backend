@@ -1,5 +1,6 @@
 from uuid import uuid4
 from database.db import db
+from Organizations.utils import get_org_users
 
 # DEPARTMENTS
 def get_departments(user_id):
@@ -165,17 +166,24 @@ def get_available_department_members(user_id):
     available_users = []
     users = db.get_users()
     organization_id = users[user_id].get("org_id")
-    org_users = db.get_organization_users(organization_id)
+    org_users = get_org_users(user_id)
     org_departments = db.get_department(organization_id)
+
+    for user in org_users:
+        if "dept_manager" in user.get("roles"):
+            unavailable_users.append(user.get("id"))
+
     for department in org_departments:
         dep_members = db.get_department_members(department)
         for member in dep_members:
             unavailable_users.append(member.get("user_id"))
+
     for user in org_users:
-        current_user = org_users[user]
-        if current_user.get("id") not in unavailable_users:
-            available_users.append(current_user)
-    return available_users
+        if user.get("id") not in unavailable_users:
+            available_users.append(user)
+
+    sorted_data = sorted(available_users, key=lambda x: x["name"])
+    return sorted_data
 
 
 def create_department_member(data, user_id):
