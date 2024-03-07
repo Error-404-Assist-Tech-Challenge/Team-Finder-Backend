@@ -29,6 +29,18 @@ def get_departments(user_id):
     return sorted_departments
 
 
+def get_managed_department(user_id):
+    user_data = db.get_user(user_id)
+    org_id = user_data.get("org_id")
+
+    departments = db.get_department(org_id)
+
+    for key in departments:
+        if departments[key].get("manager_id") == user_id:
+            return {"name": departments[key].get("name")}
+
+
+
 def create_department(data, user_id):
     users = db.get_users()
     organization_id = users[user_id].get("org_id")
