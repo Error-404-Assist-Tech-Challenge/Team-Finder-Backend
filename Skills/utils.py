@@ -246,7 +246,6 @@ def update_skill_proposal(data):
 
 def get_skill_proposals(user_id):
     skill_proposals = db.get_skill_proposals()
-
     for skill_proposal in skill_proposals:
         skill_proposal["user_name"] = db.get_user(user_id).get("name")
 
@@ -261,4 +260,4 @@ def get_skill_proposals(user_id):
             current_skill = org_skills[skill]
             if current_skill.get("id") == skill_proposal.get("skill_id"):
                 skill_proposal["skill_name"] = current_skill.get("name")
-                return skill_proposals
+    return skill_proposals
