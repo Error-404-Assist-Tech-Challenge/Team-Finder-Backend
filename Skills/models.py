@@ -36,6 +36,16 @@ class UserSkills(BaseModel):
     created_at: datetime = datetime.now().isoformat()
 
 
+class SkillProposal(BaseModel):
+    skill_id: UUID
+    user_id: UUID
+    level: int
+    experience: int
+    user_name: str
+    type: str
+    skill_name: str
+
+
 class UpdateSkills(BaseModel):
     skill_id: UUID
     level: int
