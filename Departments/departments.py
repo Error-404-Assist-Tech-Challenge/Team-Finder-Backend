@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from Departments.models import Department, DepartmentUpdate, RemoveDepartment, DepartmentResponse, ManagedDepartment
 from Departments.utils import create_department, get_departments, get_departments_managers, update_department, delete_department, get_projects_department, get_managed_department
@@ -20,7 +20,10 @@ def departments_get(user_id: str = Depends(auth_handler.auth_wrapper)):
 
 @departments_router.get("/api/departments/managed", response_model=ManagedDepartment)
 def department_managed_get(user_id: str = Depends(auth_handler.auth_wrapper)):
-    return get_managed_department(user_id)
+    response, error = get_managed_department(user_id)
+    if error:
+        raise HTTPException(status_code=409, detail=error)
+    return response
 
 
 @departments_router.put("/api/departments", response_model=List[DepartmentResponse])

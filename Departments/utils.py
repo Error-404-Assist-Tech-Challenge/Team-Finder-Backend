@@ -37,7 +37,9 @@ def get_managed_department(user_id):
 
     for key in departments:
         if departments[key].get("manager_id") == user_id:
-            return {"name": departments[key].get("name")}
+            return {"name": departments[key].get("name")}, None
+
+    return None, "You don't manage any department"
 
 
 
