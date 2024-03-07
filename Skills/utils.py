@@ -39,25 +39,27 @@ def get_skills_by_users_id(user_id):
     for user_skill in user_skills:
         if user_skill.get("user_id") == user_id:
             user_skill_id = user_skill.get("skill_id")
-            if skills[user_skill_id]:
-                skill = skills[user_skill_id]
+            for skill in skills:
+                current_skill = skills[skill]
+                if current_skill.get("skill_id") == user_skill_id:
+                    skill = skills[user_skill_id]
 
-                # Put skill category in user skills
-                for skill_category in skill_categories:
-                    if skill_category.get("value") == skill.get("category_id"):
-                        user_skill["category_name"] = skill_category.get("label")
-                # Put name in user skills
-                skill_name = skill.get("name")
-                user_skill["skill_name"] = skill_name
-                # Put description in user skills
-                skill_description = skill.get("description")
-                user_skill["skill_description"] = skill_description
+                    # Put skill category in user skills
+                    for skill_category in skill_categories:
+                        if skill_category.get("value") == skill.get("category_id"):
+                            user_skill["category_name"] = skill_category.get("label")
+                    # Put name in user skills
+                    skill_name = skill.get("name")
+                    user_skill["skill_name"] = skill_name
+                    # Put description in user skills
+                    skill_description = skill.get("description")
+                    user_skill["skill_description"] = skill_description
 
-                # Put author in user skills
-                skill_author = skill.get("author_id")
-                user_skill["skill_author"] = all_users[skill_author].get("name")
+                    # Put author in user skills
+                    skill_author = skill.get("author_id")
+                    user_skill["skill_author"] = all_users[skill_author].get("name")
 
-                user_skills_list.append(user_skill)
+                    user_skills_list.append(user_skill)
     user_skills_list.sort(key=lambda x: x.get("skill_name", "").lower())
     return user_skills_list
 
