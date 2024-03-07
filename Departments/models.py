@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from pydantic import BaseModel,  validator
+from pydantic import BaseModel,  validator, Field
 from uuid import UUID
 from datetime import datetime
 
@@ -10,7 +10,7 @@ class DepartmentMember(BaseModel):
     user_id: UUID
     email: str
     name: str
-    skills: List[str]
+    skills: Optional[List[str]] = Field(default_factory=list)
 
 
 class CreateMember(BaseModel):
