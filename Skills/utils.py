@@ -29,7 +29,7 @@ def create_skills(data):
 
 
 # USER_SKILLS
-def get_skills_by_users_id(user_id):
+def get_skills_by_users_id(user_id, skill_id):
     all_users = db.get_users()
     organization_id = all_users[user_id].get("org_id")
     user_skills = db.get_user_skills(user_id)
@@ -37,7 +37,7 @@ def get_skills_by_users_id(user_id):
     skill_categories = get_skill_categories(user_id)
     user_skills_list = []
     for user_skill in user_skills:
-        if user_skill.get("user_id") == user_id:
+        if user_skill.get("user_id") == user_id and user_skill.get("user_id")==skill_id:
             user_skill_id = user_skill.get("skill_id")
             if user_skill_id in skills:
                 skill = skills[user_skill_id]
@@ -250,7 +250,8 @@ def get_skill_proposals(user_id):
         skill_proposal["user_name"] = user_data.get("name")
 
         org_skills = db.get_skills(db.get_user(user_id).get("org_id"))
-        users_skills = get_skills_by_users_id(skill_proposal.get("user_id"))
+        users_skills = get_skills_by_users_id(skill_proposal.get("user_id"), skill_proposal.get("skill_id"))
+        print(users_skills)
         if users_skills:
             skill_proposal["type"] = "put"
         else:
