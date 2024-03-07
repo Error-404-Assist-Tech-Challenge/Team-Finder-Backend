@@ -238,10 +238,10 @@ def update_skill_proposal(data):
                                           experience=experience,
                                           created_at=datetime.now().isoformat())
                 db.delete_proposed_skill(user_id=user_id, skill_id=skill_id)
-                return data
+                return get_skill_proposals(user_id)
     else:
         db.delete_proposed_skill(user_id=user_id, skill_id=skill_id)
-        return data
+        return get_skill_proposals(user_id)
 
 
 def get_skill_proposals(user_id):
@@ -252,9 +252,9 @@ def get_skill_proposals(user_id):
         org_skills = db.get_skills(db.get_user(user_id).get("org_id"))
         users_skills = get_skills_by_users_id(skill_proposal.get("user_id"))
         if users_skills:
-            skill_proposal["type"] = "post"
-        else:
             skill_proposal["type"] = "put"
+        else:
+            skill_proposal["type"] = "post"
 
         for skill in org_skills:
             current_skill = org_skills[skill]
