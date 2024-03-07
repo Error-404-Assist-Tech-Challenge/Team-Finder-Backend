@@ -308,10 +308,20 @@ class DataBase:
             return returned_members
 
     @staticmethod
+    def get_department_user(user_id):
+        with session_scope() as session:
+            all_department_members = get_department_members(session=session)
+            for member in all_department_members:
+                member_dept_id = member.get("dept_id")
+                member_user_id = member.get("user_id")
+
+                if member_user_id == user_id:
+                    return member_dept_id
+
+    @staticmethod
     def delete_department_members(dept_id):
         with session_scope() as session:
             return delete_department_members(session=session, dept_id=dept_id)
-
 
     @staticmethod
     def delete_department_member(dept_id, user_id):
@@ -381,6 +391,7 @@ class DataBase:
                                      skill_id=skill_id,
                                      level=level,
                                      experience=experience)
+
     @staticmethod
     def remove_user_skill(user_id, skill_id):
         with session_scope() as session:
@@ -388,17 +399,25 @@ class DataBase:
                                      user_id=user_id,
                                      skill_id=skill_id)
 
+    @staticmethod
+    def verify_user_skill(user_id, skill_id):
+        with session_scope() as session:
+            all_user_skills = get_user_skills(session)
+            for user_skill in all_user_skills:
+                if user_skill.get("user_id") == str(user_id) and user_skill.get("skill_id") == str(skill_id):
+                    return True
+        return False
+
     # SKILL PROPOSALS
 
     @staticmethod
-    def propose_skill(skill_id, user_id, dept_id, level, experience, proposal):
+    def propose_skill(skill_id, user_id, dept_id, level, experience):
         with session_scope() as session:
             return propose_skill(session=session,
                                  dept_id=dept_id,
                                  user_id=user_id,
                                  skill_id=skill_id,
                                  level=level,
-                                 proposal=proposal,
                                  experience=experience)
 
     @staticmethod
