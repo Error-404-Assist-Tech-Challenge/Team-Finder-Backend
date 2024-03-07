@@ -361,8 +361,7 @@ class DataBase:
                             returned_skills[current_skill_id]["dept_id"].append(dept_id)
             return returned_skills
 
-
-    #USER_SKILLS
+    # USER_SKILLS
     @staticmethod
     def create_user_skills(user_id, skill_id, level, experience, created_at):
         with session_scope() as session:
