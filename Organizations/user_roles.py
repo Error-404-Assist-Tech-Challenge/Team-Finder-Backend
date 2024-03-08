@@ -6,6 +6,7 @@ from auth import AuthHandler
 user_roles_router = APIRouter()
 auth_handler = AuthHandler()
 
+
 @user_roles_router.post("/api/organizations/user_roles", response_model=UserRole)
 def create_user_role_route(user_role_data: UserRole):
     return create_user_role(user_role_data)

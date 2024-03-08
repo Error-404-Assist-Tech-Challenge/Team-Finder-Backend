@@ -67,7 +67,7 @@ class DataBase:
                                password=password,
                                created_at=created_at,
                                org_id=org_id,
-                               user_id=zero_id)
+                               user_id="00000000-0000-0000-0000-000000000000")
 
     @staticmethod
     def get_users():
@@ -282,6 +282,16 @@ class DataBase:
             return delete_department(session=session,
                                      dept_id=dept_id)
 
+    @staticmethod
+    def remove_manager_id(dept_id, manager_id):
+        with session_scope() as session:
+            return remove_manager_id(session=session, dept_id=dept_id, manager_id=manager_id)
+
+    @staticmethod
+    def get_department_info(dept_id):
+        with session_scope() as session:
+            return get_department_info(session=session, dept_id=dept_id)
+
     # DEPARTMENT_MEMBERS
     @staticmethod
     def create_department_member(dept_id, user_id):
@@ -473,8 +483,7 @@ class DataBase:
                                          name=name,
                                          modified_at=modified_at)
 
-
-    #DEPARTMENT_SKILLS
+    # DEPARTMENT_SKILLS
     @staticmethod
     def create_department_skill(dept_id, skill_id):
         with session_scope() as session:
@@ -527,11 +536,19 @@ class DataBase:
                                            skill_id=skill_id,
                                            new_dept_id=new_dept_id,
                                            new_skill_id=new_skill_id)
+
     @staticmethod
     def delete_department_skills(dept_id):
         with session_scope() as session:
             return delete_department_skills(session=session,
                                             dept_id=dept_id)
+
+    @staticmethod
+    def delete_department_skill(dept_id, skill_id):
+        with session_scope() as session:
+            return delete_department_skill(session=session,
+                                            dept_id=dept_id,
+                                            skill_id=skill_id)
 
 #PROJECTS===============================================================================================================
 
