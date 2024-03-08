@@ -217,7 +217,7 @@ def create_department_skill(data, user_id):
         if str(current_department.get("manager_id")) == str(user_id):
             db.create_department_skill(dept_id=current_department.get("id"),
                                        skill_id=department_skills_data.get("skill_id"))
-            return department_skills_data
+            return db.get_skills(organization_id)
 
 
 def delete_department_skill(data, user_id):

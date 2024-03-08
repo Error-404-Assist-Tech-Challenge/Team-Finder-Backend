@@ -7,7 +7,7 @@ auth_handler = AuthHandler()
 department_skills_router = APIRouter()
 
 
-@department_skills_router.post("/api/skills/department", response_model=Department_skills)
+@department_skills_router.post("/api/skills/department")
 def department_skill_create(department_skills_data: Department_skills, user_id: str = Depends(auth_handler.auth_wrapper)):
     return create_department_skill(department_skills_data, user_id)
 
