@@ -169,6 +169,12 @@ def get_organizations_skills(user_id):
             if modified_skill.get("author_id") == current_user.get("id"):
                 modified_skill["author_name"] = current_user.get("name")
 
+        # Check if skill is authored
+        if str(modified_skill.get("author_id")) == str(user_id):
+            modified_skill["is_authored"] = True
+        else:
+            modified_skill["is_authored"] = False
+
         for department in departments:
             current_department = departments[department]
 
@@ -181,11 +187,11 @@ def get_organizations_skills(user_id):
                     current_department_skill = department_skills[department_skill]
                     if str(current_department_skill.get("skill_id")) == str(modified_skill.get("id")) and str(
                             current_department_skill.get("dept_id")) == str(current_department.get("id")):
-                        modified_skill["is_in_my_department"] = True
+                        modified_skill["is_department_managed"] = True
                     else:
-                        modified_skill["is_in_my_department"] = False
+                        modified_skill["is_department_managed"] = False
             else:
-                modified_skill["is_in_my_department"] = False
+                modified_skill["is_department_managed"] = False
 
             for department_id in current_skill_department_ids:
                 if str(department_id) == str(current_department_id):
