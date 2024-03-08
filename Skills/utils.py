@@ -1,5 +1,8 @@
 from datetime import datetime
 from uuid import uuid4
+
+from fastapi import HTTPException
+
 from database.db import db
 
 from Organizations.utils import get_organizations_skills
@@ -69,21 +72,19 @@ def create_user_skills(data, user_id):
     user_skill_data = data.model_dump()
     is_manager = False
     # Logic skill proposal
-
     skill_id = user_skill_data.get("skill_id")
 
     # Search if user exists in a department
     department_id = db.get_department_user(user_id)
-
     # Search if user is manager to a department
     if not department_id:
         departments = db.get_department(db.get_user(user_id).get("org_id"))
         for department in departments:
             current_department = departments[department]
-            if current_department.get("manager_id") == user_id:
+            if str(current_department.get("manager_id")) == str(user_id):
                 department_id = current_department.get("id")
                 is_manager = True
-
+    # If user is not a manager and has a department user can propose skill
     if department_id and not is_manager:
         db.propose_skill(skill_id=skill_id,
                          user_id=user_id,
@@ -92,15 +93,29 @@ def create_user_skills(data, user_id):
                          experience=user_skill_data.get("experience"))
         returned_data = get_skills_by_users_id(user_id)
         return returned_data
+    # If user is manager auto accept is implemented
     elif is_manager:
-        db.create_user_skills(skill_id=skill_id,
-                              user_id=user_id,
-                              level=user_skill_data.get("level"),
-                              experience=user_skill_data.get("experience"),
-                              created_at=datetime.now().isoformat())
-        return get_skills_by_users_id(user_id=user_id, skill_id=skill_id)
+        # Verify if manager has or not having that skill
+        manager_skills = db.get_user_skills(user_id)
+        skill_found = False
+        for skill in manager_skills:
+            if str(skill.get("skill_id")) == str(skill_id):
+                skill_found = True
+        if skill_found:
+            db.update_user_skill(skill_id=skill_id,
+                                 user_id=user_id,
+                                 level=user_skill_data.get("level"),
+                                 experience=user_skill_data.get("experience"))
+        else:
+            db.create_user_skills(skill_id=skill_id,
+                                  user_id=user_id,
+                                  level=user_skill_data.get("level"),
+                                  experience=user_skill_data.get("experience"),
+                                  created_at=datetime.now().isoformat())
+        return get_skills_by_users_id(user_id=user_id)
+    # If user doesn't have a skill he cannot propose to anybody therefore we throw error 409
     else:
-        return {"error": "Department not found for the user"}, 409
+        raise HTTPException(status_code=409, detail="Department not found for the user")
 
 
 def remove_user_skill(data, user_id):
