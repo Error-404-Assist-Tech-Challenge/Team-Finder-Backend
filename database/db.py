@@ -324,7 +324,7 @@ class DataBase:
             for member in all_department_members:
                 member_dept_id = member.get("dept_id")
                 member_user_id = member.get("user_id")
-                if member_user_id == user_id:
+                if str(member_user_id) == str(user_id):
                     return member_dept_id
 
     @staticmethod
