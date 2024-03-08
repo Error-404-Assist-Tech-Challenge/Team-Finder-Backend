@@ -130,10 +130,20 @@ def remove_user_skill(data, user_id):
 
 def update_user_skills(data, user_id):
     user_skill_data = data.model_dump()
-
+    is_manager = False
     skill_id = user_skill_data.get("skill_id")
+    # Search if user exists in a department
     department_id = db.get_department_user(user_id)
-    if department_id:
+    # Search if user is manager to a department
+    if not department_id:
+        departments = db.get_department(db.get_user(user_id).get("org_id"))
+        for department in departments:
+            current_department = departments[department]
+            if str(current_department.get("manager_id")) == str(user_id):
+                department_id = current_department.get("id")
+                is_manager = True
+
+    if department_id and not is_manager:
         db.propose_skill(skill_id=skill_id,
                          user_id=user_id,
                          dept_id=department_id,
@@ -141,8 +151,15 @@ def update_user_skills(data, user_id):
                          experience=user_skill_data.get("experience"))
         returned_data = get_skills_by_users_id(user_id)
         return returned_data
+    elif is_manager:
+        db.update_user_skill(skill_id=skill_id,
+                             user_id=user_id,
+                             level=user_skill_data.get("level"),
+                             experience=user_skill_data.get("experience"))
+        returned_data = get_skills_by_users_id(user_id)
+        return returned_data
     else:
-        return {"error": "Department not found for the user"}, 409
+        raise HTTPException(status_code=409, detail="Department not found for the user")
 
 
 # SKILL_CATEGORIES
