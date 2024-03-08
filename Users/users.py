@@ -68,7 +68,7 @@ def user_login(user_data: UserLogin, response: Response):
     return login_obj
 
 
-@user_router.post("/api/users/logout")
+@user_router.get("/api/users/logout")
 def user_logout(response: Response):
     response.set_cookie(key="refresh_token", value="", secure=True, httponly=True, domain="api-team-finder.azurewebsites.net", path="/api", samesite="none")
     return {"detail": "Logged out"}
