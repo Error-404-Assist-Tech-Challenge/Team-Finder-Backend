@@ -3,6 +3,9 @@ from datetime import datetime, timedelta
 import secrets
 from database.db import db
 
+# from Departments.utils import get_department_members
+from database.db import db
+
 department_manager_id = "fa124499-1762-4f3b-8a61-712307e1677a"
 
 # USER_ROLES
@@ -43,7 +46,7 @@ def delete_user_role(data, admin_id):
             departments = db.get_department(db.get_user(admin_id).get("org_id"))
             for department in departments:
                 current_department = departments[department]
-                if current_department.get("manager_id") == removed_data.get("user_id"):
+                if str(current_department.get("manager_id")) == str(removed_data.get("user_id")):
                     db.remove_manager_id(current_department.get("id"), None)
     returned_data = get_org_users(admin_id)
     return returned_data, None
