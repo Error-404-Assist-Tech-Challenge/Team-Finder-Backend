@@ -274,7 +274,7 @@ def get_skill_proposals(user_id):
         skill_proposal["user_name"] = user_data.get("name")
 
         org_skills = db.get_skills(db.get_user(user_id).get("org_id"))
-        users_skills = get_skills_by_users_id(skill_proposal.get("user_id"), skill_proposal.get("skill_id"))
+        users_skills = get_skills_by_users_id(skill_proposal.get("user_id"))
         if users_skills:
             skill_proposal["type"] = "put"
         else:
