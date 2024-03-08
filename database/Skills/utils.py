@@ -185,6 +185,18 @@ def delete_department_skills(session, dept_id):
         return error
 
 
+def delete_department_skill(session, dept_id, skill_id):
+    try:
+        department_skill = session.query(Department_skills).filter(Department_skills.dept_id == dept_id,
+                                                                   Department_skills.skill_id == skill_id).first()
+        session.delete(department_skill)
+        session.commit()
+        return department_skill
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
 #SKILL_CATEGORIES
 
 def create_skill_category(session, org_id, name, created_at, skill_category_id):

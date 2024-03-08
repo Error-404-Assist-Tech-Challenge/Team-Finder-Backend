@@ -29,15 +29,15 @@ def create_skills(data):
 
 
 # USER_SKILLS
-def get_skills_by_users_id(user_id, skill_id):
-    all_users = db.get_users()
-    organization_id = all_users[user_id].get("org_id")
+def get_skills_by_users_id(user_id):
+    organization_id = db.get_user(user_id).get("org_id")
     user_skills = db.get_user_skills(user_id)
     skills = db.get_skills(organization_id)
     skill_categories = get_skill_categories(user_id)
     user_skills_list = []
+
     for user_skill in user_skills:
-        if user_skill.get("user_id") == user_id and user_skill.get("user_id")==skill_id:
+        if user_skill.get("user_id") == user_id:
             user_skill_id = user_skill.get("skill_id")
             if user_skill_id in skills:
                 skill = skills[user_skill_id]
@@ -55,7 +55,7 @@ def get_skills_by_users_id(user_id, skill_id):
 
                 # Put author in user skills
                 skill_author = skill.get("author_id")
-                user_skill["skill_author"] = all_users[skill_author].get("name")
+                user_skill["skill_author"] = db.get_user(skill_author).get("name")
 
                 user_skills_list.append(user_skill)
     user_skills_list.sort(key=lambda x: x.get("skill_name", "").lower())
@@ -215,6 +215,22 @@ def create_department_skill(data):
                                skill_id=department_skills_data.get("skill_id"))
 
     return department_skills_data
+
+
+def delete_department_skill(data, user_id):
+    removed_skill_id = data.model_dump().get("skill_id")
+    department_skills = get_department_skills()
+    for department in department_skills:
+        current_department = department_skills[department]
+        current_department_id = current_department.get("dept_id")
+        current_department_skill_id = current_department.get("skill_id")
+        if str(removed_skill_id) == current_department_skill_id:
+            department_info = db.get_department_info(current_department_id)
+            if str(department_info.get("manager_id")) == str(user_id):
+                db.delete_department_skill(dept_id=current_department_id,
+                                           skill_id=current_department_skill_id)
+                returned_data = get_department_skills()
+                return returned_data
 
 # SKILLS PROPOSALS
 

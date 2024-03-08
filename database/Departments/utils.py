@@ -1,6 +1,5 @@
 from sqlalchemy.exc import SQLAlchemyError
 from database.Departments.models import *
-from database.config import zero_id
 
 
 # DEPARTMENTS
@@ -40,6 +39,7 @@ def update_department(session, dept_id, name, manager_id):
         print(error)
         return error
 
+
 def delete_department(session, dept_id):
     try:
         department_info = session.query(Department).filter(
@@ -58,7 +58,39 @@ def delete_department(session, dept_id):
         print(error)
         return error
 
-#DEPARTMENT_MEMBERS
+
+def remove_manager_id(session, dept_id, manager_id):
+    try:
+        department = session.query(Department).filter(
+            Department.id == dept_id
+        ).first()
+        department.manager_id = manager_id
+
+        return department.serialize(department)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        session.rollback()
+        print(error)
+        return error
+
+
+def get_department_info(session, dept_id):
+    try:
+        department = session.query(Department).filter(
+            Department.id == dept_id
+        ).first()
+
+        if department:
+            return department.serialize()
+        else:
+            return None
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        session.rollback()
+        print(error)
+        return error
+
+# DEPARTMENT_MEMBERS
 def create_department_member(session, dept_id, user_id):
     try:
         obj = Department_members(dept_id=dept_id, user_id=user_id)
@@ -78,6 +110,7 @@ def get_department_members(session):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
 
 def delete_department_members(session, dept_id):
     try:

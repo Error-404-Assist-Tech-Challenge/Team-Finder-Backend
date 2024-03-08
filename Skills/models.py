@@ -83,13 +83,15 @@ class UpdateSkillCategory(BaseModel):
 class Department_skills(BaseModel):
     skill_id: UUID
     dept_id: UUID
-    new_dept_id: UUID
-    new_skill_id: UUID
 
 
 class AddDepartment(BaseModel):
     skill_id: UUID
     dept_id: UUID
+
+
+class Remove_department_skill(BaseModel):
+    skill_id: UUID
 
 # SKILLS PROPOSALS
 
