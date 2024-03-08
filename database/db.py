@@ -485,11 +485,12 @@ class DataBase:
 
     # DEPARTMENT_SKILLS
     @staticmethod
-    def create_department_skill(dept_id, skill_id):
+    def create_department_skill(dept_id, skill_id, id):
         with session_scope() as session:
             return create_department_skill(session=session,
                                            dept_id=dept_id,
-                                           skill_id=skill_id)
+                                           skill_id=skill_id,
+                                           id=id)
 
     @staticmethod
     def get_department_skills():

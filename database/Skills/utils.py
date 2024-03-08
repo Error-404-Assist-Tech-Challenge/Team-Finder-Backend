@@ -126,9 +126,9 @@ def delete_proposed_skill(session, user_id, skill_id):
 
 
 #DEPARTMENT_SKILLS
-def create_department_skill(session, dept_id, skill_id):
+def create_department_skill(session, dept_id, skill_id, id):
     try:
-        obj = Department_skills(dept_id=dept_id, skill_id=skill_id)
+        obj = Department_skills(dept_id=dept_id, skill_id=skill_id, id=id)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:

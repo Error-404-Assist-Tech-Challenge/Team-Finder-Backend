@@ -215,11 +215,13 @@ def create_department_skill(data, user_id):
     department_skills_data = data.model_dump()
     organization_id = db.get_user(user_id).get("org_id")
     departments = db.get_department(organization_id)
+    department_skill_id = str(uuid4())
     for department in departments:
         current_department = departments[department]
         if str(current_department.get("manager_id")) == str(user_id):
             db.create_department_skill(dept_id=current_department.get("id"),
-                                       skill_id=department_skills_data.get("skill_id"))
+                                       skill_id=department_skills_data.get("skill_id"),
+                                       id=department_skill_id)
 
             returned_data = get_organizations_skills(user_id)
             return returned_data
