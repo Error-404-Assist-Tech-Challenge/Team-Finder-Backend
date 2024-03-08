@@ -208,13 +208,16 @@ def get_department_skills():
     return department_skills
 
 
-def create_department_skill(data):
+def create_department_skill(data, user_id):
     department_skills_data = data.model_dump()
-
-    db.create_department_skill(dept_id=department_skills_data.get("dept_id"),
-                               skill_id=department_skills_data.get("skill_id"))
-
-    return department_skills_data
+    organization_id = db.get_user(user_id).get("org_id")
+    departments = db.get_department(organization_id)
+    for department in departments:
+        current_department = departments[department]
+        if str(current_department.get("manager_id")) == str(user_id):
+            db.create_department_skill(dept_id=current_department.get("id"),
+                                       skill_id=department_skills_data.get("skill_id"))
+            return db.get_skills(organization_id)
 
 
 def delete_department_skill(data, user_id):

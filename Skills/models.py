@@ -82,7 +82,6 @@ class UpdateSkillCategory(BaseModel):
 
 class Department_skills(BaseModel):
     skill_id: UUID
-    dept_id: UUID
 
 
 class AddDepartment(BaseModel):
