@@ -509,13 +509,12 @@ class DataBase:
     def get_department_skills_names(organization_id):
         with session_scope() as session:
             dep_skills = get_department_skills(session=session)
-
             # GET ORGANIZATION DEPARTMENTS
             returned_departments = {}
             departments = get_department(session=session)
             for department in departments:
                 current_department = departments[department]
-                if current_department.get("org_id") == organization_id:
+                if str(current_department.get("org_id")) == str(organization_id):
                     current_department_id = current_department.get("id")
                     returned_departments[current_department_id] = current_department
 
