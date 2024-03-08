@@ -72,3 +72,4 @@ def user_login(user_data: UserLogin, response: Response):
 def protected(response: Response):
     response.set_cookie(key="refresh_token", expires=0, max_age=0, secure=True, httponly=True, domain="api-team-finder.azurewebsites.net", path="/api", samesite="none")
     return {"detail": "Logged out"}
+
