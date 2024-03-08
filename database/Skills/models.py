@@ -83,7 +83,7 @@ class UserSkills(Base):
 class Department_skills(Base):
     __tablename__ = "department_skills"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
+    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4())
     dept_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False)
     skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"), nullable=False)
     @staticmethod

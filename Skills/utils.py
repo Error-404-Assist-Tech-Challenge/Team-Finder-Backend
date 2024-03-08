@@ -2,6 +2,9 @@ from datetime import datetime
 from uuid import uuid4
 from database.db import db
 
+from Organizations.utils import get_organizations_skills
+
+
 # SKILLS
 
 
@@ -217,7 +220,9 @@ def create_department_skill(data, user_id):
         if str(current_department.get("manager_id")) == str(user_id):
             db.create_department_skill(dept_id=current_department.get("id"),
                                        skill_id=department_skills_data.get("skill_id"))
-            return db.get_skills(organization_id)
+
+            returned_data = get_organizations_skills(user_id)
+            return returned_data
 
 
 def delete_department_skill(data, user_id):
@@ -232,7 +237,8 @@ def delete_department_skill(data, user_id):
             if str(department_info.get("manager_id")) == str(user_id):
                 db.delete_department_skill(dept_id=current_department_id,
                                            skill_id=current_department_skill_id)
-                returned_data = get_department_skills()
+
+                returned_data = get_organizations_skills(user_id)
                 return returned_data
 
 # SKILLS PROPOSALS
