@@ -1,9 +1,9 @@
 from uuid import uuid4
-
-
-from database.db import db
 from datetime import datetime, timedelta
 import secrets
+
+# from Departments.utils import get_department_members
+from database.db import db
 
 department_manager_id = "fa124499-1762-4f3b-8a61-712307e1677a"
 
@@ -169,6 +169,11 @@ def get_organizations_skills(user_id):
             current_user = users[user]
             if modified_skill.get("author_id") == current_user.get("id"):
                 modified_skill["author_name"] = current_user.get("name")
+
+                if modified_skill.get("author_id") == user_id:
+                    modified_skill["is_authored"] = True
+                else:
+                    modified_skill["is_authored"] = False
 
         for department in departments:
             current_department = departments[department]
