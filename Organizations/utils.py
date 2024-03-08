@@ -157,11 +157,10 @@ def get_organizations_skills(user_id):
     returned_skills = []
     users = db.get_users()
     organization_id = users[user_id].get("org_id")
-
+    department_skills = db.get_department_skills_names(organization_id)
     skills = db.get_skills(organization_id)
     skill_categories = db.get_skill_categories(organization_id)
     departments = db.get_department_skills_names(organization_id)
-
     for skill in skills:
         modified_skill = skills[skill]
         modified_skill["dept_name"] = []
@@ -170,17 +169,32 @@ def get_organizations_skills(user_id):
             if modified_skill.get("author_id") == current_user.get("id"):
                 modified_skill["author_name"] = current_user.get("name")
 
-                if modified_skill.get("author_id") == user_id:
-                    modified_skill["is_authored"] = True
-                else:
-                    modified_skill["is_authored"] = False
+        # Check if skill is authored
+        if str(modified_skill.get("author_id")) == str(user_id):
+            modified_skill["is_authored"] = True
+        else:
+            modified_skill["is_authored"] = False
 
         for department in departments:
             current_department = departments[department]
+
             current_department_id = current_department.get("dept_id")
             current_skill_department_ids = modified_skill.get("dept_id")
+
+            # Check if skill is in my department
+            if department_skills == {}:
+                for department_skill in department_skills:
+                    current_department_skill = department_skills[department_skill]
+                    if str(current_department_skill.get("skill_id")) == str(modified_skill.get("id")) and str(
+                            current_department_skill.get("dept_id")) == str(current_department.get("id")):
+                        modified_skill["is_department_managed"] = True
+                    else:
+                        modified_skill["is_department_managed"] = False
+            else:
+                modified_skill["is_department_managed"] = False
+
             for department_id in current_skill_department_ids:
-                if department_id == current_department_id:
+                if str(department_id) == str(current_department_id):
                     modified_skill["dept_name"].append(current_department.get("dept_name"))
 
         for skill_category in skill_categories:
@@ -190,7 +204,6 @@ def get_organizations_skills(user_id):
 
         del modified_skill["org_id"], modified_skill["created_at"]
         returned_skills.append(modified_skill)
-
     sorted_data = sorted(returned_skills, key=lambda x: x['name'])
     return sorted_data
 
