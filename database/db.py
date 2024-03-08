@@ -324,7 +324,7 @@ class DataBase:
             for member in all_department_members:
                 member_dept_id = member.get("dept_id")
                 member_user_id = member.get("user_id")
-                if member_user_id == user_id:
+                if str(member_user_id) == str(user_id):
                     return member_dept_id
 
     @staticmethod
@@ -360,13 +360,13 @@ class DataBase:
             departments_skills = get_department_skills(session=session)
             for skill in skills:
                 current_skill = skills[skill]
-                if current_skill.get("org_id") == organization_id:
+                if str(current_skill.get("org_id")) == str(organization_id):
                     current_skill_id = current_skill.get("id")
                     returned_skills[current_skill_id] = current_skill
                     returned_skills[current_skill_id]["dept_id"] = []
                     for departments_skill in departments_skills:
                         current_department_skill = departments_skills[departments_skill]
-                        if current_skill_id == current_department_skill.get("skill_id"):
+                        if str(current_skill_id) == str(current_department_skill.get("skill_id")):
                             dept_id = current_department_skill.get("dept_id")
                             returned_skills[current_skill_id]["dept_id"].append(dept_id)
             return returned_skills
