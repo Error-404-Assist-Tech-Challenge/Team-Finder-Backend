@@ -1,8 +1,6 @@
 from uuid import uuid4
 from datetime import datetime, timedelta
 import secrets
-
-# from Departments.utils import get_department_members
 from database.db import db
 
 department_manager_id = "fa124499-1762-4f3b-8a61-712307e1677a"
