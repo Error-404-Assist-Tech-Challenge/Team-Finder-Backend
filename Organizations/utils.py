@@ -241,10 +241,14 @@ def create_organization_user_role(data, admin_id):
 # TEAM_ROLES
 def get_team_roles(admin_id):
     user_data = db.get_user(admin_id)
-    team_roles = db.get_team_roles(user_data.get("org_id"))
+    team_roles_data = db.get_team_roles(user_data.get("org_id"))
 
-    for key in team_roles:
-        team_roles[key].pop("org_id")
+    for key in team_roles_data:
+        team_roles_data[key].pop("org_id")
+
+    team_roles = []
+    for key, value in team_roles_data.items():
+        team_roles.append({"id": key, "name": value["name"]})
 
     return team_roles
 
@@ -257,22 +261,28 @@ def create_team_role(data, admin_id):
                         org_id=user_data.get("org_id"),
                         name=team_role_data.get("name"))
 
-    return team_role_data
+    returned_data = get_team_roles(admin_id)
+
+    return returned_data
 
 
-def update_team_role(data):
+def update_team_role(data, admin_id):
     team_role_data = data.model_dump()
     db.update_team_role(id=team_role_data.get("id"),
                         name=team_role_data.get("name"))
 
-    return team_role_data
+    returned_data = get_team_roles(admin_id)
+
+    return returned_data
 
 
-def delete_team_role(data):
+def delete_team_role(data, admin_id):
     team_role_data = data.model_dump()
     response, error = db.delete_team_role(id=team_role_data.get("id"))
 
-    return response, error
+    returned_data = get_team_roles(admin_id)
+
+    return returned_data, error
 
 
 # SIGNUP_TOKENS
