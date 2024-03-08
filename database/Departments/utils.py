@@ -65,8 +65,8 @@ def remove_manager_id(session, dept_id, manager_id):
             Department.id == dept_id
         ).first()
         department.manager_id = manager_id
-
-        return department.serialize(department)
+        session.commit()
+        return department.serialize()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         session.rollback()
