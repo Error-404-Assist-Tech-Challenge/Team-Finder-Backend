@@ -1,8 +1,6 @@
 from uuid import uuid4
 from datetime import datetime, timedelta
 import secrets
-
-# from Departments.utils import get_department_members
 from database.db import db
 
 department_manager_id = "fa124499-1762-4f3b-8a61-712307e1677a"
@@ -157,13 +155,12 @@ def get_organizations_skills(user_id):
     returned_skills = []
     users = db.get_users()
     organization_id = users[user_id].get("org_id")
-    department_skills = db.get_department_skills_names(organization_id)
     skills = db.get_skills(organization_id)
     skill_categories = db.get_skill_categories(organization_id)
-    departments = db.get_department_skills_names(organization_id)
+
     for skill in skills:
         modified_skill = skills[skill]
-        modified_skill["dept_name"] = []
+
         for user in users:
             current_user = users[user]
             if modified_skill.get("author_id") == current_user.get("id"):
@@ -175,27 +172,18 @@ def get_organizations_skills(user_id):
         else:
             modified_skill["is_authored"] = False
 
-        for department in departments:
-            current_department = departments[department]
+        # Check if skill is in my department
+        modified_skill["is_department_managed"] = False
+        for department_id in modified_skill.get("dept_id"):
+            department_info = db.get_department_info(department_id)
 
-            current_department_id = current_department.get("dept_id")
-            current_skill_department_ids = modified_skill.get("dept_id")
+            if str(department_info.get("manager_id")) == modified_skill.get("author_id"):
+                modified_skill["is_department_managed"] = True
 
-            # Check if skill is in my department
-            if department_skills == {}:
-                for department_skill in department_skills:
-                    current_department_skill = department_skills[department_skill]
-                    if str(current_department_skill.get("skill_id")) == str(modified_skill.get("id")) and str(
-                            current_department_skill.get("dept_id")) == str(current_department.get("id")):
-                        modified_skill["is_department_managed"] = True
-                    else:
-                        modified_skill["is_department_managed"] = False
-            else:
-                modified_skill["is_department_managed"] = False
-
-            for department_id in current_skill_department_ids:
-                if str(department_id) == str(current_department_id):
-                    modified_skill["dept_name"].append(current_department.get("dept_name"))
+        modified_skill["dept_name"] = []
+        for department_id in modified_skill.get("dept_id"):
+            department_info = db.get_department_info(department_id)
+            modified_skill["dept_name"].append(department_info.get("name"))
 
         for skill_category in skill_categories:
             current_skill_category_id = skill_category.get("value")

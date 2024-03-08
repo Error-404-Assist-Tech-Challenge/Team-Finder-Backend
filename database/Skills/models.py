@@ -83,13 +83,14 @@ class UserSkills(Base):
 class Department_skills(Base):
     __tablename__ = "department_skills"
 
-    dept_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), primary_key=True, nullable=False)
+    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
+    dept_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False)
     skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"), nullable=False)
     @staticmethod
     def serialize_department_skills(department_skills):
         serialize_department_skills = {}
         for department_skill in department_skills:
-            serialize_department_skills[str(department_skill.dept_id)] = {
+            serialize_department_skills[str(department_skill.id)] = {
                 "dept_id": str(department_skill.dept_id),
                 "skill_id": str(department_skill.skill_id)
             }
