@@ -74,12 +74,18 @@ class RoleCreate(BaseModel):
 
 # TEAM_ROLES
 class TeamRole(BaseModel):
+    id: UUID
+    name: str
+
+
+class TeamRoleCreate(BaseModel):
     name: str
 
 
 class TeamRoleUpdate(BaseModel):
     id: UUID
     name: str
+
 
 class TeamRoleDelete(BaseModel):
     id: UUID
