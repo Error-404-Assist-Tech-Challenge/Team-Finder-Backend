@@ -30,9 +30,8 @@ class Skill(BaseModel):
     category_name: str
     name: str
     description: str
-    is_in_my_department: bool
-    is_created_by_me: bool
-
+    is_authored: bool
+    # is_department_managed: bool
 
 class CreateSkill(BaseModel):
     category_id: UUID
