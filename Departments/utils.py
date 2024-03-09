@@ -2,7 +2,9 @@ from uuid import uuid4
 from database.db import db
 from Organizations.utils import get_org_users
 
+
 # DEPARTMENTS
+
 def get_departments(user_id):
     users = db.get_users()
     organization_id = users[user_id].get("org_id")
@@ -41,7 +43,6 @@ def get_managed_department(user_id):
             return {"name": departments[key].get("name")}, None
 
     return None, "You don't manage any department"
-
 
 
 def create_department(data, user_id):
@@ -111,6 +112,14 @@ def get_departments_managers(user_id):
             }
             managers_available.append(returned_body)
     return managers_available
+
+
+def get_department_statistics(user_id):
+    departments = get_departments(user_id)
+    for department in departments:
+        if str(department.get("manager_id")) == str(user_id):
+            statistics = db.get_department_statistics(department.get("id"), department.get("org_id"))
+            return statistics
 
 
 def get_projects_department(user_id): # Endpoint where department manager can see the projects if one of  his members are on the project

@@ -59,17 +59,6 @@ class DataBase:
                                user_id=user_id)
 
     @staticmethod
-    def create_dummy(name, email, password, created_at, org_id):
-        with session_scope() as session:
-            return create_user(session=session,
-                               name=name,
-                               email=email,
-                               password=password,
-                               created_at=created_at,
-                               org_id=org_id,
-                               user_id="00000000-0000-0000-0000-000000000000")
-
-    @staticmethod
     def get_users():
         with session_scope() as session:
             return get_users(session=session)
@@ -417,6 +406,14 @@ class DataBase:
                     return True
         return False
 
+    @staticmethod
+    def get_skill_info(skill_id, org_id):
+        with session_scope() as session:
+            org_skill = get_skills(session)
+            current_skill = org_skill[skill_id]
+            if str(current_skill.get("org_id")) == str(org_id):
+                return current_skill
+
     # SKILL PROPOSALS
 
     @staticmethod
@@ -550,8 +547,53 @@ class DataBase:
                                             dept_id=dept_id,
                                             skill_id=skill_id)
 
-#PROJECTS===============================================================================================================
+    @staticmethod
+    def get_department_statistics(dept_id, org_id):
+        with session_scope() as session:
+            department_skills = []
+            returned_body = []
+            reference_user_skill = {}
 
+            org_dept_skills = get_department_skills(session)
+            org_user_skills = get_user_skills(session)
+            # Modifying user_skills for reference search
+            for user_skill in org_user_skills:
+                # Verifying if user is in organization
+                current_user_id = user_skill.get("user_id")
+                if db.get_user(current_user_id).get("org_id") == org_id:
+                    reference_user_skill[user_skill.get("user_id")] = {
+                        "skill_id": user_skill.get("skill_id"),
+                        "level": user_skill.get("level"),
+                        "experience": user_skill.get("experience")
+                    }
+
+            # Search every skill from department
+            for skill in org_dept_skills:
+                current_skill = org_dept_skills[skill]
+                if str(current_skill.get("dept_id")) == str(dept_id):
+                    department_skills.append(current_skill.get("skill_id"))
+            # Search for every skill info
+            for skill in department_skills:
+                levels = [0, 0, 0, 0, 0, 0]
+                total_users_skills = 0
+                skill_info = db.get_skill_info(skill, org_id)
+
+                # Search for every user with skills if has a specific skill
+                for user_skill in reference_user_skill:
+                    if str(reference_user_skill[user_skill].get("skill_id")) == str(skill):
+                        levels[0] = total_users_skills + 1
+                        total_users_skills = total_users_skills + 1
+                        current_user_skill_info = reference_user_skill[user_skill]
+                        current_user_skill_level = int(current_user_skill_info.get("level"))
+                        levels[current_user_skill_level] = levels[current_user_skill_level]+1
+                returned_skill = {
+                    "skill_name": skill_info.get("name"),
+                    "levels": levels
+                }
+                returned_body.append(returned_skill)
+        return returned_body
+
+#PROJECTS===============================================================================================================
     @staticmethod
     def create_project(project_id, org_id, name, period, start_date, deadline_date, status, description,tech_stack, created_at):
         with session_scope() as session:
