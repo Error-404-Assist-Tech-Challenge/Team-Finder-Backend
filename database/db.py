@@ -601,29 +601,29 @@ class DataBase:
 
 #PROJECTS===============================================================================================================
     @staticmethod
-    def create_project(project_id, org_id, name, period, start_date, deadline_date, status, description,tech_stack, created_at):
+    def create_project(project_id, org_id, name, manager_id, period, start_date, deadline_date, status, description, created_at):
         with session_scope() as session:
             return create_project(session=session,
                                   project_id=project_id,
                                   org_id=org_id,
                                   name=name,
+                                  manager_id=manager_id,
                                   period=period,
                                   start_date=start_date,
-                                  deadline_date = deadline_date,
-                                  status= status,
-                                  description = description,
-                                  tech_stack = tech_stack,
-                                  created_at = created_at)
+                                  deadline_date=deadline_date,
+                                  status=status,
+                                  description=description,
+                                  created_at=created_at)
 
     @staticmethod
     def get_org_projects(org_id):
         with session_scope() as session:
-            returned_projects = []
+            returned_projects = {}
             all_projects = get_projects(session=session)
             for project in all_projects:
                 current_project = all_projects[project]
                 if current_project.get("org_id") == org_id:
-                    returned_projects.append(project)
+                    returned_projects[current_project.get("id")] = current_project
             return returned_projects
 
     @staticmethod
@@ -674,11 +674,11 @@ class DataBase:
 
     #PROJECT TECH STACK SKILLS
     @staticmethod
-    def create_project_tech_stack_skills(proj_id, skill_id):
+    def create_project_tech_stack_skills(proj_id, tech_stack):
         with session_scope() as session:
             return create_project_tech_stack_skill(session=session,
-                                         proj_id=proj_id,
-                                         skill_id=skill_id)
+                                                   proj_id=proj_id,
+                                                   tech_stack=tech_stack)
 
 
     @staticmethod
@@ -688,12 +688,13 @@ class DataBase:
 
     #PROJECT NEEDED ROLES
     @staticmethod
-    def create_project_needed_roles(proj_id, role_id, count):
+    def create_project_needed_roles(id, proj_id, role_id, count):
         with session_scope() as session:
             return create_project_needed_role(session=session,
-                                         proj_id=proj_id,
-                                         role_id=role_id,
-                                         count=count)
+                                              id=id,
+                                              proj_id=proj_id,
+                                              role_id=role_id,
+                                              count=count)
     @staticmethod
     def get_project_needed_roles():
         with session_scope() as session:

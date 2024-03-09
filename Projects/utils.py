@@ -8,8 +8,7 @@ from datetime import datetime, time
 
 def get_projects(user_id):
     returned_user_projects = []
-    user = db.get_user(user_id)
-    organization_id = user[user_id].get("org_id")
+    organization_id = db.get_user(user_id).get("org_id")
     projects = db.get_org_projects(organization_id)
     for project in projects:
         current_project = projects[project]
@@ -28,17 +27,25 @@ def create_projects(data):
 
     deadline_date = project_data.get("deadline_date")
     deadline_date_iso = deadline_date.isoformat()
-
-    db.create_project(name=project_data.get("name"),
+    # Create project info
+    db.create_project(project_id=project_id,
+                      org_id=project_data.get("org_id"),
+                      manager_id=project_data.get("manager_id"),
+                      name=project_data.get("name"),
+                      period=project_data.get("period"),
                       start_date=start_date_iso,
                       deadline_date=deadline_date_iso,
                       status=project_data.get("status"),
-                      period=project_data.get("period"),
                       description=project_data.get("description"),
-                      tech_stack=project_data.get("tech_stack"),
-                      created_at=project_data.get("created_at"),
-                      org_id=project_data.get("org_id"),
-                      project_id=project_id)
+                      created_at=project_data.get("created_at"))
+    # Create project tech stack
+    db.create_project_tech_stack_skills(project_id, project_data.get("tech_stack"))
+
+    # Create team roles needed
+    team_roles_needed = project_data.get("team_roles")
+    for team_role in team_roles_needed:
+        project_needed_role_id = str(uuid4())
+        db.create_project_needed_roles(project_needed_role_id, project_id, team_role.get("role_id"), team_role.get("count"))
 
     return project_data
 
@@ -101,7 +108,7 @@ def get_project_tech_stack_skills():
 def create_project_tech_stack_skill(data):
     project_tech_stack_skill = data.model_dump()
     db.create_project_tech_stack_skills(proj_id=project_tech_stack_skill.get("proj_id"),
-                                        skill_id=project_tech_stack_skill.get("skill_id"))
+                                        tech_stack=project_tech_stack_skill.get("tech_stack"))
     return project_tech_stack_skill
 
 
