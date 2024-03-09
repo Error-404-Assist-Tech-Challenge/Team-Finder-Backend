@@ -12,10 +12,8 @@ class Team_roles(BaseModel):
 
 
 class Projects(BaseModel):
-    org_id: UUID
     name: str
     period: Literal['Fixed', 'Ongoing']
-    manager_id: UUID
     start_date: date
     deadline_date: date
     status: Literal['Not started', 'Starting', 'In Progress', 'Closing', 'Closed']
