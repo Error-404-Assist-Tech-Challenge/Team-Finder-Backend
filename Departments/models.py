@@ -54,3 +54,6 @@ class RemoveDepartment(BaseModel):
 
 class ManagedDepartment(BaseModel):
     name: str
+
+
+
