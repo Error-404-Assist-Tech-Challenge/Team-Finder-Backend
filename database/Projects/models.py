@@ -38,6 +38,20 @@ class Projects(Base):
             }
         return serialized_projects
 
+    def serialize(self):
+        return {
+            "id": str(self.id),
+            "name": str(self.name),
+            "org_id": str(self.org_id),
+            "manager_id": str(self.manager_id),
+            "period": str(self.period),
+            "start_date": str(self.start_date),
+            "deadline_date": str(self.deadline_date),
+            "status": str(self.status),
+            "description": str(self.description),
+            "created_at": str(self.created_at)
+        }
+
 
 # PROJECT ASSIGNMENTS
 

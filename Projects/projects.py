@@ -7,7 +7,7 @@ projects_router = APIRouter()
 auth_handler = AuthHandler()
 
 
-@projects_router.post("/api/projects")
+@projects_router.post("/api/project")
 def create_projects_route(projects_data: Projects, user_id: str = Depends(auth_handler.auth_wrapper)):
     return create_projects(projects_data, user_id)
 
