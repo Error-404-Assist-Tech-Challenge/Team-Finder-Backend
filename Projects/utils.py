@@ -26,7 +26,7 @@ def get_projects(user_id):
     return returned_user_projects
 
 
-def create_projects(data):
+def create_projects(data, user_id):
     project_data = data.model_dump()
     project_id = str(uuid4())
     project_data["id"] = project_id
@@ -51,7 +51,7 @@ def create_projects(data):
         project_needed_role_id = str(uuid4())
         db.create_project_needed_roles(project_needed_role_id, project_id, team_role.get("role_id"), team_role.get("count"))
 
-    return project_data
+    return get_projects(user_id)
 
 # PROJECTS MEMBERS
 

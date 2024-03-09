@@ -30,6 +30,10 @@ def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
 def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_unused_organization_skills(user_id)
 
+@organization_router.get("/api/organizations/skills/unused/all")
+def organization_get_all_unused_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
+    return get_all_unused_skills(user_id)
+
 
 @organization_router.post("/api/organizations/skills", response_model=List[Skill])
 def organization_create_skill(modified_skill_data: CreateSkill, user_id: str = Depends(auth_handler.auth_wrapper)):
