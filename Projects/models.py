@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from uuid import UUID
-from datetime import datetime, time
+from datetime import datetime, time, date
 from typing import Literal, List
 
 
@@ -16,8 +16,8 @@ class Projects(BaseModel):
     name: str
     period: Literal['Fixed', 'Ongoing']
     manager_id: UUID
-    start_date: datetime
-    deadline_date: datetime
+    start_date: date
+    deadline_date: date
     status: Literal['Not started', 'Starting', 'In Progress', 'Closing', 'Closed']
     description: str
     created_at: datetime = datetime.now().isoformat()
