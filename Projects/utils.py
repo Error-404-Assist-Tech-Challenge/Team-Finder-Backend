@@ -57,7 +57,8 @@ def create_projects(data, user_id):
 def delete_project(user_id):
     project = db.get_project_info(user_id)
     project_id = project.get("id")
-    return db.delete_project(project_id=project_id)
+    db.delete_project(project_id=project_id)
+    return get_projects(user_id)
 
 # PROJECTS MEMBERS
 

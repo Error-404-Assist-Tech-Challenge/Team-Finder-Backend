@@ -35,6 +35,28 @@ def get_projects(session):
         return error
 
 
+def delete_project(session, project_id):
+    try:
+        project = session.query(Projects).filter(Projects.id == project_id).first()
+        if project:
+            session.delete(project)
+            session.commit()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def project_info(session, user_id):
+    try:
+        project = session.query(Projects).filter(Projects.manager_id == user_id).first()
+        return project.serialize()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
 # PROJECT ASSIGNMENTS
 def create_project_assignments(session, project_assignments_id, user_id, proj_id, proj_manager_id, proposal, deallocated, dealloc_reason, work_hours, comment):
     try:
@@ -88,7 +110,8 @@ def get_project_members(session):
         print(error)
         return error
 
-#USER TEAM ROLES
+# USER TEAM ROLES
+
 
 def create_user_team_role(session, user_id, role_id, proposal):
     try:
@@ -136,6 +159,18 @@ def get_project_tech_stack_skills(session):
         print(error)
         return error
 
+
+def delete_tech_stack(session, project_id):
+    try:
+        project_tech_stack_skill = session.query(Project_tech_stack_skills).filter(Project_tech_stack_skills.proj_id == project_id).first()
+        if project_tech_stack_skill:
+            session.delete(project_tech_stack_skill)
+            session.commit()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
 # PROJECT NEEDED ROLES
 
 
@@ -157,6 +192,18 @@ def get_project_needed_roles(session):
     try:
         project_needed_roles = session.query(Project_needed_roles).all()
         return Project_needed_roles.serialize_project_needed_roles(project_needed_roles)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def delete_project_needed_roles(session, project_id):
+    try:
+        project_needed_roles = session.query(Project_needed_roles).filter(Project_needed_roles.proj_id == project_id).all()
+        for role in project_needed_roles:
+            session.delete(role)
+            session.commit()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)

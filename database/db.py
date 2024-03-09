@@ -622,6 +622,11 @@ class DataBase:
                                   created_at=created_at)
 
     @staticmethod
+    def get_project_info(user_id):
+        with session_scope() as session:
+            return project_info(session=session, user_id=user_id)
+
+    @staticmethod
     def get_org_projects(org_id):
         with session_scope() as session:
             returned_projects = {}
@@ -642,6 +647,13 @@ class DataBase:
                 if current_project.get("id") == proj_id:
                     returned_projects.append(current_project)
             return returned_projects
+
+    @staticmethod
+    def delete_project(project_id):
+        with session_scope() as session:
+            delete_project(session=session, project_id=project_id)
+            delete_tech_stack(session=session, project_id=project_id)
+            delete_project_needed_roles(session=session, project_id=project_id)
 
     # PROJECT ASSIGNMENTS
     @staticmethod
