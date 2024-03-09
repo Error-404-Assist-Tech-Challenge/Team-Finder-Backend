@@ -59,9 +59,9 @@ class Project_assignments(Base):
     __tablename__ = "project_assignments"
 
     id = Column(UUID, primary_key=True, nullable=False)
+    org_id = Column(UUID, ForeignKey("organizations.id"), nullable=False)
     proj_id = Column(UUID, ForeignKey("projects.id"), nullable=False)
     user_id = Column(UUID, ForeignKey("users.id"), nullable=False)
-    proj_manager_id = Column(UUID, nullable=False)
     proposal = Column(Boolean, nullable=False)
     deallocated = Column(Boolean, nullable=False)
     dealloc_reason = Column(String, nullable=False)
@@ -70,19 +70,20 @@ class Project_assignments(Base):
 
     @staticmethod
     def serialize_project_assignments(project_assignments):
-        serialize_project_assignments = {}
+        serialized_project_assignments = []
         for project_assignment in project_assignments:
-            serialize_project_assignments[str(project_assignment.id)] = {
+            serialized_project_assignments.append({
                 "id": str(project_assignment.id),
+                "org_id": str(project_assignment.org_id),
+                "user_id": str(project_assignment.user_id),
                 "proj_id": str(project_assignment.proj_id),
-                "proj_manager_id": str(project_assignment.proj_manager_id),
-                "proposal": str(project_assignment.proposal),
-                "deallocated": str(project_assignment.deallocated),
+                "proposal": bool(project_assignment.proposal),
+                "deallocated": bool(project_assignment.deallocated),
                 "dealloc_reason": str(project_assignment.dealloc_reason),
                 "work_hours": str(project_assignment.work_hours),
                 "comment": str(project_assignment.comment)
-            }
-        return serialize_project_assignments
+            })
+        return serialized_project_assignments
 
 # PROJECTS MEMBERS
 

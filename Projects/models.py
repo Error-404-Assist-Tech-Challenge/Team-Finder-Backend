@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from uuid import UUID
 from datetime import datetime, time, date
-from typing import Literal, List
+from typing import Literal, List, Optional
 
 
 # PROJECTS
@@ -46,13 +46,18 @@ class Project_members(BaseModel):
     user_id: UUID
     proj_id: UUID
 
+
+class Search(BaseModel):
+    proj_id: UUID
+    filters: List[Literal['Unavailable', 'Partially Available', 'Close To Finish']]
+    weeks_until_deadline: Optional[int] = Field(default=None, ge=2, le=6)
+
 # PROJECT ASSIGNMENTS
 
 
 class Project_assignments(BaseModel):
     proj_id: UUID
     user_id: UUID
-    proj_manager_id: UUID
     proposal: bool
     deallocated: bool
     dealloc_reason: str

@@ -1,7 +1,8 @@
 from uuid import uuid4
 
 from database.db import db
-from datetime import datetime, time
+from datetime import datetime, timedelta
+from Organizations.utils import get_org_users
 
 
 # PROJECTS
@@ -97,6 +98,99 @@ def create_project_member(data):
                              proj_id=project_member_data.get("proj_id"))
     return project_member_data
 
+
+def search_employees(data, user_id):
+    search_data = data.model_dump()
+    proj_id = str(search_data.get("proj_id"))
+    filters = search_data.get("filters")
+    deadline_filter = search_data.get("weeks_until_deadline")
+    user_data = db.get_user(user_id)
+    org_id = user_data.get("org_id")
+    proj_assignments = db.get_project_assignments(org_id)
+    tech_stack_skills = db.get_project_tech_stack_skills(org_id=org_id, proj_id=proj_id)
+
+    stack_skill_ids = []
+    for skill in tech_stack_skills:
+        stack_skill_ids.append(skill.get("skill_id"))
+
+    eligible_employees = []
+    users_skills = db.get_users_skills()
+    for employee_skill in users_skills:
+        employee_data = db.get_user(employee_skill.get("user_id"))
+
+        if employee_data.get("org_id") == org_id:
+            # Check if employee has relevant skills for the project
+            if employee_skill.get("skill_id") in stack_skill_ids:
+                skill_data = db.get_skill(employee_skill.get("skill_id"))
+                employee_skill["skills"] = []
+                employee_skill["skills"].append({
+                    "name": skill_data.get("name"),
+                    "experience": employee_skill.get("experience"),
+                    "level": employee_skill.get("level")
+                })
+
+                # Check if the employee is already eligible and append skill
+                is_already_eligible = False
+                for employee in eligible_employees:
+                    if employee["user_id"] == employee_skill.get("user_id"):
+                        employee["skills"].append({
+                            "name": skill_data.get("name"),
+                            "experience": employee_skill.get("experience"),
+                            "level": employee_skill.get("level")
+                        })
+                        is_already_eligible = True
+                if is_already_eligible:
+                    continue
+
+                is_assigned_to_project = False
+                in_deadline_threshold = True
+                work_hours = 0
+
+                # Check each project assignment for the employee
+                # to determine if they are assigned to the current project, their work hours,
+                # and if the project's deadline is within the specified threshold
+                for assignment in proj_assignments:
+                    if assignment.get("user_id") == employee_skill.get("user_id"):
+                        if assignment.get("proj_id") == proj_id:
+                            is_assigned_to_project = True
+                        if not bool(assignment.get("proposal")) and not bool(assignment.get("deallocated")):
+                            work_hours += int(assignment.get("work_hours"))
+
+                        if deadline_filter:
+                            employee_project_info = db.get_projects_id(assignment.get("proj_id"))[0]
+                            deadline_threshold = datetime.utcnow() + timedelta(weeks=deadline_filter)
+                            proj_deadline = employee_project_info.get("deadline_date")
+
+                            if datetime.strptime(proj_deadline, "%Y-%m-%d") >= deadline_threshold:
+                                in_deadline_threshold = False
+
+                if is_assigned_to_project or not in_deadline_threshold:
+                    continue
+
+                employee_skill["work_hours"] = work_hours
+
+                if work_hours == 0:
+                    employee_skill["availability"] = "Available"
+                elif work_hours >= 8:
+                    employee_skill["availability"] = "Unavailable"
+                elif work_hours < 8:
+                    employee_skill["availability"] = "Partially Available"
+
+                if "Unavailable" in filters and employee_skill["availability"] == "Unavailable":
+                    eligible_employees.append(employee_skill)
+                elif "Partially Available" in filters and employee_skill["availability"] == "Partially Available":
+                    eligible_employees.append(employee_skill)
+                elif employee_skill["availability"] == "Available":
+                    eligible_employees.append(employee_skill)
+
+                del employee_skill["created_at"], employee_skill["skill_id"], employee_skill["experience"], employee_skill["level"]
+                employee_skill["name"] = employee_data.get("name")
+
+    sorted_data = sorted(eligible_employees, key=lambda x: x["name"])
+
+    return sorted_data
+
+
 # PROJECTS ASSIGNMENTS
 def get_project_assignments():
     project_assignments = db.get_project_assignments()
@@ -110,7 +204,6 @@ def create_project_assignment(data):
 
     db.create_project_assignment(proj_id=project_assignments_data.get("proj_id"),
                                  user_id=project_assignments_data.get("user_id"),
-                                 proj_manager_id=project_assignments_data.get("proj_manager_id"),
                                  proposal=project_assignments_data.get("proposal"),
                                  deallocated=project_assignments_data.get("deallocated"),
                                  dealloc_reason=project_assignments_data.get("dealloc_reason"),
@@ -119,6 +212,7 @@ def create_project_assignment(data):
                                  project_assignments_id=project_assignments_id)
 
     return project_assignments_data
+
 
 # USER TEAM ROLES
 def get_user_team_roles():
