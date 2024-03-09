@@ -11,6 +11,23 @@ class Team_roles(BaseModel):
     count: int
 
 
+class DeleteProject(BaseModel):
+    proj_id: UUID
+
+
+class UpdateProject(BaseModel):
+    proj_id: UUID
+    name: str
+    period: Literal['Fixed', 'Ongoing']
+    start_date: date
+    deadline_date: date
+    status: Literal['Not started', 'Starting', 'In Progress', 'Closing', 'Closed']
+    description: str
+    created_at: datetime = datetime.now().isoformat()
+    tech_stack: List[UUID]
+    team_roles: List[Team_roles]
+
+
 class Projects(BaseModel):
     name: str
     period: Literal['Fixed', 'Ongoing']

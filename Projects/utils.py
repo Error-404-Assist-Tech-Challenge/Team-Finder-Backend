@@ -54,12 +54,35 @@ def create_projects(data, user_id):
     return get_projects(user_id)
 
 
-def delete_project(user_id):
-    project = db.get_project_info(user_id)
-    project_id = project.get("id")
+def delete_project(data, user_id):
+    project_id = data.model_dump().get("proj_id")
     db.delete_project(project_id=project_id)
     return get_projects(user_id)
 
+
+def update_project(data, user_id):
+    project_data = data.model_dump()
+    project_id = project_data.get("proj_id")
+    # Update project
+    db.update_project(name=project_data.get("name"),
+                      project_id=project_id,
+                      period=project_data.get("period"),
+                      start_date=project_data.get("start_date"),
+                      deadline_date=project_data.get("deadline_date"),
+                      status=project_data.get("status"),
+                      description=project_data.get("description"),
+                      created_at=project_data.get("created_at"))
+
+    # Update tech stack skills
+    db.update_project_tech_stack_skills(project_id, project_data.get("tech_stack"))
+
+    # Update project needed roles
+    team_roles_needed = project_data.get("team_roles")
+    db.delete_project_needed_roles(project_id)
+    for team_role in team_roles_needed:
+        project_needed_role_id = str(uuid4())
+        db.create_project_needed_roles(project_needed_role_id, project_id, team_role.get("role_id"), team_role.get("count"))
+        return get_projects(user_id)
 # PROJECTS MEMBERS
 
 
