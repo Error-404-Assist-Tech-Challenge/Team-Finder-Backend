@@ -76,17 +76,16 @@ def project_info(session, user_id):
 
 
 # PROJECT ASSIGNMENTS
-def create_project_assignments(session, project_assignments_id, user_id, proj_id, proj_manager_id, proposal, deallocated, dealloc_reason, work_hours, comment):
+def create_project_assignments(session, project_assignments_id, user_id, proj_id, proposal, deallocated, dealloc_reason, work_hours, comment):
     try:
         obj = Project_assignments(id=project_assignments_id,
-                                   user_id=user_id,
-                                   proj_id=proj_id,
-                                   proj_manager_id=proj_manager_id,
-                                   proposal=proposal,
-                                   deallocated=deallocated,
-                                   dealloc_reason=dealloc_reason,
-                                   work_hours=work_hours,
-                                   comment=comment)
+                                  user_id=user_id,
+                                  proj_id=proj_id,
+                                  proposal=proposal,
+                                  deallocated=deallocated,
+                                  dealloc_reason=dealloc_reason,
+                                  work_hours=work_hours,
+                                  comment=comment)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
@@ -95,9 +94,9 @@ def create_project_assignments(session, project_assignments_id, user_id, proj_id
         return error
 
 
-def get_project_assignments(session):
+def get_project_assignments(session, org_id):
     try:
-        project_assignments = session.query(Project_assignments).all()
+        project_assignments = session.query(Project_assignments).filter(Project_assignments.org_id == org_id).all()
         return Project_assignments.serialize_project_assignments(project_assignments)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])

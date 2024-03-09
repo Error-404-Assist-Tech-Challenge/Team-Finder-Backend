@@ -361,6 +361,13 @@ class DataBase:
                             returned_skills[current_skill_id]["dept_id"].append(dept_id)
             return returned_skills
 
+    @staticmethod
+    def get_skill(skill_id):
+        with session_scope() as session:
+            skill = get_skill(session=session, skill_id=skill_id)
+            return skill
+
+
     # USER_SKILLS
     @staticmethod
     def create_user_skills(user_id, skill_id, level, experience, created_at):
@@ -381,6 +388,12 @@ class DataBase:
                 if user_skill.get("user_id") == str(user_id):
                     returned_user_skills.append(user_skill)
             return returned_user_skills
+
+    @staticmethod
+    def get_users_skills():
+        with session_scope() as session:
+            users_skills = get_user_skills(session=session)
+            return users_skills
 
     @staticmethod
     def update_user_skill(user_id, level, experience, skill_id):
@@ -670,13 +683,12 @@ class DataBase:
     # PROJECT ASSIGNMENTS
 
     @staticmethod
-    def create_project_assignment(project_assignments_id, proj_id, user_id, proj_manager_id, proposal, deallocated, dealloc_reason, work_hours, comment):
+    def create_project_assignment(project_assignments_id, proj_id, user_id, proposal, deallocated, dealloc_reason, work_hours, comment):
         with session_scope() as session:
             return create_project_assignments(session=session,
                                               project_assignments_id=project_assignments_id,
                                               proj_id=proj_id,
                                               user_id=user_id,
-                                              proj_manager_id=proj_manager_id,
                                               proposal=proposal,
                                               deallocated=deallocated,
                                               dealloc_reason=dealloc_reason,
@@ -684,9 +696,9 @@ class DataBase:
                                               comment=comment)
 
     @staticmethod
-    def get_project_assignments():
+    def get_project_assignments(org_id):
         with session_scope() as session:
-            return get_project_assignments(session=session)
+            return get_project_assignments(session=session, org_id=org_id)
 
     # USER TEAM ROLES
 

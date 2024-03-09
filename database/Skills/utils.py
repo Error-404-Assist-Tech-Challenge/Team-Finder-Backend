@@ -30,6 +30,17 @@ def get_skills(session):
         print(error)
         return error
 
+
+def get_skill(session, skill_id):
+    try:
+        skill = session.query(Skill).filter(Skill.id == skill_id).first()
+        return skill.serialize()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
 #USER_SKILLS
 
 def create_user_skills(session, user_id, skill_id, level, experience, created_at):
