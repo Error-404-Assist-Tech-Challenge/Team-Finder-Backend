@@ -33,10 +33,12 @@ class Skill(BaseModel):
     is_authored: bool
     is_department_managed: bool
 
+
 class CreateSkill(BaseModel):
     category_id: UUID
     name: str
     description: str
+    assign_department: bool
 
 
 class DeleteSkill(BaseModel):

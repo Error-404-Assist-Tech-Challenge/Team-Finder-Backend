@@ -38,16 +38,17 @@ def create_organization(session, name, hq_address, created_at, organization_id):
         return error
 
 
-def create_organization_skill(session, category_id, author_id, org_id, name, description, created_at):
+def create_organization_skill(session, skill_id, category_id, author_id, org_id, name, description, created_at):
     try:
-        obj = Skill(name=name,
+        obj = Skill(id=skill_id,
+                    name=name,
                     description=description,
                     category_id=category_id,
                     author_id= author_id,
                     org_id=org_id,
                     created_at=created_at)
         session.add(obj)
-        return obj
+        return obj.serialize()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
