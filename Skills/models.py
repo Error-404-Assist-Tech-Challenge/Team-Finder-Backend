@@ -61,7 +61,7 @@ class RemoveSkill(BaseModel):
 class SkillCategoriesResponse(BaseModel):
     label: str
     value: UUID
-
+    is_used: bool = False
 
 class SkillCategory(BaseModel):
     name: str
