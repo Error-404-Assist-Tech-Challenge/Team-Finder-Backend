@@ -125,7 +125,7 @@ class Project_tech_stack_skills(Base):
     def serialize_project_tech_stack_skills(project_tech_stack_skills):
         serialize_project_tech_stack_skill = {}
         for project_tech_stack_skill in project_tech_stack_skills:
-            project_tech_stack_skill[str(project_tech_stack_skill.proj_id)] = {
+            serialize_project_tech_stack_skill[str(project_tech_stack_skill.proj_id)] = {
                 "tech_stack": [str(tech) for tech in project_tech_stack_skill.tech_stack],
                 "proj_id": str(project_tech_stack_skill.proj_id)
             }

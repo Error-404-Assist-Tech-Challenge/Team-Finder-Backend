@@ -680,13 +680,24 @@ class DataBase:
                                                    proj_id=proj_id,
                                                    tech_stack=tech_stack)
 
-
     @staticmethod
-    def get_project_tech_stack_skills():
+    def get_project_tech_stack_skills(proj_id, org_id):
         with session_scope() as session:
-            return get_project_tech_stack_skills(session=session)
+            tech_stack_list = []
+            all_tech_stack = get_project_tech_stack_skills(session=session)
+            current_tech_stack = all_tech_stack[proj_id]
 
-    #PROJECT NEEDED ROLES
+            tech_stack = current_tech_stack.get("tech_stack")
+            for item in tech_stack:
+                returned_item = {
+                    "skill_id": item,
+                    "skill_name": db.get_skill_info(item, org_id).get("name")
+                }
+                tech_stack_list.append(returned_item)
+
+            return tech_stack_list
+
+    # PROJECT NEEDED ROLES
     @staticmethod
     def create_project_needed_roles(id, proj_id, role_id, count):
         with session_scope() as session:
@@ -695,10 +706,21 @@ class DataBase:
                                               proj_id=proj_id,
                                               role_id=role_id,
                                               count=count)
+
     @staticmethod
-    def get_project_needed_roles():
+    def get_project_needed_roles(proj_id, org_id):
         with session_scope() as session:
-            return get_project_needed_roles(session=session)
+            all_needed_roles = get_project_needed_roles(session=session)
+            returned_roles = []
+            for role in all_needed_roles:
+                current_role = all_needed_roles[role]
+                if str(current_role.get("proj_id")) == str(proj_id):
+                    role_id = current_role.get("role_id")
+                    role_name = get_team_roles(session=session, org_id=org_id)[role_id].get("name")
+                    current_role["role_name"] = role_name
+                    del current_role["proj_id"]
+                    returned_roles.append(current_role)
+            return returned_roles
 
     # PROJECT MEMBERS
     @staticmethod
