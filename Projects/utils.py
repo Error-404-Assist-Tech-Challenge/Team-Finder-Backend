@@ -33,8 +33,8 @@ def create_projects(data, user_id):
 
     # Create project info
     db.create_project(project_id=project_id,
-                      org_id=project_data.get("org_id"),
-                      manager_id=project_data.get("manager_id"),
+                      org_id=db.get_user(user_id).get("org_id"),
+                      manager_id=user_id,
                       name=project_data.get("name"),
                       period=project_data.get("period"),
                       start_date=project_data.get("start_date"),
@@ -53,7 +53,14 @@ def create_projects(data, user_id):
 
     return get_projects(user_id)
 
+
+def delete_project(user_id):
+    project = db.get_project_info(user_id)
+    project_id = project.get("id")
+    return db.delete_project(project_id=project_id)
+
 # PROJECTS MEMBERS
+
 
 def get_project_members():
     project_members = db.get_project_member()
