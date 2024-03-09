@@ -39,6 +39,17 @@ class Skill(Base):
     author_id = Column(UUID, ForeignKey("users.id"), nullable=False)
     org_id = Column(UUID, ForeignKey("organizations.id"), nullable=False)
 
+    def serialize(self):
+        return {
+                "id": str(self.id),
+                "name": self.name,
+                "category_id": self.category_id,
+                "description": self.description,
+                "created_at": self.created_at,
+                "author_id": self.author_id,
+                "org_id": self.org_id
+            }
+
     @staticmethod
     def serialize_skills(skills):
         serialize_skills = {}

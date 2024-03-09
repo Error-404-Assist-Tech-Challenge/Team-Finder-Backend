@@ -33,7 +33,10 @@ def organization_get_skills(user_id: str = Depends(auth_handler.auth_wrapper)):
 
 @organization_router.post("/api/organizations/skills", response_model=List[Skill])
 def organization_create_skill(modified_skill_data: CreateSkill, user_id: str = Depends(auth_handler.auth_wrapper)):
-    return create_organization_skill(modified_skill_data, user_id)
+    returned_data, error = create_organization_skill(modified_skill_data, user_id)
+    if error:
+        raise HTTPException(status_code=409, detail=error)
+    return returned_data
 
 
 @organization_router.put("/api/organizations/skills", response_model=List[Skill])
@@ -56,7 +59,6 @@ def organization_get_skills(admin_id: str = Depends(auth_handler.auth_wrapper)):
 @organization_router.post("/api/organizations/signup_token")
 def signup_token_create(user_id: str = Depends(auth_handler.auth_wrapper)):
     token, error = create_signup_token(user_id)
-
     if error:
         raise HTTPException(status_code=500, detail=error)
     return token

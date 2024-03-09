@@ -185,10 +185,9 @@ def delete_department_skills(session, dept_id):
         return error
 
 
-def delete_department_skill(session, dept_id, skill_id):
+def delete_department_skill(session, id):
     try:
-        department_skill = session.query(Department_skills).filter(Department_skills.dept_id == dept_id,
-                                                                   Department_skills.skill_id == skill_id).first()
+        department_skill = session.query(Department_skills).filter(Department_skills.id == id).first()
         session.delete(department_skill)
         session.commit()
         return department_skill

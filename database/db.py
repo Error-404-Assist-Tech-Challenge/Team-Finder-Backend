@@ -121,9 +121,10 @@ class DataBase:
                                        organization_id=organization_id)
 
     @staticmethod
-    def create_organization_skill(category_id, author_id, org_id, name, description, created_at):
+    def create_organization_skill(skill_id, category_id, author_id, org_id, name, description, created_at):
         with session_scope() as session:
             return create_organization_skill(session=session,
+                                             skill_id=skill_id,
                                              category_id=category_id,
                                              author_id=author_id,
                                              org_id=org_id,
@@ -498,10 +499,12 @@ class DataBase:
     def get_department_skill(skill_id):
         with session_scope() as session:
             department_skills = get_department_skills(session=session)
+            skill_departments = []
             for department in department_skills:
                 current_department = department_skills[department]
                 if current_department.get("skill_id") == str(skill_id):
-                    return department
+                    skill_departments.append(department)
+            return skill_departments
 
     @staticmethod
     def get_department_skills_names(organization_id):
@@ -541,11 +544,9 @@ class DataBase:
                                             dept_id=dept_id)
 
     @staticmethod
-    def delete_department_skill(dept_id, skill_id):
+    def delete_department_skill(id):
         with session_scope() as session:
-            return delete_department_skill(session=session,
-                                            dept_id=dept_id,
-                                            skill_id=skill_id)
+            return delete_department_skill(session=session, id=id)
 
     @staticmethod
     def get_department_statistics(dept_id, org_id):
