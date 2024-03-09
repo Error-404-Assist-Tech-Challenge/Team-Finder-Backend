@@ -496,14 +496,19 @@ class DataBase:
             return get_department_skills(session=session)
 
     @staticmethod
-    def get_department_skill(skill_id):
+    def get_department_skill(skill_id, dept_id = None):
         with session_scope() as session:
             department_skills = get_department_skills(session=session)
             skill_departments = []
             for department in department_skills:
                 current_department = department_skills[department]
-                if current_department.get("skill_id") == str(skill_id):
+
+                if dept_id:
+                    if str(dept_id) == str(current_department.get("dept_id")) and str(skill_id) == str(current_department.get("skill_id")):
+                        skill_departments.append(department)
+                elif current_department.get("skill_id") == str(skill_id):
                     skill_departments.append(department)
+
             return skill_departments
 
     @staticmethod

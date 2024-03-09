@@ -269,8 +269,10 @@ def delete_department_skill(data, user_id):
         if str(removed_skill_id) == current_department_skill_id:
             department_info = db.get_department_info(current_department_id)
             if str(department_info.get("manager_id")) == str(user_id):
-                db.delete_department_skill(dept_id=current_department_id,
-                                           skill_id=current_department_skill_id)
+                department_skill_ids = db.get_department_skill(removed_skill_id, current_department_id)
+
+                for id in department_skill_ids:
+                    db.delete_department_skill(id=id)
 
                 returned_data = get_organizations_skills(user_id)
                 return returned_data
