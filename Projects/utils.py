@@ -12,9 +12,16 @@ def get_projects(user_id):
     projects = db.get_org_projects(organization_id)
     for project in projects:
         current_project = projects[project]
+        project_id = current_project.get("id")
         if str(current_project.get("manager_id")) == str(user_id):
-            tech_stack = db.get_project_tech_stack_skills()
-            team_roles = db.get_project_team_roles()
+            # Getting tech stack skills names
+            tech_stack = db.get_project_tech_stack_skills(project_id, organization_id)
+            current_project["tech_stack"] = tech_stack
+
+            # Getting team role names
+            team_role = db.get_project_needed_roles(project_id, organization_id)
+            current_project["team_role"] = team_role
+            del current_project["org_id"]
             returned_user_projects.append(current_project)
     return returned_user_projects
 
