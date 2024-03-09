@@ -165,9 +165,16 @@ def update_user_skills(data, user_id):
 # SKILL_CATEGORIES
 
 def get_skill_categories(user_id):
-    users = db.get_users()
-    organization_id = users[str(user_id)].get("org_id")
-    skill_categories = db.get_skill_categories(organization_id)
+    user = db.get_user(user_id)
+    org_id = user.get("org_id")
+    org_skills = db.get_skills(org_id)
+    skill_categories = db.get_skill_categories(org_id)
+
+    for category in skill_categories:
+        for key in org_skills:
+            if org_skills[key].get("category_id") == category.get("value"):
+                category["is_used"] = True
+                break
 
     sorted_data = sorted(skill_categories, key=lambda x: x['label'])
     return sorted_data
