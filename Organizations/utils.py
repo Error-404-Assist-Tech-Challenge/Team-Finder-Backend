@@ -177,7 +177,7 @@ def get_organizations_skills(user_id):
         for department_id in modified_skill.get("dept_id"):
             department_info = db.get_department_info(department_id)
 
-            if str(department_info.get("manager_id")) == modified_skill.get("author_id"):
+            if str(department_info.get("manager_id")) == user_id:
                 modified_skill["is_department_managed"] = True
 
         modified_skill["dept_name"] = []
