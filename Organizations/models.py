@@ -80,6 +80,11 @@ class TeamRole(BaseModel):
     name: str
 
 
+class TeamRoleAll(BaseModel):
+    value: UUID
+    label: str
+
+
 class TeamRoleCreate(BaseModel):
     name: str
 
