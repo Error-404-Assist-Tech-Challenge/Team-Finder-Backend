@@ -288,6 +288,20 @@ def get_team_roles(admin_id):
     return team_roles
 
 
+def get_all_team_roles(admin_id):
+    user_data = db.get_user(admin_id)
+    team_roles_data = db.get_team_roles(user_data.get("org_id"))
+
+    for key in team_roles_data:
+        team_roles_data[key].pop("org_id")
+
+    team_roles = []
+    for key, value in team_roles_data.items():
+        team_roles.append({"value": key, "label": value["name"]})
+
+    return team_roles
+
+
 def create_team_role(data, admin_id):
     team_role_data = data.model_dump()
     user_data = db.get_user(admin_id)

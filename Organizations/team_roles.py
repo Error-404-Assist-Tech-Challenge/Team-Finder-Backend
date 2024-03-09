@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from auth import AuthHandler
-from Organizations.models import TeamRole, TeamRoleCreate, TeamRoleUpdate, TeamRoleDelete
+from Organizations.models import TeamRole, TeamRoleCreate, TeamRoleUpdate, TeamRoleDelete, TeamRoleAll
 from Organizations.utils import *
 
 auth_handler = AuthHandler()
@@ -29,3 +29,8 @@ def delete_team_role_route(team_role_data: TeamRoleDelete, admin_id: str = Depen
 @team_roles_router.get("/api/organizations/team_roles", response_model=List[TeamRole])
 def team_roles_get(admin_id: str = Depends(auth_handler.auth_wrapper)):
     return get_team_roles(admin_id)
+
+
+@team_roles_router.get("/api/organizations/team_roles/all", response_model=List[TeamRoleAll])
+def team_roles_get(admin_id: str = Depends(auth_handler.auth_wrapper)):
+    return get_all_team_roles(admin_id)
