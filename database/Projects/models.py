@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, DateTime, TIMESTAMP, ForeignKey, INTEGER, Boolean
+from sqlalchemy import Column, String, TIMESTAMP, ForeignKey, INTEGER, Boolean, Date
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from database.db import Base
 
@@ -14,8 +14,8 @@ class Projects(Base):
     manager_id = Column(UUID, nullable=False)
     org_id = Column(UUID, ForeignKey("organizations.id"), nullable=False)
     period = Column(String, nullable=False)
-    start_date = Column(DateTime, nullable=False)
-    deadline_date = Column(DateTime, nullable=False)
+    start_date = Column(Date, nullable=False)
+    deadline_date = Column(Date, nullable=False)
     status = Column(String, nullable=False)
     description = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)

@@ -11,6 +11,8 @@ auth_handler = AuthHandler()
 def create_projects_route(projects_data: Projects):
     return create_projects(projects_data)
 
+# Get all projects
+
 
 @projects_router.get("/api/projects")
 def projects_get(user_id: str = Depends(auth_handler.auth_wrapper)):

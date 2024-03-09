@@ -12,7 +12,9 @@ def get_projects(user_id):
     projects = db.get_org_projects(organization_id)
     for project in projects:
         current_project = projects[project]
-        if current_project.get("manager_id") == user_id:
+        if str(current_project.get("manager_id")) == str(user_id):
+            tech_stack = db.get_project_tech_stack_skills()
+            team_roles = db.get_project_team_roles()
             returned_user_projects.append(current_project)
     return returned_user_projects
 
@@ -22,19 +24,14 @@ def create_projects(data):
     project_id = str(uuid4())
     project_data["id"] = project_id
 
-    start_date = project_data.get("start_date")
-    start_date_iso = start_date.isoformat()
-
-    deadline_date = project_data.get("deadline_date")
-    deadline_date_iso = deadline_date.isoformat()
     # Create project info
     db.create_project(project_id=project_id,
                       org_id=project_data.get("org_id"),
                       manager_id=project_data.get("manager_id"),
                       name=project_data.get("name"),
                       period=project_data.get("period"),
-                      start_date=start_date_iso,
-                      deadline_date=deadline_date_iso,
+                      start_date=project_data.get("start_date"),
+                      deadline_date=project_data.get("deadline_date"),
                       status=project_data.get("status"),
                       description=project_data.get("description"),
                       created_at=project_data.get("created_at"))
