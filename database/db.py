@@ -560,8 +560,13 @@ class DataBase:
             returned_body = []
             reference_user_skill = {}
 
+            # See how many members in department are
+            department_members = db.get_department_members(dept_id)
+
+            # Fetching department skills and user skills info from db
             org_dept_skills = get_department_skills(session)
             org_user_skills = get_user_skills(session)
+
             # Modifying user_skills for reference search
             for user_skill in org_user_skills:
                 # Verifying if user is in organization
@@ -594,7 +599,8 @@ class DataBase:
                         levels[current_user_skill_level] = levels[current_user_skill_level]+1
                 returned_skill = {
                     "skill_name": skill_info.get("name"),
-                    "levels": levels
+                    "levels": levels,
+                    "total_department_members": len(department_members)
                 }
                 returned_body.append(returned_skill)
         return returned_body
