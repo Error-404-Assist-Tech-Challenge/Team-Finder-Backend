@@ -652,10 +652,23 @@ class DataBase:
     def delete_project(project_id):
         with session_scope() as session:
             delete_project(session=session, project_id=project_id)
-            delete_tech_stack(session=session, project_id=project_id)
-            delete_project_needed_roles(session=session, project_id=project_id)
+            db.delete_project_tech_stack_skills(project_id)
+            db.delete_project_needed_roles(project_id)
 
+    @staticmethod
+    def update_project(name, period, start_date, deadline_date, status, description, created_at, project_id):
+        with session_scope() as session:
+            return update_project(session=session,
+                                  project_id=project_id,
+                                  name=name,
+                                  period=period,
+                                  start_date=start_date,
+                                  deadline_date=deadline_date,
+                                  status=status,
+                                  description=description,
+                                  created_at=created_at)
     # PROJECT ASSIGNMENTS
+
     @staticmethod
     def create_project_assignment(project_assignments_id, proj_id, user_id, proj_manager_id, proposal, deallocated, dealloc_reason, work_hours, comment):
         with session_scope() as session:
@@ -675,7 +688,8 @@ class DataBase:
         with session_scope() as session:
             return get_project_assignments(session=session)
 
-    #USER TEAM ROLES
+    # USER TEAM ROLES
+
     @staticmethod
     def create_user_team_role(user_id, role_id, proposal):
         with session_scope() as session:
@@ -684,13 +698,12 @@ class DataBase:
                                           role_id=role_id,
                                           proposal=proposal)
 
-
     @staticmethod
     def get_user_team_roles():
         with session_scope() as session:
             return get_user_team_roles(session=session)
 
-    #PROJECT TECH STACK SKILLS
+    # PROJECT TECH STACK SKILLS
     @staticmethod
     def create_project_tech_stack_skills(proj_id, tech_stack):
         with session_scope() as session:
@@ -714,6 +727,18 @@ class DataBase:
                 tech_stack_list.append(returned_item)
 
             return tech_stack_list
+
+    @staticmethod
+    def update_project_tech_stack_skills(proj_id, tech_stack):
+        with session_scope() as session:
+            return update_project_tech_stack_skill(session=session,
+                                                   proj_id=proj_id,
+                                                   tech_stack=tech_stack)
+
+    @staticmethod
+    def delete_project_tech_stack_skills(project_id):
+        with session_scope() as session:
+            delete_tech_stack(session=session, project_id=project_id)
 
     # PROJECT NEEDED ROLES
     @staticmethod
@@ -740,7 +765,12 @@ class DataBase:
                     returned_roles.append(current_role)
             return returned_roles
 
+    @staticmethod
+    def delete_project_needed_roles(project_id):
+        with session_scope() as session:
+            delete_project_needed_roles(session=session, project_id=project_id)
     # PROJECT MEMBERS
+
     @staticmethod
     def create_project_member(proj_id, user_id):
         with session_scope() as session:

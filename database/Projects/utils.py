@@ -25,6 +25,24 @@ def create_project(session, project_id, org_id, name, period, start_date, deadli
         return error
 
 
+def update_project(session, project_id, name, period, start_date, deadline_date, status, description, created_at):
+    try:
+        project = session.query(Projects).filter(Projects.id == project_id).first()
+        if project:
+            project.name = name
+            project.period = period
+            project.start_date = start_date
+            project.deadline_date = deadline_date
+            project.status = status
+            project.description = description
+            project.created_at = created_at
+            session.commit()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
 def get_projects(session):
     try:
         projects = session.query(Projects).all()
@@ -165,6 +183,18 @@ def delete_tech_stack(session, project_id):
         project_tech_stack_skill = session.query(Project_tech_stack_skills).filter(Project_tech_stack_skills.proj_id == project_id).first()
         if project_tech_stack_skill:
             session.delete(project_tech_stack_skill)
+            session.commit()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def update_project_tech_stack_skill(session, proj_id, tech_stack):
+    try:
+        project_tech_stack_skill = session.query(Project_tech_stack_skills).filter(Project_tech_stack_skills.proj_id == proj_id).first()
+        if project_tech_stack_skill:
+            project_tech_stack_skill.tech_stack = tech_stack
             session.commit()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
