@@ -8,8 +8,8 @@ auth_handler = AuthHandler()
 
 
 @projects_router.post("/api/projects")
-def create_projects_route(projects_data: Projects):
-    return create_projects(projects_data)
+def create_projects_route(projects_data: Projects, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return create_projects(projects_data, user_id)
 
 # Get all projects
 
