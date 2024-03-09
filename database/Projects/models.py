@@ -3,19 +3,21 @@ from sqlalchemy import Column, String, DateTime, TIMESTAMP, ForeignKey, INTEGER,
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from database.db import Base
 
-#PROJECTS
+# PROJECTS
+
+
 class Projects(Base):
     __tablename__ = "projects"
 
     id = Column(UUID, primary_key=True, nullable=False)
     name = Column(String, nullable=False)
+    manager_id = Column(UUID, nullable=False)
     org_id = Column(UUID, ForeignKey("organizations.id"), nullable=False)
     period = Column(String, nullable=False)
     start_date = Column(DateTime, nullable=False)
     deadline_date = Column(DateTime, nullable=False)
     status = Column(String, nullable=False)
     description = Column(String, nullable=False)
-    tech_stack = Column(ARRAY(String), nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
 
     @staticmethod
@@ -26,20 +28,20 @@ class Projects(Base):
                 "id": str(project.id),
                 "name": str(project.name),
                 "org_id": str(project.org_id),
+                "manager_id": str(project.manager_id),
                 "period": str(project.period),
                 "start_date": str(project.start_date),
                 "deadline_date": str(project.deadline_date),
                 "status": str(project.status),
                 "description": str(project.description),
-                "tech_stack": [str(tech) for tech in project.tech_stack],
                 "created_at": str(project.created_at)
             }
         return serialized_projects
 
 
-#PROJECT ASSIGNMENTS
+# PROJECT ASSIGNMENTS
 
-class Project_assignmments(Base):
+class Project_assignments(Base):
     __tablename__ = "project_assignments"
 
     id = Column(UUID, primary_key=True, nullable=False)
@@ -68,7 +70,8 @@ class Project_assignmments(Base):
             }
         return serialize_project_assignments
 
-#PROJECTS MEMBERS
+# PROJECTS MEMBERS
+
 
 class Project_members(Base):
     __tablename__ = "project_members"
@@ -87,13 +90,16 @@ class Project_members(Base):
             serialize_project_members.append(project_member)
         return serialize_project_members
 
-#USER TEAM ROLES
-class  User_team_roles(Base):
+# USER TEAM ROLES
+
+
+class User_team_roles(Base):
     __tablename__ = "user_team_roles"
 
     user_id = Column(UUID, ForeignKey("users.id"), primary_key=True, nullable=False)
     role_id = Column(UUID, ForeignKey("team_roles.id"), nullable=False)
     proposal = Column(Boolean, nullable=False)
+
     @staticmethod
     def serialize_user_team_roles(user_team_roles):
         serialize_user_team_roles = []
@@ -106,41 +112,44 @@ class  User_team_roles(Base):
             serialize_user_team_roles.append(user_team_role)
         return serialize_user_team_roles
 
-#PROJECT TECH STACK SKILLS
+# PROJECT TECH STACK SKILLS
+
 
 class Project_tech_stack_skills(Base):
     __tablename__ = "project_tech_stack_skills"
 
     proj_id = Column(UUID, ForeignKey("projects.id"), primary_key=True, nullable=False)
-    skill_id = Column(UUID, ForeignKey("skills.id"), nullable=False)
+    tech_stack = Column(ARRAY(UUID), nullable=False)
+
     @staticmethod
     def serialize_project_tech_stack_skills(project_tech_stack_skills):
-        serialize_project_tech_stack_skill = []
+        serialize_project_tech_stack_skill = {}
         for project_tech_stack_skill in project_tech_stack_skills:
-            project_tech_stack_skill = {
-                "skill_id": str(project_tech_stack_skill.skill_id),
+            project_tech_stack_skill[str(project_tech_stack_skill.proj_id)] = {
+                "tech_stack": [str(tech) for tech in project_tech_stack_skill.tech_stack],
                 "proj_id": str(project_tech_stack_skill.proj_id)
             }
-            serialize_project_tech_stack_skill.append(project_tech_stack_skill)
         return serialize_project_tech_stack_skill
 
-#PROJECT NEEDED ROLES
+# PROJECT NEEDED ROLES
+
 
 class Project_needed_roles(Base):
     __tablename__ = "project_needed_roles"
 
-    proj_id = Column(UUID, ForeignKey("projects.id"), primary_key=True, nullable=False)
+    id = Column(UUID, primary_key=True, nullable=False)
+    proj_id = Column(UUID, ForeignKey("projects.id"), nullable=False)
     role_id = Column(UUID, ForeignKey("team_roles.id"), nullable=False)
     count = Column(INTEGER, nullable=False)
+
     @staticmethod
     def serialize_project_needed_roles(project_needed_roles):
-        serialize_project_needed_roles = []
+        serialize_project_needed_roles = {}
         for project_needed_role in project_needed_roles:
-            project_needed_role = {
+            serialize_project_needed_roles[str(project_needed_role.id)] = {
                 "role_id": str(project_needed_role.role_id),
                 "proj_id": str(project_needed_role.proj_id),
                 "count": str(project_needed_role.count)
             }
-            serialize_project_needed_roles.append(project_needed_role)
         return serialize_project_needed_roles
 

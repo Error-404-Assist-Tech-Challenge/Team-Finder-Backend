@@ -1,28 +1,38 @@
 from pydantic import BaseModel
 from uuid import UUID
 from datetime import datetime, time
+from typing import Literal, List
 
 
-#PROJECTS
+# PROJECTS
+
+class Team_roles(BaseModel):
+    role_id: UUID
+    count: int
+
 
 class Projects(BaseModel):
     org_id: UUID
     name: str
-    period: str
+    period: Literal['Fixed', 'Ongoing']
+    manager_id: UUID
     start_date: datetime
     deadline_date: datetime
-    status: str
+    status: Literal['Not started', 'Starting', 'In Progress', 'Closing', 'Closed']
     description: str
-    tech_stack: list
     created_at: datetime = datetime.now().isoformat()
+    tech_stack: List[UUID]
+    team_roles: List[Team_roles]
 
-#PROJECTS MEMBERS
+# PROJECTS MEMBERS
+
 
 class Project_members(BaseModel):
     user_id: UUID
     proj_id: UUID
 
-#PROJECT ASSIGNMENTS
+# PROJECT ASSIGNMENTS
+
 
 class Project_assignments(BaseModel):
     proj_id: UUID
@@ -34,22 +44,17 @@ class Project_assignments(BaseModel):
     work_hours: int
     comment: str
 
-#USER TEAM ROLES
+# USER TEAM ROLES
+
 
 class User_team_roles(BaseModel):
     user_id: UUID
     role_id: UUID
     proposal: bool
 
-#PROJECT TECH STACK SKILLS
 
 
-class Project_tech_stack_skills(BaseModel):
-    proj_id: UUID
-    skill_id: UUID
-
-
-#PROJECT NEEDED ROLES
+# PROJECT NEEDED ROLES
 
 class Project_needed_roles(BaseModel):
     proj_id: UUID

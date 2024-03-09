@@ -2,19 +2,21 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from database.Projects.models import *
 
-#PROJECTS
-def create_project(session, project_id, org_id, name, period, start_date, deadline_date, status, description, tech_stack, created_at):
+# PROJECTS
+
+
+def create_project(session, project_id, org_id, name, period, start_date, deadline_date, status, description, manager_id, created_at):
     try:
         obj = Projects(id=project_id,
-                           org_id=org_id,
-                           name=name,
-                           period=period,
-                           start_date=start_date,
-                           deadline_date=deadline_date,
-                           status=status,
-                           description=description,
-                           tech_stack=tech_stack,
-                           created_at=created_at)
+                       org_id=org_id,
+                       name=name,
+                       period=period,
+                       start_date=start_date,
+                       deadline_date=deadline_date,
+                       status=status,
+                       description=description,
+                       manager_id=manager_id,
+                       created_at=created_at)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
@@ -33,10 +35,10 @@ def get_projects(session):
         return error
 
 
-#PROJECT ASSIGNMENTS
+# PROJECT ASSIGNMENTS
 def create_project_assignments(session, project_assignments_id, user_id, proj_id, proj_manager_id, proposal, deallocated, dealloc_reason, work_hours, comment):
     try:
-        obj = Project_assignmments(id=project_assignments_id,
+        obj = Project_assignments(id=project_assignments_id,
                                    user_id=user_id,
                                    proj_id=proj_id,
                                    proj_manager_id=proj_manager_id,
@@ -55,14 +57,15 @@ def create_project_assignments(session, project_assignments_id, user_id, proj_id
 
 def get_project_assignments(session):
     try:
-        project_assignments = session.query(Project_assignmments).all()
-        return Project_assignmments.serialize_project_assignments(project_assignments)
+        project_assignments = session.query(Project_assignments).all()
+        return Project_assignments.serialize_project_assignments(project_assignments)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
         return error
 
-#PROJECT MEMBERS
+# PROJECT MEMBERS
+
 
 def create_project_members(session, user_id, proj_id):
     try:
@@ -109,11 +112,12 @@ def get_user_team_roles(session):
         print(error)
         return error
 
-#PROJECT TECH STACK SKILLS
+# PROJECT TECH STACK SKILLS
 
-def create_project_tech_stack_skill(session, skill_id, proj_id):
+
+def create_project_tech_stack_skill(session, tech_stack, proj_id):
     try:
-        obj = Project_tech_stack_skills(skill_id=skill_id,
+        obj = Project_tech_stack_skills(tech_stack=tech_stack,
                                         proj_id=proj_id)
         session.add(obj)
         return obj
@@ -132,13 +136,15 @@ def get_project_tech_stack_skills(session):
         print(error)
         return error
 
-#PROJECT NEEDED ROLES
+# PROJECT NEEDED ROLES
 
-def create_project_needed_role(session, proj_id, role_id, count):
+
+def create_project_needed_role(session, proj_id, id, role_id, count):
     try:
         obj = Project_needed_roles(proj_id=proj_id,
-                       role_id=role_id,
-                       count=count)
+                                   role_id=role_id,
+                                   id=id,
+                                   count=count)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:

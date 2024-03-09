@@ -6,7 +6,8 @@ from auth import AuthHandler
 projects_router = APIRouter()
 auth_handler = AuthHandler()
 
-@projects_router.post("/api/projects", response_model=Projects)
+
+@projects_router.post("/api/projects")
 def create_projects_route(projects_data: Projects):
     return create_projects(projects_data)
 
