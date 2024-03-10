@@ -49,8 +49,21 @@ class Project_members(BaseModel):
 
 class Search(BaseModel):
     proj_id: UUID
-    filters: List[Literal['Unavailable', 'Partially Available', 'Close To Finish']]
     weeks_until_deadline: Optional[int] = Field(default=None, ge=2, le=6)
+
+
+class SkillResponse(BaseModel):
+    name: str
+    experience: int
+    level: int
+
+
+class SearchResponse(BaseModel):
+    user_id: UUID
+    skills: List[SkillResponse]
+    dept_name: str
+    work_hours: int
+    name: str
 
 # PROJECT ASSIGNMENTS
 

@@ -102,10 +102,11 @@ def create_project_member(data):
 def search_employees(data, user_id):
     search_data = data.model_dump()
     proj_id = str(search_data.get("proj_id"))
-    filters = search_data.get("filters")
     deadline_filter = search_data.get("weeks_until_deadline")
     user_data = db.get_user(user_id)
     org_id = user_data.get("org_id")
+    dept_members = db.get_all_department_members()
+    org_departments = db.get_department(org_id)
     proj_assignments = db.get_project_assignments(org_id)
     tech_stack_skills = db.get_project_tech_stack_skills(org_id=org_id, proj_id=proj_id)
 
@@ -167,24 +168,24 @@ def search_employees(data, user_id):
                 if is_assigned_to_project or not in_deadline_threshold:
                     continue
 
+                employee_skill["dept_name"] = ""
+                # Check if the employee is assigned to a department
+                for dept_member in dept_members:
+                    if dept_member.get("user_id") == employee_skill.get("user_id"):
+                        dept_info = db.get_department_info(dept_member.get("dept_id"))
+                        employee_skill["dept_name"] = dept_info.get("name")
+
+                # Check if the employee is manages a department
+                if not employee_skill["dept_name"]:
+                    for key in org_departments:
+                        if org_departments[key].get("manager_id") == employee_skill.get("user_id"):
+                            employee_skill["dept_name"] = org_departments[key].get("name")
+
                 employee_skill["work_hours"] = work_hours
-
-                if work_hours == 0:
-                    employee_skill["availability"] = "Available"
-                elif work_hours >= 8:
-                    employee_skill["availability"] = "Unavailable"
-                elif work_hours < 8:
-                    employee_skill["availability"] = "Partially Available"
-
-                if "Unavailable" in filters and employee_skill["availability"] == "Unavailable":
-                    eligible_employees.append(employee_skill)
-                elif "Partially Available" in filters and employee_skill["availability"] == "Partially Available":
-                    eligible_employees.append(employee_skill)
-                elif employee_skill["availability"] == "Available":
-                    eligible_employees.append(employee_skill)
 
                 del employee_skill["created_at"], employee_skill["skill_id"], employee_skill["experience"], employee_skill["level"]
                 employee_skill["name"] = employee_data.get("name")
+                eligible_employees.append(employee_skill)
 
     sorted_data = sorted(eligible_employees, key=lambda x: x["name"])
 
