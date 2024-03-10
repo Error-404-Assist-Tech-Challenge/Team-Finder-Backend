@@ -33,7 +33,7 @@ class Projects(BaseModel):
     period: Literal['Fixed', 'Ongoing']
     start_date: date
     deadline_date: date
-    status: Literal['Not started', 'Starting', 'In Progress', 'Closing', 'Closed']
+    status: Literal['Not Started', 'Starting', 'In Progress', 'Closing', 'Closed']
     description: str
     created_at: datetime = datetime.now().isoformat()
     tech_stack: List[UUID]
