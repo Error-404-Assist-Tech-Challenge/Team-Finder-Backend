@@ -47,11 +47,6 @@ class Project_members(BaseModel):
     proj_id: UUID
 
 
-class Search(BaseModel):
-    proj_id: UUID
-    weeks_until_deadline: Optional[int] = Field(default=None, ge=2, le=6)
-
-
 class SkillResponse(BaseModel):
     name: str
     experience: int
@@ -60,10 +55,11 @@ class SkillResponse(BaseModel):
 
 class SearchResponse(BaseModel):
     user_id: UUID
+    name: str
     skills: List[SkillResponse]
     dept_name: str
     work_hours: int
-    name: str
+    deadline: str
 
 # PROJECT ASSIGNMENTS
 
