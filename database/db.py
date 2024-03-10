@@ -308,6 +308,12 @@ class DataBase:
             return returned_members
 
     @staticmethod
+    def get_all_department_members():
+        with session_scope() as session:
+            all_department_members = get_department_members(session=session)
+            return all_department_members
+
+    @staticmethod
     def get_department_user(user_id):
         with session_scope() as session:
             all_department_members = get_department_members(session=session)
