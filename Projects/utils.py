@@ -99,10 +99,8 @@ def create_project_member(data):
     return project_member_data
 
 
-def search_employees(data, user_id):
-    search_data = data.model_dump()
-    proj_id = str(search_data.get("proj_id"))
-    deadline_filter = search_data.get("weeks_until_deadline")
+def search_employees(proj_id, user_id):
+    proj_id = str(proj_id)
     user_data = db.get_user(user_id)
     org_id = user_data.get("org_id")
     dept_members = db.get_all_department_members()
@@ -144,12 +142,12 @@ def search_employees(data, user_id):
                     continue
 
                 is_assigned_to_project = False
-                in_deadline_threshold = True
+                deadlines = []
                 work_hours = 0
 
                 # Check each project assignment for the employee
-                # to determine if they are assigned to the current project, their work hours,
-                # and if the project's deadline is within the specified threshold
+                # to determine if they are assigned to the current project
+                # and get their work hours
                 for assignment in proj_assignments:
                     if assignment.get("user_id") == employee_skill.get("user_id"):
                         if assignment.get("proj_id") == proj_id:
@@ -157,15 +155,22 @@ def search_employees(data, user_id):
                         if not bool(assignment.get("proposal")) and not bool(assignment.get("deallocated")):
                             work_hours += int(assignment.get("work_hours"))
 
-                        if deadline_filter:
-                            employee_project_info = db.get_projects_id(assignment.get("proj_id"))[0]
-                            deadline_threshold = datetime.utcnow() + timedelta(weeks=deadline_filter)
-                            proj_deadline = employee_project_info.get("deadline_date")
+                        employee_project_info = db.get_projects_id(assignment.get("proj_id"))[0]
+                        proj_deadline = employee_project_info.get("deadline_date")
 
-                            if datetime.strptime(proj_deadline, "%Y-%m-%d") >= deadline_threshold:
-                                in_deadline_threshold = False
+                        deadlines.append(proj_deadline)
 
-                if is_assigned_to_project or not in_deadline_threshold:
+
+                # Get the nearest assigned project deadline
+                nearest_deadline_str = ""
+                if deadlines:
+                    deadlines = [datetime.strptime(date, '%Y-%m-%d') for date in deadlines]
+                    nearest_deadline = min(deadlines, key=lambda date: abs(date - datetime.now()))
+                    nearest_deadline_str = nearest_deadline.strftime('%Y-%m-%d')
+
+                employee_skill["deadline"] = nearest_deadline_str
+
+                if is_assigned_to_project:
                     continue
 
                 employee_skill["dept_name"] = ""
@@ -175,7 +180,7 @@ def search_employees(data, user_id):
                         dept_info = db.get_department_info(dept_member.get("dept_id"))
                         employee_skill["dept_name"] = dept_info.get("name")
 
-                # Check if the employee is manages a department
+                # Check if the employee manages a department
                 if not employee_skill["dept_name"]:
                     for key in org_departments:
                         if org_departments[key].get("manager_id") == employee_skill.get("user_id"):
