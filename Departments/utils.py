@@ -89,7 +89,10 @@ def delete_department(data, user_id):
 
 
 def get_departments_managers(user_id):
-    dep_role = "fa124499-1762-4f3b-8a61-712307e1677a"
+    print(user_id)
+    dep_role = db.get_department_manager_id()
+    print(user_id)
+    print(dep_role)
     managers_with_department = []
     managers_available = []
 

@@ -3,7 +3,8 @@ from sqlalchemy import Column, String, TIMESTAMP, ForeignKey, Integer, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
-#SKILL_CATEGORIES
+
+# SKILL_CATEGORIES
 
 class Skill_categories(Base):
     __tablename__ = "skill_categories"
@@ -26,7 +27,7 @@ class Skill_categories(Base):
         return serialize_skill_category
 
 
-#SKILLS
+# SKILLS
 
 class Skill(Base):
     __tablename__ = "skills"
@@ -41,14 +42,14 @@ class Skill(Base):
 
     def serialize(self):
         return {
-                "id": str(self.id),
-                "name": self.name,
-                "category_id": self.category_id,
-                "description": self.description,
-                "created_at": self.created_at,
-                "author_id": self.author_id,
-                "org_id": self.org_id
-            }
+            "id": str(self.id),
+            "name": self.name,
+            "category_id": self.category_id,
+            "description": self.description,
+            "created_at": self.created_at,
+            "author_id": self.author_id,
+            "org_id": self.org_id
+        }
 
     @staticmethod
     def serialize_skills(skills):
@@ -65,7 +66,8 @@ class Skill(Base):
             }
         return serialize_skills
 
-#USER_SKILLS
+
+# USER_SKILLS
 class UserSkills(Base):
     __tablename__ = "user_skills"
 
@@ -89,7 +91,8 @@ class UserSkills(Base):
             serialized_user_skills.append(user_skill)
         return serialized_user_skills
 
-#DEPARTMENT_SKILLS
+
+# DEPARTMENT_SKILLS
 
 class Department_skills(Base):
     __tablename__ = "department_skills"
@@ -97,6 +100,7 @@ class Department_skills(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4())
     dept_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False)
     skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"), nullable=False)
+
     @staticmethod
     def serialize_department_skills(department_skills):
         serialize_department_skills = {}
@@ -107,7 +111,9 @@ class Department_skills(Base):
             }
         return serialize_department_skills
 
+
 # SKILL PROPOSALS
+
 
 class Skill_proposals(Base):
     __tablename__ = "skill_proposals"
@@ -130,3 +136,27 @@ class Skill_proposals(Base):
             }
             serialized_skill_proposals.append(serialized_skill)
         return serialized_skill_proposals
+
+
+class Endorsements(Base):
+    __tablename__ = "endorsements"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
+    skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"), nullable=False)
+    org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
+    endo = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    proj_id = Column(UUID(as_uuid=True), ForeignKey("projects.id"))
+
+    @staticmethod
+    def serialize_endorsements(skill_endorsements):
+        serialized_endorsements = {}
+        for endo in skill_endorsements:
+            serialized_endorsements[str(endo.skill_id)] = {
+                "id": str(endo.id),
+                "org_id": str(endo.org_id),
+                "endo": str(endo.endo),
+                "description": str(endo.description),
+                "proj_id": str(endo.proj_id)
+            }
+        return serialized_endorsements

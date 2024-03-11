@@ -24,6 +24,10 @@ def get_projects(user_id):
             current_project["team_role"] = team_role
             del current_project["org_id"]
             returned_user_projects.append(current_project)
+
+            # Getting project approved members
+            members = db.get_project_approved_members(project_id)
+            current_project["projects"] = members
     return returned_user_projects
 
 
