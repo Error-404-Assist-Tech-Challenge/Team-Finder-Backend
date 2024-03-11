@@ -786,15 +786,18 @@ class DataBase:
         with session_scope() as session:
             all_needed_roles = get_project_needed_roles(session=session)
             returned_roles = []
+            available_roles = []
             for role in all_needed_roles:
                 current_role = all_needed_roles[role]
                 if str(current_role.get("proj_id")) == str(proj_id):
                     role_id = current_role.get("role_id")
                     role_name = get_team_roles(session=session, org_id=org_id)[role_id].get("name")
                     current_role["role_name"] = role_name
+                    if int(current_role.get("count")) > 0:
+                        available_roles.append({"value": role_id, "label": role_name})
                     del current_role["proj_id"]
                     returned_roles.append(current_role)
-            return returned_roles
+            return returned_roles, available_roles
 
     @staticmethod
     def delete_project_needed_roles(project_id):
