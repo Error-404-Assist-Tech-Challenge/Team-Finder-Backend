@@ -203,18 +203,26 @@ def search_employees(proj_id, user_id):
 
 
 # PROJECTS ASSIGNMENTS
-def get_project_assignments():
-    project_assignments = db.get_project_assignments()
-    return project_assignments
+def get_project_assignments(user_id):
+    manager_projects_ids = []
+    returned_project_assignments = []
+    organization_id = db.get_user(user_id).get("org_id")
+    project_assignments = db.get_project_assignments(organization_id)
+    manager_projects = db.get_manager_projects(user_id)
+    for project in manager_projects:
+        manager_projects_ids.append(project)
+    for assign in project_assignments:
+        if str(assign.get("proj_id")) in manager_projects_ids:
+            returned_project_assignments.append(assign)
+    return returned_project_assignments
 
 
 def create_project_assignment(data, user_id):
     project_assignments_data = data.model_dump()
     project_assignments_id = str(uuid4())
     project_assignments_data["id"] = project_assignments_id
-    project_info = db.get_project_info(user_id)
     organization_id = db.get_user(user_id).get("org_id")
-    db.create_project_assignment(proj_id=project_info.get("id"),
+    db.create_project_assignment(proj_id=project_assignments_data.get("proj_id"),
                                  user_id=project_assignments_data.get("user_id"),
                                  org_id=organization_id,
                                  role_id=project_assignments_data.get("role_id"),
@@ -229,6 +237,7 @@ def create_project_assignment(data, user_id):
                                           role_id=project_assignments_data.get("role_id"),
                                           comment=project_assignments_data.get("comment"),
                                           user_id=project_assignments_data.get("user_id"),
+                                          assignment_id=project_assignments_id,
                                           proposal=False)
     return project_assignments_data
 

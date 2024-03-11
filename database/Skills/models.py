@@ -129,6 +129,7 @@ class Skill_proposals(Base):
     role_id = Column(UUID(as_uuid=True), ForeignKey("team_roles.id"), nullable=True)
     proposal = Column(Boolean, nullable=False)
     deallocated = Column(Boolean, nullable=True)
+    assignment_id = Column(UUID(as_uuid=True), ForeignKey("project_assignments.id"), nullable=True)
 
     @staticmethod
     def serialize_skill_proposals(skill_proposals):
@@ -136,6 +137,7 @@ class Skill_proposals(Base):
         for skill_proposal in skill_proposals:
             serialized_skill[str(skill_proposal.id)] = {
                 "skill_id": str(skill_proposal.skill_id),
+                "assignment_id": str(skill_proposal.assignment_id),
                 "dept_id": str(skill_proposal.dept_id),
                 "role_id": str(skill_proposal.role_id),
                 "level": str(skill_proposal.level),

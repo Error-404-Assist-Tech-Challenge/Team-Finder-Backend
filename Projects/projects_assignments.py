@@ -13,5 +13,5 @@ def create_project_assignments_route(project_assignments_data: Project_assignmen
 
 
 @project_assignments_router.get("/api/projects/project_assignments")
-def project_assignments_get():
-    return get_project_assignments()
+def project_assignments_get(user_id: str = Depends(auth_handler.auth_wrapper)):
+    return get_project_assignments(user_id)
