@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Depends, Query
-from typing import List, Optional
+from fastapi import APIRouter, Depends
 from uuid import UUID
 from auth import AuthHandler
 from Projects.models import Project_members, SearchResponse
@@ -19,6 +18,6 @@ def project_members_get():
     return get_project_members()
 
 
-@project_members_router.get("/api/projects/search_employees", response_model=List[SearchResponse])
+@project_members_router.get("/api/projects/search_employees", response_model=SearchResponse)
 def employees_search_get(proj_id: UUID, user_id: str = Depends(auth_handler.auth_wrapper)):
     return search_employees(proj_id, user_id)

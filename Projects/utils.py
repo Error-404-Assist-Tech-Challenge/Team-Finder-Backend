@@ -117,12 +117,18 @@ def search_employees(proj_id, user_id):
     for skill in tech_stack_skills:
         stack_skill_ids.append(skill.get("skill_id"))
 
+    returned_data = {"active": [], "proposed": [], "past": [], "new": []}
+
     eligible_employees = []
+    active_employees = []
+    proposed_employees = []
+    deallocated_employees = []
+
     users_skills = db.get_users_skills()
     for employee_skill in users_skills:
         employee_data = db.get_user(employee_skill.get("user_id"))
 
-        if employee_data.get("org_id") == org_id:
+        if employee_data.get("org_id") == org_id and employee_skill.get("user_id") != user_id:
             # Check if employee has relevant skills for the project
             if employee_skill.get("skill_id") in stack_skill_ids:
                 skill_data = db.get_skill(employee_skill.get("skill_id"))
@@ -146,38 +152,6 @@ def search_employees(proj_id, user_id):
                 if is_already_eligible:
                     continue
 
-                is_assigned_to_project = False
-                deadlines = []
-                work_hours = 0
-
-                # Check each project assignment for the employee
-                # to determine if they are assigned to the current project
-                # and get their work hours
-                for assignment in proj_assignments:
-                    if assignment.get("user_id") == employee_skill.get("user_id"):
-                        if assignment.get("proj_id") == proj_id:
-                            is_assigned_to_project = True
-                        if not bool(assignment.get("proposal")) and not bool(assignment.get("deallocated")):
-                            work_hours += int(assignment.get("work_hours"))
-
-                        employee_project_info = db.get_projects_id(assignment.get("proj_id"))[0]
-                        proj_deadline = employee_project_info.get("deadline_date")
-
-                        deadlines.append(proj_deadline)
-
-
-                # Get the nearest assigned project deadline
-                nearest_deadline_str = ""
-                if deadlines:
-                    deadlines = [datetime.strptime(date, '%Y-%m-%d') for date in deadlines]
-                    nearest_deadline = min(deadlines, key=lambda date: abs(date - datetime.now()))
-                    nearest_deadline_str = nearest_deadline.strftime('%Y-%m-%d')
-
-                employee_skill["deadline"] = nearest_deadline_str
-
-                if is_assigned_to_project:
-                    continue
-
                 employee_skill["dept_name"] = ""
                 # Check if the employee is assigned to a department
                 for dept_member in dept_members:
@@ -191,15 +165,57 @@ def search_employees(proj_id, user_id):
                         if org_departments[key].get("manager_id") == employee_skill.get("user_id"):
                             employee_skill["dept_name"] = org_departments[key].get("name")
 
-                employee_skill["work_hours"] = work_hours
-
-                del employee_skill["created_at"], employee_skill["skill_id"], employee_skill["experience"], employee_skill["level"]
                 employee_skill["name"] = employee_data.get("name")
+
                 eligible_employees.append(employee_skill)
 
-    sorted_data = sorted(eligible_employees, key=lambda x: x["name"])
+    user_ids_to_remove = []
+    for employee in eligible_employees:
+        deadlines = []
+        work_hours = 0
+        # Check each project assignment for the employee
+        # to determine their status and get their work hours
+        for assignment in proj_assignments:
+            if assignment.get("user_id") == employee.get("user_id"):
+                if assignment.get("proj_id") == proj_id:
+                    if assignment.get("proposal") and not assignment.get("deallocated"):
+                        proposed_employees.append(employee)
+                    if not assignment.get("proposal") and assignment.get("deallocated"):
+                        deallocated_employees.append(employee)
+                    if assignment.get("proposal") and assignment.get("deallocated"):
+                        active_employees.append(employee)
+                    if not assignment.get("proposal") and not assignment.get("deallocated"):
+                        active_employees.append(employee)
 
-    return sorted_data
+                    user_ids_to_remove.append(employee.get("user_id"))
+
+                    work_hours += int(assignment.get("work_hours"))
+
+                employee_project_info = db.get_projects_id(assignment.get("proj_id"))[0]
+                proj_deadline = employee_project_info.get("deadline_date")
+
+                deadlines.append(proj_deadline)
+
+        # Get the nearest assigned project deadline
+        nearest_deadline_str = ""
+        if deadlines:
+            deadlines = [datetime.strptime(date, '%Y-%m-%d') for date in deadlines]
+            nearest_deadline = min(deadlines, key=lambda date: abs(date - datetime.now()))
+            nearest_deadline_str = nearest_deadline.strftime('%Y-%m-%d')
+
+        employee["deadline"] = nearest_deadline_str
+        employee["work_hours"] = work_hours
+        del employee["created_at"], employee["skill_id"], employee["experience"], employee["level"]
+
+    active_employees = sorted(active_employees, key=lambda x: x["name"])
+    proposed_employees = sorted(proposed_employees, key=lambda x: x["name"])
+    deallocated_employees = sorted(deallocated_employees, key=lambda x: x["name"])
+
+    potential_employees = [employee for employee in eligible_employees if employee.get('user_id') not in user_ids_to_remove]
+
+    returned_data = {"active": active_employees, "proposed": proposed_employees, "past": deallocated_employees, "new": potential_employees}
+
+    return returned_data
 
 
 # PROJECTS ASSIGNMENTS
