@@ -43,7 +43,7 @@ class UserSkills(BaseModel):
     experience: int
     created_at: datetime = datetime.now().isoformat()
     # For skill endorsements
-    endorsements: Optional[List[Endorsements]]
+    # endorsements: Optional[List[Endorsements]]
 
 
 class SkillProposal(BaseModel):
