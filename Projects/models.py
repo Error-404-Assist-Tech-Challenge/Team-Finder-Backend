@@ -53,13 +53,21 @@ class SkillResponse(BaseModel):
     level: int
 
 
-class SearchResponse(BaseModel):
+class UserResponse(BaseModel):
     user_id: UUID
     name: str
     skills: List[SkillResponse]
     dept_name: str
     work_hours: int
     deadline: str
+
+
+class SearchResponse(BaseModel):
+    active: Optional[List[UserResponse]]
+    proposed: Optional[List[UserResponse]]
+    past: Optional[List[UserResponse]]
+    new: Optional[List[UserResponse]]
+
 
 # PROJECT ASSIGNMENTS
 
