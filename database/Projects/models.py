@@ -127,18 +127,18 @@ class Project_members(Base):
 class User_team_roles(Base):
     __tablename__ = "user_team_roles"
 
-    user_id = Column(UUID, ForeignKey("users.id"), primary_key=True, nullable=False)
+    id = Column(UUID, primary_key=True, nullable=False, default=uuid.uuid4)
+    user_id = Column(UUID, ForeignKey("users.id"), nullable=False)
     role_id = Column(UUID, ForeignKey("team_roles.id"), nullable=False)
-    proposal = Column(Boolean, nullable=False)
 
     @staticmethod
     def serialize_user_team_roles(user_team_roles):
         serialize_user_team_roles = []
         for user_team_role in user_team_roles:
             user_team_role = {
+                "id": str(user_team_role.id),
                 "user_id": str(user_team_role.user_id),
-                "role_id": str(user_team_role.role_id),
-                "proposal": str(user_team_role.proposal)
+                "role_id": str(user_team_role.role_id)
             }
             serialize_user_team_roles.append(user_team_role)
         return serialize_user_team_roles

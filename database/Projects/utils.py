@@ -174,11 +174,9 @@ def get_project_members(session):
 # USER TEAM ROLES
 
 
-def create_user_team_role(session, user_id, role_id, proposal):
+def create_user_team_role(session, user_id, role_id):
     try:
-        obj = User_team_roles(user_id=user_id,
-                       role_id=role_id,
-                       proposal=proposal)
+        obj = User_team_roles(user_id=user_id, role_id=role_id)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
