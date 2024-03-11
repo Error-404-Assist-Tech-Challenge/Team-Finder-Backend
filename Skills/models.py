@@ -4,6 +4,14 @@ from pydantic import BaseModel
 from uuid import UUID
 from datetime import datetime
 
+# SKILL ENDORSEMENTS
+
+
+class Endorsements(BaseModel):
+    endorsement: str
+    description: str
+    proj_id: Optional[str]
+
 
 # SKILLS MODELS
 
@@ -31,12 +39,6 @@ class SkillsResponse(BaseModel):
 # USER_SKILLS MODELS
 
 
-class Endorsements(BaseModel):
-    endo: Literal['Title', 'Course', 'Project']
-    description: str
-    proj_id: Optional[UUID]
-
-
 class UserSkills(BaseModel):
     skill_id: Optional[str]
     role_id: Optional[str]
@@ -44,7 +46,7 @@ class UserSkills(BaseModel):
     experience: int
     created_at: datetime = datetime.now().isoformat()
     # For skill endorsements
-    # endorsements: Optional[List[Endorsements]]
+    endorsements: Optional[List[Endorsements]]
 
 
 class SkillProposal(BaseModel):
@@ -114,9 +116,4 @@ class Update_skill(BaseModel):
     proposal: bool
 
 
-# SKILL ENDORSEMENTS
 
-class Endorsements(BaseModel):
-    endorsement: Literal['Title', 'Course', 'Project']
-    description: str
-    proj_id: Optional[UUID]

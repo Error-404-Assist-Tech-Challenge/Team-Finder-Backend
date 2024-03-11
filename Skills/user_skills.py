@@ -8,22 +8,22 @@ auth_handler = AuthHandler()
 user_skills_router = APIRouter()
 
 
-@user_skills_router.post("/api/skills/user", response_model=List[SkillsResponse])
+@user_skills_router.post("/api/skills/user")
 def create_user_skill_route(user_skill_data: UserSkills, user_id: str = Depends(auth_handler.auth_wrapper)):
     return create_user_skills(user_skill_data, user_id)
 
 
-@user_skills_router.get("/api/skills/user", response_model=List[SkillsResponse])
+@user_skills_router.get("/api/skills/user")
 def user_skills_get(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_skills_by_users_id(user_id)
 
 
-@user_skills_router.delete("/api/skills/user", response_model=List[SkillsResponse])
+@user_skills_router.delete("/api/skills/user")
 def user_skills_delete(user_skill_data: RemoveSkill, user_id: str = Depends(auth_handler.auth_wrapper)):
     return remove_user_skill(user_skill_data, user_id)
 
 
-@user_skills_router.put("/api/skills/user", response_model=List[SkillsResponse])
+@user_skills_router.put("/api/skills/user")
 def updating_user_skills(user_skill_data: UpdateSkills, user_id: str = Depends(auth_handler.auth_wrapper)):
     return update_user_skills(user_skill_data, user_id)
 

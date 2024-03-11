@@ -442,6 +442,29 @@ class DataBase:
             if str(current_skill.get("org_id")) == str(org_id):
                 return current_skill
 
+    # SKILL ENDORSEMENTS
+
+    @staticmethod
+    def create_skill_endorsement(endo_id, org_id, skill_id, endo, description, proj_id):
+        with session_scope() as session:
+            return create_skill_endorsement(session=session,
+                                            endo_id=endo_id,
+                                            org_id=org_id,
+                                            skill_id=skill_id,
+                                            endo=endo,
+                                            description=description,
+                                            proj_id=proj_id)
+
+    @staticmethod
+    def get_skill_endorsements(skill_id):
+        with session_scope() as session:
+            returned_endorsements = []
+            all_endorsements = get_endorsements(session=session)
+            for endo in all_endorsements:
+                if str(endo.get("skill_id")) == skill_id:
+                    returned_endorsements.append(endo)
+            return returned_endorsements
+
     # SKILL PROPOSALS
 
     @staticmethod
@@ -670,7 +693,6 @@ class DataBase:
                                   status=status,
                                   description=description,
                                   created_at=created_at)
-
 
     @staticmethod
     def remove_project_manager_id(proj_id, manager_id):

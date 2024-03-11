@@ -159,17 +159,19 @@ class Endorsements(Base):
     org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
     endo = Column(String, nullable=False)
     description = Column(String, nullable=False)
-    proj_id = Column(UUID(as_uuid=True), ForeignKey("projects.id"))
+    proj_id = Column(UUID(as_uuid=True), ForeignKey("projects.id"), nullable=True)
 
     @staticmethod
     def serialize_endorsements(skill_endorsements):
-        serialized_endorsements = {}
+        serialized_endorsements = []
         for endo in skill_endorsements:
-            serialized_endorsements[str(endo.skill_id)] = {
+            skill_endorsement = {
                 "id": str(endo.id),
+                "skill_id": str(endo.skill_id),
                 "org_id": str(endo.org_id),
                 "endo": str(endo.endo),
                 "description": str(endo.description),
                 "proj_id": str(endo.proj_id)
             }
+            serialized_endorsements.append(skill_endorsement)
         return serialized_endorsements
