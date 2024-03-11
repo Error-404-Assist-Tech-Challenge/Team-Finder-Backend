@@ -98,9 +98,9 @@ def remove_user_skill(session, user_id, skill_id):
 # SKILL PROPOSALS
 
 
-def propose_skill(session, user_id, skill_id, dept_id, level, experience):
+def propose_skill(session, user_id, skill_id, dept_id, level, experience, proposal, id):
     try:
-        obj = Skill_proposals(user_id=user_id, skill_id=skill_id, level=level, experience=experience, dept_id=dept_id)
+        obj = Skill_proposals(user_id=user_id, id=id, skill_id=skill_id, level=level, experience=experience, dept_id=dept_id, proposal=proposal)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
@@ -118,6 +118,7 @@ def get_proposed_skills(session):
         print(error)
         return error
 
+
 def delete_proposed_skill(session, user_id, skill_id):
     try:
         proposed_skill = session.query(Skill_proposals).filter(Skill_proposals.user_id == user_id,
@@ -134,9 +135,24 @@ def delete_proposed_skill(session, user_id, skill_id):
         return error
 
 
+def create_project_assignment_proposal(session, user_id, role_id, comment, proposal, dept_id, id):
+    try:
+        obj = Skill_proposals(user_id=user_id,
+                              role_id=role_id,
+                              comment=comment,
+                              proposal=proposal,
+                              dept_id=dept_id,
+                              id=id)
+        session.add(obj)
+        return obj
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
 
 
-#DEPARTMENT_SKILLS
+# DEPARTMENT_SKILLS
+
 def create_department_skill(session, dept_id, skill_id, id):
     try:
         obj = Department_skills(dept_id=dept_id, skill_id=skill_id, id=id)

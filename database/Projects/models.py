@@ -62,9 +62,10 @@ class Project_assignments(Base):
     org_id = Column(UUID, ForeignKey("organizations.id"), nullable=False)
     proj_id = Column(UUID, ForeignKey("projects.id"), nullable=False)
     user_id = Column(UUID, ForeignKey("users.id"), nullable=False)
+    role_id = Column(UUID, ForeignKey("team_roles.id"), nullable=False)
     proposal = Column(Boolean, nullable=False)
     deallocated = Column(Boolean, nullable=False)
-    dealloc_reason = Column(String, nullable=False)
+    dealloc_reason = Column(String, nullable=True)
     work_hours = Column(INTEGER, nullable=False)
     comment = Column(String, nullable=False)
 
@@ -76,6 +77,7 @@ class Project_assignments(Base):
                 "id": str(project_assignment.id),
                 "org_id": str(project_assignment.org_id),
                 "user_id": str(project_assignment.user_id),
+                "role_id": str(project_assignment.role_id),
                 "proj_id": str(project_assignment.proj_id),
                 "proposal": bool(project_assignment.proposal),
                 "deallocated": bool(project_assignment.deallocated),

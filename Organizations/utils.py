@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 import secrets
 from database.db import db
 
-department_manager_id = "fa124499-1762-4f3b-8a61-712307e1677a"
 
 # USER_ROLES
+
 def get_user_roles(user_id):
     user = db.get_user(user_id)
     organization_id = user.get("org_id")

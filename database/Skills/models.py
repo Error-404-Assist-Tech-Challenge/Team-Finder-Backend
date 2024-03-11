@@ -118,24 +118,35 @@ class Department_skills(Base):
 class Skill_proposals(Base):
     __tablename__ = "skill_proposals"
 
+    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
     dept_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False)
-    skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"), nullable=False, primary_key=True)
-    level = Column(Integer, nullable=False)
-    experience = Column(Integer, nullable=False)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, primary_key=True)
+    skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"), nullable=True)
+    level = Column(Integer, nullable=True)
+    experience = Column(Integer, nullable=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    dealloc_reason = Column(String, nullable=True)
+    comment = Column(String, nullable=True)
+    role_id = Column(UUID(as_uuid=True), ForeignKey("team_roles.id"), nullable=True)
+    proposal = Column(Boolean, nullable=False)
+    deallocated = Column(Boolean, nullable=True)
 
     @staticmethod
     def serialize_skill_proposals(skill_proposals):
-        serialized_skill_proposals = []
+        serialized_skill = {}
         for skill_proposal in skill_proposals:
-            serialized_skill = {
+            serialized_skill[str(skill_proposal.id)] = {
                 "skill_id": str(skill_proposal.skill_id),
+                "dept_id": str(skill_proposal.dept_id),
+                "role_id": str(skill_proposal.role_id),
                 "level": str(skill_proposal.level),
                 "experience": str(skill_proposal.experience),
-                "user_id": str(skill_proposal.user_id)
+                "user_id": str(skill_proposal.user_id),
+                "dealloc_reason": str(skill_proposal.dealloc_reason),
+                "comment": str(skill_proposal.comment),
+                "proposal": str(skill_proposal.proposal),
+                "deallocated": str(skill_proposal.deallocated),
             }
-            serialized_skill_proposals.append(serialized_skill)
-        return serialized_skill_proposals
+        return serialized_skill
 
 
 class Endorsements(Base):

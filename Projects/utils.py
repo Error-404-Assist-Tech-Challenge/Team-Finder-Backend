@@ -208,20 +208,28 @@ def get_project_assignments():
     return project_assignments
 
 
-def create_project_assignment(data):
+def create_project_assignment(data, user_id):
     project_assignments_data = data.model_dump()
     project_assignments_id = str(uuid4())
     project_assignments_data["id"] = project_assignments_id
-
-    db.create_project_assignment(proj_id=project_assignments_data.get("proj_id"),
+    project_info = db.get_project_info(user_id)
+    organization_id = db.get_user(user_id).get("org_id")
+    db.create_project_assignment(proj_id=project_info.get("id"),
                                  user_id=project_assignments_data.get("user_id"),
-                                 proposal=project_assignments_data.get("proposal"),
-                                 deallocated=project_assignments_data.get("deallocated"),
+                                 org_id=organization_id,
+                                 role_id=project_assignments_data.get("role_id"),
+                                 proposal=False,
+                                 deallocated=False,
                                  dealloc_reason=project_assignments_data.get("dealloc_reason"),
                                  work_hours=project_assignments_data.get("work_hours"),
                                  comment=project_assignments_data.get("comment"),
                                  project_assignments_id=project_assignments_id)
-
+    db.create_project_assignment_proposal(id=str(uuid4()),
+                                          dept_id=db.get_department_user(project_assignments_data.get("user_id")),
+                                          role_id=project_assignments_data.get("role_id"),
+                                          comment=project_assignments_data.get("comment"),
+                                          user_id=project_assignments_data.get("user_id"),
+                                          proposal=False)
     return project_assignments_data
 
 
