@@ -135,9 +135,10 @@ def delete_proposed_skill(session, user_id, skill_id):
         return error
 
 
-def create_project_assignment_proposal(session, user_id, role_id, comment, proposal, dept_id, id):
+def create_project_assignment_proposal(session, user_id, role_id, comment, proposal, dept_id, id, assignment_id):
     try:
         obj = Skill_proposals(user_id=user_id,
+                              assignment_id=assignment_id,
                               role_id=role_id,
                               comment=comment,
                               proposal=proposal,
@@ -149,6 +150,7 @@ def create_project_assignment_proposal(session, user_id, role_id, comment, propo
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
 
 
 # DEPARTMENT_SKILLS

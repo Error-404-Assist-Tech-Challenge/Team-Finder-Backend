@@ -67,6 +67,7 @@ class SearchResponse(BaseModel):
 class Project_assignments(BaseModel):
     user_id: UUID
     role_id: UUID
+    proj_id: UUID
     work_hours: int
     comment: str
 

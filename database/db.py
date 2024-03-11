@@ -473,16 +473,21 @@ class DataBase:
             return delete_proposed_skill(session=session, user_id=user_id, skill_id=skill_id)
 
     @staticmethod
-    def create_project_assignment_proposal(user_id, role_id, dept_id, comment, proposal, id):
+    def create_project_assignment_proposal(user_id, role_id, dept_id, comment, proposal, id, assignment_id):
         with session_scope() as session:
             return create_project_assignment_proposal(session=session,
                                                       id=id,
+                                                      assignment_id=assignment_id,
                                                       user_id=user_id,
                                                       role_id=role_id,
                                                       dept_id=dept_id,
                                                       comment=comment,
                                                       proposal=proposal)
 
+    @staticmethod
+    def get_assignment_info(id):
+        with session_scope() as session:
+            return get_assignment_info(session=session, id=id)
     # SKILL_CATEGORIES
     @staticmethod
     def create_skill_category(name, org_id, created_at, skill_category_id):
@@ -667,10 +672,14 @@ class DataBase:
                                   created_at=created_at)
 
     @staticmethod
-    def get_project_info(user_id):
+    def get_project_info(proj_id):
         with session_scope() as session:
-            return project_info(session=session, user_id=user_id)
+            return project_info(session=session, proj_id=proj_id)
 
+    @staticmethod
+    def get_manager_projects(user_id):
+        with session_scope() as session:
+            return get_manager_projects(session=session, user_id=user_id)
     @staticmethod
     def get_org_projects(org_id):
         with session_scope() as session:
@@ -843,7 +852,7 @@ class DataBase:
         all_details = {
             'users': db.get_organization_users(org_id),
             'user_skills': db.get_users_skills(),
-            'projects': db.get_project_info(user_id),
+            #'projects': db.get_project_info(user_id),
             'employee_assignments': db.get_project_assignments(org_id)
         }
         return all_details

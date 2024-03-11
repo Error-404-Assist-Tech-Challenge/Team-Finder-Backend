@@ -393,6 +393,13 @@ def get_skill_proposals(user_id):
                     for role in team_roles:
                         if str(role) == role_id:
                             skill_proposal["role_name"] = team_roles[role].get("name")
+
+                    # Find project details
+                    assignment = db.get_assignment_info(skill_proposal.get("assignment_id"))
+                    project = db.get_project_info(assignment.get("proj_id"))
+                    skill_proposal["project_name"] = project.get("name")
+                    skill_proposal["project_manager"] = db.get_user(project.get("manager_id")).get("name")
+                    skill_proposal["work_hours"] = assignment.get("work_hours")
             return skill_proposals
 
 

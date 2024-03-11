@@ -65,10 +65,20 @@ def delete_project(session, project_id):
         return error
 
 
-def project_info(session, user_id):
+def project_info(session, proj_id):
     try:
-        project = session.query(Projects).filter(Projects.manager_id == user_id).first()
+        project = session.query(Projects).filter(Projects.id == proj_id).first()
         return project.serialize()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def get_manager_projects(session, user_id):
+    try:
+        projects = session.query(Projects).filter(Projects.manager_id == user_id).all()
+        return Projects.serialize_projects(projects)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
@@ -110,6 +120,16 @@ def get_project_assigned_members(session, proj_id):
     try:
         members = session.query(Project_assignments).filter(Project_assignments.proj_id == proj_id).all()
         return members
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def get_assignment_info(session, id):
+    try:
+        assignment_proposal = session.query(Project_assignments).filter(Project_assignments.id == id).first()
+        return assignment_proposal.serialize()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)

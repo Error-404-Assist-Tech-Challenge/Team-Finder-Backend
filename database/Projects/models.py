@@ -87,6 +87,20 @@ class Project_assignments(Base):
             })
         return serialized_project_assignments
 
+    def serialize(self):
+        return {
+            "id": str(self.id),
+            "org_id": str(self.org_id),
+            "user_id": str(self.user_id),
+            "role_id": str(self.role_id),
+            "proj_id": str(self.proj_id),
+            "proposal": bool(self.proposal),
+            "deallocated": bool(self.deallocated),
+            "dealloc_reason": str(self.dealloc_reason),
+            "work_hours": str(self.work_hours),
+            "comment": str(self.comment)
+        }
+
 # PROJECTS MEMBERS
 
 
