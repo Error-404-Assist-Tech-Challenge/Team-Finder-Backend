@@ -754,9 +754,8 @@ class DataBase:
     def create_user_team_role(user_id, role_id, proposal):
         with session_scope() as session:
             return create_user_team_role(session=session,
-                                          user_id=user_id,
-                                          role_id=role_id,
-                                          proposal=proposal)
+                                         user_id=user_id,
+                                         role_id=role_id)
 
     @staticmethod
     def get_user_team_roles():

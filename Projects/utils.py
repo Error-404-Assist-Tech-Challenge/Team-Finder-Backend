@@ -112,12 +112,12 @@ def search_employees(proj_id, user_id):
     org_departments = db.get_department(org_id)
     proj_assignments = db.get_project_assignments(org_id)
     tech_stack_skills = db.get_project_tech_stack_skills(org_id=org_id, proj_id=proj_id)
+    user_team_roles = db.get_user_team_roles()
+    org_team_roles = db.get_team_roles(org_id)
 
     stack_skill_ids = []
     for skill in tech_stack_skills:
         stack_skill_ids.append(skill.get("skill_id"))
-
-    returned_data = {"active": [], "proposed": [], "past": [], "new": []}
 
     eligible_employees = []
     active_employees = []
@@ -152,31 +152,40 @@ def search_employees(proj_id, user_id):
                 if is_already_eligible:
                     continue
 
-                employee_skill["dept_name"] = ""
-                # Check if the employee is assigned to a department
-                for dept_member in dept_members:
-                    if dept_member.get("user_id") == employee_skill.get("user_id"):
-                        dept_info = db.get_department_info(dept_member.get("dept_id"))
-                        employee_skill["dept_name"] = dept_info.get("name")
-
-                # Check if the employee manages a department
-                if not employee_skill["dept_name"]:
-                    for key in org_departments:
-                        if org_departments[key].get("manager_id") == employee_skill.get("user_id"):
-                            employee_skill["dept_name"] = org_departments[key].get("name")
-
                 employee_skill["name"] = employee_data.get("name")
 
                 eligible_employees.append(employee_skill)
 
     user_ids_to_remove = []
     for employee in eligible_employees:
+        employee_id = employee.get("user_id")
+        employee["dept_name"] = ""
+        employee["roles"] = []
+
+        # Check if the employee is assigned to a department
+        for dept_member in dept_members:
+            if dept_member.get("user_id") == employee_id:
+                dept_info = db.get_department_info(dept_member.get("dept_id"))
+                employee["dept_name"] = dept_info.get("name")
+
+        # Check if the employee manages a department
+        if not employee["dept_name"]:
+            for key in org_departments:
+                if org_departments[key].get("manager_id") == employee_id:
+                    employee["dept_name"] = org_departments[key].get("name")
+
+        # Get employee team roles
+        for role in user_team_roles:
+            if role.get("user_id") == employee_id:
+                employee_role_name = org_team_roles.get(role.get("role_id")).get("name")
+                employee["roles"].append(employee_role_name)
+
         deadlines = []
         work_hours = 0
         # Check each project assignment for the employee
         # to determine their status and get their work hours
         for assignment in proj_assignments:
-            if assignment.get("user_id") == employee.get("user_id"):
+            if assignment.get("user_id") == employee_id:
                 if assignment.get("proj_id") == proj_id:
                     if assignment.get("proposal") and not assignment.get("deallocated"):
                         proposed_employees.append(employee)
@@ -187,7 +196,7 @@ def search_employees(proj_id, user_id):
                     if not assignment.get("proposal") and not assignment.get("deallocated"):
                         active_employees.append(employee)
 
-                    user_ids_to_remove.append(employee.get("user_id"))
+                    user_ids_to_remove.append(employee_id)
 
                     work_hours += int(assignment.get("work_hours"))
 
@@ -267,8 +276,7 @@ def get_user_team_roles():
 def create_user_team_role(data):
     user_team_role_data = data.model_dump()
     db.create_user_team_role(user_id=user_team_role_data.get("user_id"),
-                             role_id=user_team_role_data.get("role_id"),
-                             proposal=user_team_role_data.get("proposal"))
+                             role_id=user_team_role_data.get("role_id"))
     return user_team_role_data
 
 # PROJECT TECH STACK SKILLS

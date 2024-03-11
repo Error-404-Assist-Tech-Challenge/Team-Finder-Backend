@@ -56,6 +56,7 @@ class SkillResponse(BaseModel):
 class UserResponse(BaseModel):
     user_id: UUID
     name: str
+    roles: List[str]
     skills: List[SkillResponse]
     dept_name: str
     work_hours: int
