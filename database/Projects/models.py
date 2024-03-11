@@ -64,7 +64,7 @@ class Project_assignments(Base):
     user_id = Column(UUID, ForeignKey("users.id"), nullable=False)
     role_id = Column(UUID, ForeignKey("team_roles.id"), nullable=False)
     proposal = Column(Boolean, nullable=False)
-    deallocated = Column(Boolean, nullable=False)
+    deallocated = Column(Boolean, nullable=True)
     dealloc_reason = Column(String, nullable=True)
     work_hours = Column(INTEGER, nullable=False)
     comment = Column(String, nullable=False)

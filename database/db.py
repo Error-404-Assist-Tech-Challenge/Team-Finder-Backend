@@ -273,7 +273,7 @@ class DataBase:
                                      dept_id=dept_id)
 
     @staticmethod
-    def remove_manager_id(dept_id, manager_id):
+    def remove_department_manager_id(dept_id, manager_id):
         with session_scope() as session:
             return remove_manager_id(session=session, dept_id=dept_id, manager_id=manager_id)
 
@@ -670,6 +670,12 @@ class DataBase:
                                   status=status,
                                   description=description,
                                   created_at=created_at)
+
+
+    @staticmethod
+    def remove_project_manager_id(proj_id, manager_id):
+        with session_scope() as session:
+            return remove_project_manager_id(session=session, proj_id=proj_id, manager_id=manager_id)
 
     @staticmethod
     def get_project_info(proj_id):
