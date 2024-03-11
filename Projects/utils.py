@@ -20,9 +20,10 @@ def get_projects(user_id):
             current_project["tech_stack"] = tech_stack
 
             # Getting team role names
-            team_role = db.get_project_needed_roles(project_id, organization_id)
+            team_role, available_roles = db.get_project_needed_roles(project_id, organization_id)
             current_project["team_role"] = team_role
             del current_project["org_id"]
+            current_project["available_roles"] = available_roles
             returned_user_projects.append(current_project)
 
             # Getting project approved members
