@@ -25,6 +25,18 @@ def create_project(session, project_id, org_id, name, period, start_date, deadli
         return error
 
 
+def remove_project_manager_id(session, proj_id, manager_id):
+    try:
+        project = session.query(Projects).filter(Projects.proj_id == proj_id).first()
+        if project:
+            project.manager_id = manager_id
+            session.commit()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
 def update_project(session, project_id, name, period, start_date, deadline_date, status, description, created_at):
     try:
         project = session.query(Projects).filter(Projects.id == project_id).first()
