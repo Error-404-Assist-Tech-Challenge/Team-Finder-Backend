@@ -47,13 +47,13 @@ def delete_user_role(data, admin_id):
                     if str(current_department.get("manager_id")) == str(removed_data.get("user_id")):
                         db.remove_department_manager_id(current_department.get("id"), None)
 
-            # Check and remove if user_id is project manager
-            if current_role.get("name") == "proj_manager":
-                projects = db.get_org_projects(db.get_user(admin_id).get("org_id"))
-                for project in projects:
-                    current_project = projects[project]
-                    if str(current_project.get("manager_id")) == str(removed_data.get("user_id")):
-                        db.remove_project_manager_id(current_project.get("id"), None)
+            # # Check and remove if user_id is project manager
+            # if current_role.get("name") == "proj_manager":
+            #     projects = db.get_org_projects(db.get_user(admin_id).get("org_id"))
+            #     for project in projects:
+            #         current_project = projects[project]
+            #         if str(current_project.get("manager_id")) == str(removed_data.get("user_id")):
+            #             db.remove_project_manager_id(current_project.get("id"), None)
     returned_data = get_org_users(admin_id)
     return returned_data, None
 
