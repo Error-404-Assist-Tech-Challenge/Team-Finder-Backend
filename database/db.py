@@ -333,6 +333,14 @@ class DataBase:
         with session_scope() as session:
             return delete_department_member(session=session, dept_id=dept_id, user_id=user_id)
 
+    @staticmethod
+    def get_department_manager_id():
+        with session_scope() as session:
+            org_roles = get_organization_roles(session=session)
+            for role in org_roles:
+                current_role = org_roles[role]
+                if str(current_role.get("name")) == "dept_manager":
+                    return role
 
 # SKILLS=================================================================================================================
 
@@ -706,6 +714,11 @@ class DataBase:
         with session_scope() as session:
             return get_project_assignments(session=session, org_id=org_id)
 
+    @staticmethod
+    def get_project_approved_members(proj_id):
+        with session_scope() as session:
+            all_project_assigned_members = get_project_assigned_members(session=session, proj_id=proj_id)
+            print(all_project_assigned_members)
     # USER TEAM ROLES
 
     @staticmethod
@@ -803,16 +816,14 @@ class DataBase:
 
 #CHAT GPT FEATURE=======================================================================================================
     @staticmethod
-    def get_all_details():
-        with session_scope() as session:
-            all_details = {}
-            all_details['Users'] = get_users(session=session)
-            all_details['organizations'] = get_organizations(session=session)
-            all_details['departments'] = get_department(session=session)
-            all_details['department_members'] = get_department_members(session=session)
-            all_details['user_roles'] = get_user_roles(session=session)
-            #Plus the rest of the database
-            return all_details
+    def get_all_details(org_id, user_id):
+        all_details = {
+            'users': db.get_organization_users(org_id),
+            'user_skills': db.get_users_skills(),
+            'projects': db.get_project_info(user_id),
+            'employee_assignments': db.get_project_assignments(org_id)
+        }
+        return all_details
 
 
 db = DataBase()

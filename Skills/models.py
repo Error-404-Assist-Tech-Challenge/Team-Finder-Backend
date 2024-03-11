@@ -1,3 +1,5 @@
+from typing import Literal, Optional, List
+
 from pydantic import BaseModel
 from uuid import UUID
 from datetime import datetime
@@ -29,11 +31,19 @@ class SkillsResponse(BaseModel):
 # USER_SKILLS MODELS
 
 
+class Endorsements(BaseModel):
+    endo: Literal['Title', 'Course', 'Project']
+    description: str
+    proj_id: Optional[UUID]
+
+
 class UserSkills(BaseModel):
     skill_id: UUID
     level: int
     experience: int
     created_at: datetime = datetime.now().isoformat()
+    # For skill endorsements
+    endorsements: Optional[List[Endorsements]]
 
 
 class SkillProposal(BaseModel):
@@ -62,6 +72,7 @@ class SkillCategoriesResponse(BaseModel):
     label: str
     value: UUID
     is_used: bool = False
+
 
 class SkillCategory(BaseModel):
     name: str
@@ -99,3 +110,11 @@ class Update_skill(BaseModel):
     user_id: UUID
     skill_id: UUID
     proposal: bool
+
+
+# SKILL ENDORSEMENTS
+
+class Endorsements(BaseModel):
+    endorsement: Literal['Title', 'Course', 'Project']
+    description: str
+    proj_id: Optional[UUID]

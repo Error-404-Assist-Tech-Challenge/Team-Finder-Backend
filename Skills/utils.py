@@ -71,6 +71,20 @@ def get_skills_by_users_id(user_id):
 def create_user_skills(data, user_id):
     user_skill_data = data.model_dump()
     is_manager = False
+
+    # Check if user added an endorsement to his skill
+    endorsements = user_skill_data.get("endorsement")
+    if endorsements is not None:
+        organization_id = db.get_user(user_id).get("org_id")
+        for endo in endorsements:
+            endo_id = str(uuid4())
+            db.create_skill_endorsement(endo_id=endo_id,
+                                        org_id=organization_id,
+                                        skill_id=user_skill_data.get("skill_id"),
+                                        endorsement=endo.get("endo"),
+                                        description=endo.get("description"),
+                                        proj_id=endo.get("proj_id"))
+
     # Logic skill proposal
     skill_id = user_skill_data.get("skill_id")
 
@@ -337,3 +351,13 @@ def get_skill_proposals(user_id):
             if current_skill.get("id") == skill_proposal.get("skill_id"):
                 skill_proposal["skill_name"] = current_skill.get("name")
     return skill_proposals
+
+
+
+
+
+
+
+
+
+

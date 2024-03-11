@@ -138,3 +138,4 @@ def delete_department_member(session, dept_id, user_id):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
