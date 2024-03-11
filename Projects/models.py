@@ -65,13 +65,11 @@ class SearchResponse(BaseModel):
 
 
 class Project_assignments(BaseModel):
-    proj_id: UUID
     user_id: UUID
-    proposal: bool
-    deallocated: bool
-    dealloc_reason: str
+    role_id: UUID
     work_hours: int
     comment: str
+
 
 # USER TEAM ROLES
 

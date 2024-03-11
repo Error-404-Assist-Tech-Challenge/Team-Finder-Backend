@@ -445,25 +445,43 @@ class DataBase:
     # SKILL PROPOSALS
 
     @staticmethod
-    def propose_skill(skill_id, user_id, dept_id, level, experience):
+    def propose_skill(skill_id, id, user_id, dept_id, level, experience, proposal):
         with session_scope() as session:
             return propose_skill(session=session,
+                                 id=id,
                                  dept_id=dept_id,
                                  user_id=user_id,
                                  skill_id=skill_id,
                                  level=level,
-                                 experience=experience)
+                                 experience=experience,
+                                 proposal=proposal)
 
     @staticmethod
-    def get_skill_proposals():
+    def get_skill_proposals(department_id):
         with session_scope() as session:
-            return get_proposed_skills(session=session)
+            proposed_skills = []
+            all_proposed_skills = get_proposed_skills(session=session)
+            for skill in all_proposed_skills:
+                current_skill = all_proposed_skills[skill]
+                if current_skill.get("dept_id") == department_id:
+                    proposed_skills.append(all_proposed_skills[skill])
+            return proposed_skills
 
     @staticmethod
     def delete_proposed_skill(user_id, skill_id):
         with session_scope() as session:
             return delete_proposed_skill(session=session, user_id=user_id, skill_id=skill_id)
 
+    @staticmethod
+    def create_project_assignment_proposal(user_id, role_id, dept_id, comment, proposal, id):
+        with session_scope() as session:
+            return create_project_assignment_proposal(session=session,
+                                                      id=id,
+                                                      user_id=user_id,
+                                                      role_id=role_id,
+                                                      dept_id=dept_id,
+                                                      comment=comment,
+                                                      proposal=proposal)
 
     # SKILL_CATEGORIES
     @staticmethod
@@ -697,11 +715,13 @@ class DataBase:
     # PROJECT ASSIGNMENTS
 
     @staticmethod
-    def create_project_assignment(project_assignments_id, proj_id, user_id, proposal, deallocated, dealloc_reason, work_hours, comment):
+    def create_project_assignment(project_assignments_id, proj_id, user_id, proposal, deallocated, dealloc_reason, work_hours, comment, org_id, role_id):
         with session_scope() as session:
             return create_project_assignments(session=session,
                                               project_assignments_id=project_assignments_id,
                                               proj_id=proj_id,
+                                              org_id=org_id,
+                                              role_id=role_id,
                                               user_id=user_id,
                                               proposal=proposal,
                                               deallocated=deallocated,

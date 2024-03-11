@@ -100,11 +100,14 @@ def create_user_skills(data, user_id):
                 is_manager = True
     # If user is not a manager and has a department user can propose skill
     if department_id and not is_manager:
-        db.propose_skill(skill_id=skill_id,
+        propose_skill = str(uuid4())
+        db.propose_skill(id=propose_skill,
+                         skill_id=skill_id,
                          user_id=user_id,
                          dept_id=department_id,
                          level=user_skill_data.get("level"),
-                         experience=user_skill_data.get("experience"))
+                         experience=user_skill_data.get("experience"),
+                         proposal=False)
         returned_data = get_skills_by_users_id(user_id)
         return returned_data
     # If user is manager auto accept is implemented
@@ -301,56 +304,96 @@ def delete_department_skill(data, user_id):
 # SKILLS PROPOSALS
 
 
-def update_skill_proposal(data):
+def update_skill_proposal(data, user_id):
     update_data = data.model_dump()
-    proposal = update_data.get("proposal")
-    user_id = update_data.get("user_id")
-    skill_id = update_data.get("skill_id")
-    if proposal:
-        proposed_skills = db.get_skill_proposals()
-        for skill in proposed_skills:
-            current_skill = skill
-            if current_skill.get("user_id") == str(user_id) and current_skill.get("skill_id") == str(skill_id):
-                level = current_skill.get("level")
-                experience = current_skill.get("experience")
-                user_skill_exists = db.verify_user_skill(user_id=user_id,
-                                                         skill_id=skill_id)
-                if user_skill_exists:
-                    db.update_user_skill(user_id=user_id,
-                                         skill_id=skill_id,
-                                         level=level,
-                                         experience=experience)
+
+    # Fetch organization and department id
+    organization_id = db.get_user(user_id).get("org_id")
+    departments = db.get_department(organization_id)
+
+    # Find the department
+    for dep in departments:
+        current_department = departments[dep]
+        if str(current_department.get("manager_id")) == user_id:
+            department_id = dep
+
+            # Fetch the skill proposals from his department
+            proposed_skills = db.get_skill_proposals(department_id)
+            for current_skill in proposed_skills:
+                role_id = current_skill.get("role_id")
+                skill_id = current_skill.get("skill_id")
+                proposal = current_skill.get("proposal")
+                # Check if the proposal is for project or for skill requests
+                if skill_id and proposal:
+                    if current_skill.get("user_id") == str(update_data.get("user_id")) and current_skill.get("skill_id") == str(update_data.get("skill_id")):
+                        level = current_skill.get("level")
+                        experience = current_skill.get("experience")
+                        user_skill_exists = db.verify_user_skill(user_id=update_data.get("user_id"),
+                                                                 skill_id=skill_id)
+                        if user_skill_exists:
+                            db.update_user_skill(user_id=update_data.get("user_id"),
+                                                 skill_id=skill_id,
+                                                 level=level,
+                                                 experience=experience)
+                        else:
+                            db.create_user_skills(user_id=update_data.get("user_id"),
+                                                  skill_id=skill_id,
+                                                  level=level,
+                                                  experience=experience,
+                                                  created_at=datetime.now().isoformat())
+                        db.delete_proposed_skill(user_id=update_data.get("user_id"), skill_id=skill_id)
+                        return get_skill_proposals(user_id)
+                elif role_id:
+                    print("Entered Role")
+                    if proposal:
+                        # Make project assignment true
+                        continue
+                    else:
+                        # Make project assignment false
+                        continue
                 else:
-                    db.create_user_skills(user_id=user_id,
-                                          skill_id=skill_id,
-                                          level=level,
-                                          experience=experience,
-                                          created_at=datetime.now().isoformat())
-                db.delete_proposed_skill(user_id=user_id, skill_id=skill_id)
-                return get_skill_proposals(user_id)
-    else:
-        db.delete_proposed_skill(user_id=user_id, skill_id=skill_id)
-        return get_skill_proposals(user_id)
+                    db.delete_proposed_skill(user_id=user_id, skill_id=skill_id)
+                    return get_skill_proposals(user_id)
 
 
 def get_skill_proposals(user_id):
-    skill_proposals = db.get_skill_proposals()
-    for skill_proposal in skill_proposals:
-        user_data = db.get_user(skill_proposal.get("user_id"))
-        skill_proposal["user_name"] = user_data.get("name")
+    organization_id = db.get_user(user_id).get("org_id")
+    # Find user department
+    departments = db.get_department(organization_id)
 
-        org_skills = db.get_skills(db.get_user(user_id).get("org_id"))
-        users_skills = get_skills_by_users_id(skill_proposal.get("user_id"))
-        if users_skills:
-            skill_proposal["type"] = "put"
-        else:
-            skill_proposal["type"] = "post"
+    # Check user department
+    for dep in departments:
+        department = departments[dep]
+        if str(department.get("manager_id")) == user_id:
+            skill_proposals = db.get_skill_proposals(dep)
+            # Put the info in each proposal
+            for skill_proposal in skill_proposals:
+                # Check if it is skill proposal or project assignment
+                role_id = skill_proposal.get("role_id")
+                skill_id = skill_proposal.get("skill_id")
+                if str(role_id) == "None":
+                    user_data = db.get_user(skill_proposal.get("user_id"))
 
-        for skill in org_skills:
-            current_skill = org_skills[skill]
-            if current_skill.get("id") == skill_proposal.get("skill_id"):
-                skill_proposal["skill_name"] = current_skill.get("name")
-    return skill_proposals
+                    # Put username in response
+                    skill_proposal["user_name"] = user_data.get("name")
+                    users_skills = get_skills_by_users_id(skill_proposal.get("user_id"))
+                    if users_skills:
+                        skill_proposal["type"] = "put"
+                    else:
+                        skill_proposal["type"] = "post"
+                    skill_proposal["skill_name"] = db.get_skill_info(skill_id, organization_id).get("name")
+                elif str(skill_id) == "None":
+                    user_data = db.get_user(skill_proposal.get("user_id"))
+
+                    # Put username in response
+                    skill_proposal["user_name"] = user_data.get("name")
+
+                    # Find the role and put it in response
+                    team_roles = db.get_team_roles(organization_id)
+                    for role in team_roles:
+                        if str(role) == role_id:
+                            skill_proposal["role_name"] = team_roles[role].get("name")
+            return skill_proposals
 
 
 
