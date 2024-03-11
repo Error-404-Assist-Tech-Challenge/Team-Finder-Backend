@@ -19,8 +19,8 @@ class UpdateProject(BaseModel):
     proj_id: UUID
     name: str
     period: Literal['Fixed', 'Ongoing']
-    start_date: date
-    deadline_date: date
+    start_date: datetime
+    deadline_date: datetime
     status: Literal['Not started', 'Starting', 'In Progress', 'Closing', 'Closed']
     description: str
     created_at: datetime = datetime.now().isoformat()
@@ -31,8 +31,8 @@ class UpdateProject(BaseModel):
 class Projects(BaseModel):
     name: str
     period: Literal['Fixed', 'Ongoing']
-    start_date: date
-    deadline_date: date
+    start_date: datetime
+    deadline_date: datetime
     status: Literal['Not Started', 'Starting', 'In Progress', 'Closing', 'Closed']
     description: str
     created_at: datetime = datetime.now().isoformat()
