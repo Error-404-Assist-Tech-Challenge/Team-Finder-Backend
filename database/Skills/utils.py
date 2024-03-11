@@ -1,7 +1,8 @@
 from sqlalchemy.exc import SQLAlchemyError
 from database.Skills.models import *
 
-#SKILLS
+# SKILLS
+
 
 def create_skill(session, category_id, name, description, skill_id, created_at, author_id, org_id):
     try:
@@ -41,7 +42,29 @@ def get_skill(session, skill_id):
         return error
 
 
-#USER_SKILLS
+def create_skill_endorsement(session, endo_id, org_id, skill_id, description, endo, proj_id):
+    try:
+        obj = Endorsements(id=endo_id, org_id=org_id, skill_id=skill_id, description=description, endo=endo, proj_id=proj_id)
+        session.add(obj)
+        return obj
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def get_endorsements(session):
+    try:
+        all_endorsements = session.query(Endorsements).all()
+        return Endorsements.serialize_endorsements(all_endorsements)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+# USER_SKILLS
+
 
 def create_user_skills(session, user_id, skill_id, level, experience, created_at):
     try:
@@ -62,7 +85,6 @@ def get_user_skills(session):
         error = str(e.__dict__['orig'])
         print(error)
         return error
-
 
 
 def update_user_skill(session, user_id, level, experience, skill_id):
@@ -150,7 +172,6 @@ def create_project_assignment_proposal(session, user_id, role_id, comment, propo
         error = str(e.__dict__['orig'])
         print(error)
         return error
-
 
 
 # DEPARTMENT_SKILLS

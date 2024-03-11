@@ -63,6 +63,8 @@ def get_skills_by_users_id(user_id):
                 skill_author = skill.get("author_id")
                 user_skill["skill_author"] = db.get_user(skill_author).get("name")
 
+                # Put skill endorsements
+                user_skill["skill_endorsements"] = db.get_skill_endorsements(skill.get("id"))
                 user_skills_list.append(user_skill)
     user_skills_list.sort(key=lambda x: x.get("skill_name", "").lower())
     return user_skills_list
@@ -73,17 +75,28 @@ def create_user_skills(data, user_id):
     is_manager = False
 
     # Check if user added an endorsement to his skill
-    # endorsements = user_skill_data.get("endorsement")
-    # if endorsements is not None:
-    #     organization_id = db.get_user(user_id).get("org_id")
-    #     for endo in endorsements:
-    #         endo_id = str(uuid4())
-    #         db.create_skill_endorsement(endo_id=endo_id,
-    #                                     org_id=organization_id,
-    #                                     skill_id=user_skill_data.get("skill_id"),
-    #                                     endorsement=endo.get("endo"),
-    #                                     description=endo.get("description"),
-    #                                     proj_id=endo.get("proj_id"))
+    endorsements = user_skill_data.get("endorsements")
+    if endorsements is not None:
+        organization_id = db.get_user(user_id).get("org_id")
+        for endo in endorsements:
+            endo_id = str(uuid4())
+            proj_id = endo.get("proj_id")
+
+            # Check if project has or not project id
+            if proj_id == '':
+                db.create_skill_endorsement(endo_id=endo_id,
+                                            org_id=organization_id,
+                                            skill_id=user_skill_data.get("skill_id"),
+                                            endo=endo.get("endorsement"),
+                                            description=endo.get("description"),
+                                            proj_id=None)
+            else:
+                db.create_skill_endorsement(endo_id=endo_id,
+                                            org_id=organization_id,
+                                            skill_id=user_skill_data.get("skill_id"),
+                                            endo=endo.get("endorsement"),
+                                            description=endo.get("description"),
+                                            proj_id=endo.get("proj_id"))
 
     # Logic skill proposal
     skill_id = user_skill_data.get("skill_id")
@@ -108,8 +121,7 @@ def create_user_skills(data, user_id):
                          level=user_skill_data.get("level"),
                          experience=user_skill_data.get("experience"),
                          proposal=False)
-        returned_data = get_skills_by_users_id(user_id)
-        return returned_data
+        return get_skills_by_users_id(user_id)
     # If user is manager auto accept is implemented
     elif is_manager:
         # Verify if manager has or not having that skill
@@ -123,13 +135,14 @@ def create_user_skills(data, user_id):
                                  user_id=user_id,
                                  level=user_skill_data.get("level"),
                                  experience=user_skill_data.get("experience"))
+            return get_skills_by_users_id(user_id=user_id)
         else:
             db.create_user_skills(skill_id=skill_id,
                                   user_id=user_id,
                                   level=user_skill_data.get("level"),
                                   experience=user_skill_data.get("experience"),
                                   created_at=datetime.now().isoformat())
-        return get_skills_by_users_id(user_id=user_id)
+            return get_skills_by_users_id(user_id=user_id)
     # If user doesn't have a skill he cannot propose to anybody therefore we throw error 409
     else:
         raise HTTPException(status_code=409, detail="Department not found for the user")
