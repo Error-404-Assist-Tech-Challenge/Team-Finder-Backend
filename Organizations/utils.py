@@ -40,7 +40,7 @@ def delete_user_role(data, admin_id):
                                 role_id=role_id)
 
             # Check and remove if user_id is department manager
-            if current_role.get("name") == "dept_manager":
+            if removed_data.get("name") == "dept_manager":
                 departments = db.get_department(db.get_user(admin_id).get("org_id"))
                 for department in departments:
                     current_department = departments[department]
