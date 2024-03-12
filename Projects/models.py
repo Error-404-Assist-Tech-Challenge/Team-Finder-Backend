@@ -120,7 +120,6 @@ class DeleteAssignmentProposal(BaseModel):
 
 class ManageProposal(BaseModel):
     assignment_id: UUID
-    proj_id: UUID
     action: Literal['Accept', 'Reject']
 
 
