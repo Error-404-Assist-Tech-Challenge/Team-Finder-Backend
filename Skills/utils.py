@@ -436,9 +436,9 @@ def get_skill_proposals(user_id):
             # Put the info in each proposal
             for skill_proposal in skill_proposals:
                 # Check if it is skill proposal or project assignment
-                role_id = skill_proposal.get("role_id")
+                role_ids = skill_proposal.get("role_id")
                 skill_id = skill_proposal.get("skill_id")
-                if str(role_id) == "None":
+                if str(role_ids) == "None":
                     user_data = db.get_user(skill_proposal.get("user_id"))
 
                     # Put username in response
@@ -458,7 +458,7 @@ def get_skill_proposals(user_id):
                     # Find the role and put it in response
                     team_roles = db.get_team_roles(organization_id)
                     for role in team_roles:
-                        if str(role) == role_id:
+                        if str(role) in role_ids:
                             skill_proposal["role_name"] = team_roles[role].get("name")
 
                     # Find project details

@@ -264,7 +264,7 @@ def create_project_assignment(data, user_id):
     db.create_project_assignment(proj_id=project_assignments_data.get("proj_id"),
                                  user_id=project_assignments_data.get("user_id"),
                                  org_id=organization_id,
-                                 role_id=project_assignments_data.get("role_id"),
+                                 role_ids=project_assignments_data.get("role_ids"),
                                  proposal=True,
                                  deallocated=False,
                                  dealloc_reason=project_assignments_data.get("dealloc_reason"),
@@ -273,7 +273,7 @@ def create_project_assignment(data, user_id):
                                  project_assignments_id=project_assignments_id)
     db.create_project_assignment_proposal(id=str(uuid4()),
                                           dept_id=db.get_department_user(project_assignments_data.get("user_id")),
-                                          role_id=project_assignments_data.get("role_id"),
+                                          role_ids=project_assignments_data.get("role_ids"),
                                           comment=project_assignments_data.get("comment"),
                                           user_id=project_assignments_data.get("user_id"),
                                           assignment_id=project_assignments_id,
