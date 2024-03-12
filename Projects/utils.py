@@ -265,7 +265,7 @@ def create_project_assignment(data, user_id):
                                  user_id=project_assignments_data.get("user_id"),
                                  org_id=organization_id,
                                  role_id=project_assignments_data.get("role_id"),
-                                 proposal=False,
+                                 proposal=True,
                                  deallocated=False,
                                  dealloc_reason=project_assignments_data.get("dealloc_reason"),
                                  work_hours=project_assignments_data.get("work_hours"),
@@ -277,7 +277,8 @@ def create_project_assignment(data, user_id):
                                           comment=project_assignments_data.get("comment"),
                                           user_id=project_assignments_data.get("user_id"),
                                           assignment_id=project_assignments_id,
-                                          proposal=False,
+                                          proposal=True,
+                                          deallocated=False,
                                           read=False)
     return project_assignments_data
 
