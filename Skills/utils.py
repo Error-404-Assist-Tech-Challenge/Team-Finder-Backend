@@ -178,7 +178,7 @@ def remove_user_skill(data, user_id):
     skill_data = data.model_dump()
     db.remove_user_skill(user_id=user_id,
                          skill_id=skill_data.get("skill_id"))
-
+    db.delete_user_endorsements(skill_id=skill_data.get("skill_id"), org_id=db.get_user(user_id).get("org_id"))
     returned_data = get_skills_by_users_id(user_id)
 
     return returned_data
