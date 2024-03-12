@@ -117,6 +117,13 @@ class DeleteAssignmentProposal(BaseModel):
     assignment_id: UUID
     proj_id: UUID
 
+
+class ManageProposal(BaseModel):
+    assignment_id: UUID
+    proj_id: UUID
+    action: Literal['Accept', 'Reject']
+
+
 # USER TEAM ROLES
 
 

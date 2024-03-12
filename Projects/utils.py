@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from database.db import db
 from datetime import datetime, timedelta
-from Organizations.utils import get_org_users
+from Skills.utils import get_skill_proposals
 
 
 # PROJECTS
@@ -210,6 +210,8 @@ def search_employees(proj_id, user_id):
                     if not assignment.get("proposal") and not assignment.get("deallocated"):
                         active_employees.append(employee)
 
+                    employee["work_hours"] = assignment.get("work_hours")
+
                     user_ids_to_remove.append(employee_id)
                     user_role_ids = assignment.get("role_ids")
 
@@ -235,7 +237,9 @@ def search_employees(proj_id, user_id):
             nearest_deadline_str = nearest_deadline.strftime('%Y-%m-%d')
 
         employee["deadline"] = nearest_deadline_str
-        employee["work_hours"] = work_hours
+
+        if employee.get("user_id") not in user_ids_to_remove:
+            employee["work_hours"] = work_hours
 
         del employee["created_at"], employee["skill_id"], employee["experience"], employee["level"]
 
@@ -328,6 +332,19 @@ def delete_project_assignment(data, user_id):
     db.delete_project_assignment(update_data.get("assignment_id"))
 
     return search_employees(proj_id, user_id)
+
+
+def manage_proposal(data, user_id):
+    manage_data = data.model_dump()
+    assignment_id = manage_data.get("assignment_id")
+    action = manage_data.get("action")
+
+    if action == "Accept":
+        db.accept_project_assignment(assignment_id)
+    elif action == "Reject":
+        db.delete_project_assignment(assignment_id)
+
+    return get_skill_proposals(user_id)
 
 
 # USER TEAM ROLES

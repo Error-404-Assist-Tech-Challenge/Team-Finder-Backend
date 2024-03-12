@@ -487,15 +487,18 @@ def get_skill_proposals(user_id):
                     # Put username in response
                     skill_proposal["user_name"] = user_data.get("name")
 
+                    skill_proposal["role_names"] = []
                     # Find the role and put it in response
                     team_roles = db.get_team_roles(organization_id)
-                    for role in team_roles:
-                        if str(role) in role_ids:
-                            skill_proposal["role_name"] = team_roles[role].get("name")
+                    for role_id in role_ids:
+                        for key in team_roles:
+                            if str(key) == role_id:
+                                skill_proposal["role_names"].append(team_roles[key].get("name"))
 
                     # Find project details
                     assignment = db.get_assignment_info(skill_proposal.get("assignment_id"))
                     project = db.get_project_info(assignment.get("proj_id"))
+                    skill_proposal["project_id"] = assignment.get("proj_id")
                     skill_proposal["project_name"] = project.get("name")
                     skill_proposal["project_manager"] = db.get_user(project.get("manager_id")).get("name")
                     skill_proposal["work_hours"] = assignment.get("work_hours")

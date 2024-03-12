@@ -155,6 +155,32 @@ def delete_project_assignments(session, assignment_id):
         return error
 
 
+def delete_project_assignment_proposal(session, assignment_id):
+    try:
+        assignment_proposal = session.query(Skill_proposals).filter(Skill_proposals.assignment_id == assignment_id).first()
+        if assignment_proposal:
+            session.delete(assignment_proposal)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def accept_project_assignment(session, assignment_id):
+    try:
+        project_assignment = session.query(Project_assignments).filter(Project_assignments.id == assignment_id).first()
+        if project_assignment:
+            project_assignment.proposal = False
+
+        project_proposal = session.query(Skill_proposals).filter(Skill_proposals.assignment_id == assignment_id).first()
+        if project_proposal:
+            session.delete(project_proposal)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
 def get_project_assignments(session, org_id):
     try:
         project_assignments = session.query(Project_assignments).filter(Project_assignments.org_id == org_id).all()

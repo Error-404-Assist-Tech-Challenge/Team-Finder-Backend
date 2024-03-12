@@ -793,6 +793,12 @@ class DataBase:
                                               assignment_id=assignment_id)
 
     @staticmethod
+    def accept_project_assignment(assignment_id):
+        with session_scope() as session:
+            return accept_project_assignment(session=session,
+                                             assignment_id=assignment_id)
+
+    @staticmethod
     def get_project_assignments(org_id):
         with session_scope() as session:
             return get_project_assignments(session=session, org_id=org_id)
