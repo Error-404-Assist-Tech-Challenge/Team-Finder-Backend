@@ -136,20 +136,36 @@ class Skill_proposals(Base):
     def serialize_skill_proposals(skill_proposals):
         serialized_skill = {}
         for skill_proposal in skill_proposals:
-            serialized_skill[str(skill_proposal.id)] = {
-                "skill_id": str(skill_proposal.skill_id),
-                "assignment_id": str(skill_proposal.assignment_id),
-                "dept_id": str(skill_proposal.dept_id),
-                "role_ids": [str(role) for role in skill_proposal.role_ids],
-                "level": str(skill_proposal.level),
-                "experience": str(skill_proposal.experience),
-                "user_id": str(skill_proposal.user_id),
-                "dealloc_reason": str(skill_proposal.dealloc_reason),
-                "comment": str(skill_proposal.comment),
-                "proposal": str(skill_proposal.proposal),
-                "read": str(skill_proposal.read),
-                "deallocated": str(skill_proposal.deallocated),
-            }
+            if skill_proposal.role_ids is not None:
+                serialized_skill[str(skill_proposal.id)] = {
+                    "skill_id": str(skill_proposal.skill_id),
+                    "assignment_id": str(skill_proposal.assignment_id),
+                    "dept_id": str(skill_proposal.dept_id),
+                    "role_ids": [str(role) for role in skill_proposal.role_ids],
+                    "level": str(skill_proposal.level),
+                    "experience": str(skill_proposal.experience),
+                    "user_id": str(skill_proposal.user_id),
+                    "dealloc_reason": str(skill_proposal.dealloc_reason),
+                    "comment": str(skill_proposal.comment),
+                    "proposal": str(skill_proposal.proposal),
+                    "read": str(skill_proposal.read),
+                    "deallocated": str(skill_proposal.deallocated),
+                }
+            else:
+                serialized_skill[str(skill_proposal.id)] = {
+                    "skill_id": str(skill_proposal.skill_id),
+                    "assignment_id": str(skill_proposal.assignment_id),
+                    "dept_id": str(skill_proposal.dept_id),
+                    "role_ids": None,
+                    "level": str(skill_proposal.level),
+                    "experience": str(skill_proposal.experience),
+                    "user_id": str(skill_proposal.user_id),
+                    "dealloc_reason": str(skill_proposal.dealloc_reason),
+                    "comment": str(skill_proposal.comment),
+                    "proposal": str(skill_proposal.proposal),
+                    "read": str(skill_proposal.read),
+                    "deallocated": str(skill_proposal.deallocated),
+                }
         return serialized_skill
 
 
