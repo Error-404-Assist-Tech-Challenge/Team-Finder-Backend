@@ -709,6 +709,7 @@ class DataBase:
     def get_manager_projects(user_id):
         with session_scope() as session:
             return get_manager_projects(session=session, user_id=user_id)
+
     @staticmethod
     def get_org_projects(org_id):
         with session_scope() as session:
@@ -776,7 +777,6 @@ class DataBase:
     def get_project_approved_members(proj_id):
         with session_scope() as session:
             all_project_assigned_members = get_project_assigned_members(session=session, proj_id=proj_id)
-            print(all_project_assigned_members)
     # USER TEAM ROLES
 
     @staticmethod

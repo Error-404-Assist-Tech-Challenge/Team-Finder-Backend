@@ -36,7 +36,6 @@ def create_projects(data, user_id):
     project_data = data.model_dump()
     project_id = str(uuid4())
     project_data["id"] = project_id
-
     # Create project info
     db.create_project(project_id=project_id,
                       org_id=db.get_user(user_id).get("org_id"),
