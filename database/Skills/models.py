@@ -169,10 +169,7 @@ class Endorsements(Base):
         serialized_endorsements = []
         for endo in skill_endorsements:
             skill_endorsement = {
-                "id": str(endo.id),
-                "skill_id": str(endo.skill_id),
-                "org_id": str(endo.org_id),
-                "endo": str(endo.endo),
+                "endorsement": str(endo.endo),
                 "type": str(endo.type),
                 "description": str(endo.description),
                 "proj_id": str(endo.proj_id)
