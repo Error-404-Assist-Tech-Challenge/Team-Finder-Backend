@@ -502,7 +502,7 @@ class DataBase:
             return delete_proposed_skill(session=session, user_id=user_id, skill_id=skill_id)
 
     @staticmethod
-    def create_project_assignment_proposal(user_id, role_ids, dept_id, comment, proposal, id, assignment_id, read):
+    def create_project_assignment_proposal(user_id, role_ids, dept_id, comment, proposal, deallocated, id, assignment_id, read):
         with session_scope() as session:
             return create_project_assignment_proposal(session=session,
                                                       id=id,
@@ -512,7 +512,8 @@ class DataBase:
                                                       dept_id=dept_id,
                                                       comment=comment,
                                                       read=read,
-                                                      proposal=proposal)
+                                                      proposal=proposal,
+                                                      deallocated=deallocated)
 
     @staticmethod
     def get_assignment_info(id):

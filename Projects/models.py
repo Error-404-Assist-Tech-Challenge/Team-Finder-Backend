@@ -73,7 +73,7 @@ class SearchResponse(BaseModel):
 # PROJECT ASSIGNMENTS
 
 
-class Project_assignments(BaseModel):
+class AssignmentProposal(BaseModel):
     user_id: UUID
     role_ids: List[UUID]
     proj_id: UUID
