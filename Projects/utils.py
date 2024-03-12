@@ -102,7 +102,7 @@ def update_project(data, user_id):
     for team_role in team_roles_needed:
         project_needed_role_id = str(uuid4())
         db.create_project_needed_roles(project_needed_role_id, project_id, team_role.get("role_id"), team_role.get("count"))
-        return get_projects(user_id)
+    return get_projects(user_id)
 # PROJECTS MEMBERS
 
 
