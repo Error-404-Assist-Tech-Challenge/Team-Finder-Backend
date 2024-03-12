@@ -467,39 +467,40 @@ def get_skill_proposals(user_id):
             skill_proposals = db.get_skill_proposals(dep)
             # Put the info in each proposal
             for skill_proposal in skill_proposals:
-                # Check if it is skill proposal or project assignment
-                role_ids = skill_proposal.get("role_ids")
-                skill_id = skill_proposal.get("skill_id")
-                if str(role_ids) == "None":
-                    user_data = db.get_user(skill_proposal.get("user_id"))
+                if department.get("id") == skill_proposal.get("dept_id"):
+                    # Check if it is skill proposal or project assignment
+                    role_ids = skill_proposal.get("role_ids")
+                    skill_id = skill_proposal.get("skill_id")
+                    if str(role_ids) == "None":
+                        user_data = db.get_user(skill_proposal.get("user_id"))
 
-                    # Put username in response
-                    skill_proposal["user_name"] = user_data.get("name")
-                    users_skills = get_skills_by_users_id(skill_proposal.get("user_id"))
-                    if users_skills:
-                        skill_proposal["type"] = "put"
-                    else:
-                        skill_proposal["type"] = "post"
-                    skill_proposal["skill_name"] = db.get_skill_info(skill_id, organization_id).get("name")
-                elif str(skill_id) == "None":
-                    user_data = db.get_user(skill_proposal.get("user_id"))
+                        # Put username in response
+                        skill_proposal["user_name"] = user_data.get("name")
+                        users_skills = get_skills_by_users_id(skill_proposal.get("user_id"))
+                        if users_skills:
+                            skill_proposal["type"] = "put"
+                        else:
+                            skill_proposal["type"] = "post"
+                        skill_proposal["skill_name"] = db.get_skill_info(skill_id, organization_id).get("name")
+                    elif str(skill_id) == "None":
+                        user_data = db.get_user(skill_proposal.get("user_id"))
 
-                    # Put username in response
-                    skill_proposal["user_name"] = user_data.get("name")
+                        # Put username in response
+                        skill_proposal["user_name"] = user_data.get("name")
 
-                    # Find the role and put it in response
-                    team_roles = db.get_team_roles(organization_id)
-                    for role in team_roles:
-                        if str(role) in role_ids:
-                            skill_proposal["role_name"] = team_roles[role].get("name")
+                        # Find the role and put it in response
+                        team_roles = db.get_team_roles(organization_id)
+                        for role in team_roles:
+                            if str(role) in role_ids:
+                                skill_proposal["role_name"] = team_roles[role].get("name")
 
-                    # Find project details
-                    assignment = db.get_assignment_info(skill_proposal.get("assignment_id"))
-                    project = db.get_project_info(assignment.get("proj_id"))
-                    skill_proposal["project_name"] = project.get("name")
-                    skill_proposal["project_manager"] = db.get_user(project.get("manager_id")).get("name")
-                    skill_proposal["work_hours"] = assignment.get("work_hours")
-            return skill_proposals
+                        # Find project details
+                        assignment = db.get_assignment_info(skill_proposal.get("assignment_id"))
+                        project = db.get_project_info(assignment.get("proj_id"))
+                        skill_proposal["project_name"] = project.get("name")
+                        skill_proposal["project_manager"] = db.get_user(project.get("manager_id")).get("name")
+                        skill_proposal["work_hours"] = assignment.get("work_hours")
+                return skill_proposals
 
 
 
