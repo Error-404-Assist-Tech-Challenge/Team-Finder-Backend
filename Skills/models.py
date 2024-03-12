@@ -8,7 +8,7 @@ from datetime import datetime
 
 
 class Endorsements(BaseModel):
-    type: Literal['Course', 'Training', 'Project']
+    type: Optional[Literal['Course', 'Training', 'Project']]
     endorsement: str
     description: str
     proj_id: Optional[str]
@@ -64,6 +64,7 @@ class UpdateSkills(BaseModel):
     skill_id: UUID
     level: int
     experience: int
+    endorsements: Optional[List[Endorsements]]
 
 
 class RemoveSkill(BaseModel):
