@@ -188,20 +188,18 @@ def search_employees(proj_id, user_id):
                 if org_departments[key].get("manager_id") == employee_id:
                     employee["dept_name"] = org_departments[key].get("name")
 
-        # Get employee team roles
-        for role in user_team_roles:
-            if role.get("user_id") == employee_id:
-                employee_role_name = org_team_roles.get(role.get("role_id")).get("name")
-                employee["roles"].append(employee_role_name)
-
         deadlines = []
         work_hours = 0
         # Check each project assignment for the employee
         # to determine their status and get their work hours
         for assignment in proj_assignments:
             if assignment.get("user_id") == employee_id:
+                work_hours += int(assignment.get("work_hours"))
                 if assignment.get("proj_id") == proj_id:
                     if assignment.get("proposal") and not assignment.get("deallocated"):
+                        employee["comment"] = assignment.get("comment")
+                        employee["proposed_work_hours"] = assignment.get("work_hours")
+                        employee["assignment_id"] = assignment.get("id")
                         proposed_employees.append(employee)
                     if not assignment.get("proposal") and assignment.get("deallocated"):
                         deallocated_employees.append(employee)
@@ -211,13 +209,21 @@ def search_employees(proj_id, user_id):
                         active_employees.append(employee)
 
                     user_ids_to_remove.append(employee_id)
+                    user_role_ids = assignment.get("role_ids")
 
-                    work_hours += int(assignment.get("work_hours"))
+                    # Get employee team roles
+                    for role_id in user_role_ids:
+                        employee_role_name = org_team_roles.get(role_id).get("name")
+                        employee["roles"].append({"id": role_id, "name": employee_role_name})
 
-                employee_project_info = db.get_projects_id(assignment.get("proj_id"))[0]
-                proj_deadline = employee_project_info.get("deadline_date")
+                    if employee in proposed_employees:
+                        employee["proposed_roles"] = employee["roles"]
 
-                deadlines.append(proj_deadline)
+                else:
+                    employee_project_info = db.get_projects_id(assignment.get("proj_id"))[0]
+                    proj_deadline = employee_project_info.get("deadline_date")
+
+                    deadlines.append(proj_deadline)
 
         # Get the nearest assigned project deadline
         nearest_deadline_str = ""
@@ -228,6 +234,7 @@ def search_employees(proj_id, user_id):
 
         employee["deadline"] = nearest_deadline_str
         employee["work_hours"] = work_hours
+
         del employee["created_at"], employee["skill_id"], employee["experience"], employee["level"]
 
     active_employees = sorted(active_employees, key=lambda x: x["name"])
@@ -260,9 +267,26 @@ def create_project_assignment(data, user_id):
     project_assignments_data = data.model_dump()
     project_assignments_id = str(uuid4())
     project_assignments_data["id"] = project_assignments_id
+    proj_id = project_assignments_data.get("proj_id")
     organization_id = db.get_user(user_id).get("org_id")
-    db.create_project_assignment(proj_id=project_assignments_data.get("proj_id"),
-                                 user_id=project_assignments_data.get("user_id"),
+    assigned_user_id = project_assignments_data.get("user_id")
+    org_departments = db.get_department(db.get_user(user_id).get("org_id"))
+    dept_members = db.get_all_department_members()
+
+    dept_id = None
+    # Check if the employee is assigned to a department
+    for dept_member in dept_members:
+        if dept_member.get("user_id") == assigned_user_id:
+            dept_id = dept_member.get("dept_id")
+
+    # Check if the employee manages a department
+    if not dept_id:
+        for key in org_departments:
+            if str(org_departments[key].get("manager_id")) == str(assigned_user_id):
+                dept_id = key
+
+    db.create_project_assignment(proj_id=proj_id,
+                                 user_id=assigned_user_id,
                                  org_id=organization_id,
                                  role_ids=project_assignments_data.get("role_ids"),
                                  proposal=True,
@@ -272,15 +296,36 @@ def create_project_assignment(data, user_id):
                                  comment=project_assignments_data.get("comment"),
                                  project_assignments_id=project_assignments_id)
     db.create_project_assignment_proposal(id=str(uuid4()),
-                                          dept_id=db.get_department_user(project_assignments_data.get("user_id")),
+                                          dept_id=dept_id,
                                           role_ids=project_assignments_data.get("role_ids"),
                                           comment=project_assignments_data.get("comment"),
-                                          user_id=project_assignments_data.get("user_id"),
+                                          user_id=assigned_user_id,
                                           assignment_id=project_assignments_id,
                                           proposal=True,
                                           deallocated=False,
                                           read=False)
-    return project_assignments_data
+    return search_employees(proj_id, user_id)
+
+
+def update_project_assignment(data, user_id):
+    update_data = data.model_dump()
+    proj_id = update_data.get("proj_id")
+
+    db.update_project_assignment(assignment_id=update_data.get("assignment_id"),
+                                 role_ids=update_data.get("role_ids"),
+                                 work_hours=update_data.get("proposed_work_hours"),
+                                 comment=update_data.get("comment"))
+
+    return search_employees(proj_id, user_id)
+
+
+def delete_project_assignment(data, user_id):
+    update_data = data.model_dump()
+    proj_id = update_data.get("proj_id")
+
+    db.delete_project_assignment(update_data.get("assignment_id"))
+
+    return search_employees(proj_id, user_id)
 
 
 # USER TEAM ROLES

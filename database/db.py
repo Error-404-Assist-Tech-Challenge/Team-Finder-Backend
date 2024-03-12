@@ -778,6 +778,21 @@ class DataBase:
                                               comment=comment)
 
     @staticmethod
+    def update_project_assignment(assignment_id, role_ids, work_hours, comment):
+        with session_scope() as session:
+            return update_project_assignments(session=session,
+                                              assignment_id=assignment_id,
+                                              role_ids=role_ids,
+                                              work_hours=work_hours,
+                                              comment=comment)
+
+    @staticmethod
+    def delete_project_assignment(assignment_id):
+        with session_scope() as session:
+            return delete_project_assignments(session=session,
+                                              assignment_id=assignment_id)
+
+    @staticmethod
     def get_project_assignments(org_id):
         with session_scope() as session:
             return get_project_assignments(session=session, org_id=org_id)
