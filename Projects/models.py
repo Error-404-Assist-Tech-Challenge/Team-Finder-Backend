@@ -64,6 +64,7 @@ class UserResponse(BaseModel):
     roles: List[RoleResponse]
     skills: List[SkillResponse]
     dept_name: str
+    current_work_hours: int
     work_hours: int
 
 
