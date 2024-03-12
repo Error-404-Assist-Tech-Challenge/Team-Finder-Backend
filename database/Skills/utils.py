@@ -157,7 +157,7 @@ def delete_proposed_skill(session, user_id, skill_id):
         return error
 
 
-def create_project_assignment_proposal(session, user_id, role_id, comment, proposal, dept_id, id, assignment_id):
+def create_project_assignment_proposal(session, user_id, role_id, comment, proposal, dept_id, id, assignment_id, read):
     try:
         obj = Skill_proposals(user_id=user_id,
                               assignment_id=assignment_id,
@@ -165,7 +165,8 @@ def create_project_assignment_proposal(session, user_id, role_id, comment, propo
                               comment=comment,
                               proposal=proposal,
                               dept_id=dept_id,
-                              id=id)
+                              id=id,
+                              read=read)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
