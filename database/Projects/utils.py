@@ -1,6 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
 
 from database.Projects.models import *
+from database.Skills.models import Skill_proposals
 
 # PROJECTS
 
@@ -114,6 +115,40 @@ def create_project_assignments(session, project_assignments_id, user_id, proj_id
                                   comment=comment)
         session.add(obj)
         return obj
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def update_project_assignments(session, assignment_id, role_ids, work_hours, comment):
+    try:
+        project_assignment = session.query(Project_assignments).filter(Project_assignments.id == assignment_id).first()
+        if project_assignment:
+            project_assignment.role_ids = role_ids
+            project_assignment.work_hours = work_hours
+            project_assignment.comment = comment
+
+        project_proposal = session.query(Skill_proposals).filter(Skill_proposals.assignment_id == assignment_id).first()
+        if project_proposal:
+            project_proposal.role_ids = role_ids
+            # project_proposal.work_hours = work_hours
+            project_proposal.comment = comment
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def delete_project_assignments(session, assignment_id):
+    try:
+        assignment_proposal = session.query(Skill_proposals).filter(Skill_proposals.assignment_id == assignment_id).first()
+        if assignment_proposal:
+            session.delete(assignment_proposal)
+
+        assignment = session.query(Project_assignments).filter(Project_assignments.id == assignment_id).first()
+        if assignment:
+            session.delete(assignment)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
