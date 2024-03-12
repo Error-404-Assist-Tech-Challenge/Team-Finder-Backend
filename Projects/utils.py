@@ -207,7 +207,7 @@ def search_employees(proj_id, user_id):
         # Get the nearest assigned project deadline
         nearest_deadline_str = ""
         if deadlines:
-            deadlines = [datetime.strptime(date, '%Y-%m-%d') for date in deadlines]
+            deadlines = [datetime.strptime(date, '%Y-%m-%d %H:%M:%S') for date in deadlines]
             nearest_deadline = min(deadlines, key=lambda date: abs(date - datetime.now()))
             nearest_deadline_str = nearest_deadline.strftime('%Y-%m-%d')
 
