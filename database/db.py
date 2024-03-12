@@ -445,13 +445,14 @@ class DataBase:
     # SKILL ENDORSEMENTS
 
     @staticmethod
-    def create_skill_endorsement(endo_id, org_id, skill_id, endo, description, proj_id):
+    def create_skill_endorsement(endo_id, org_id, skill_id, endo, description, proj_id, type):
         with session_scope() as session:
             return create_skill_endorsement(session=session,
                                             endo_id=endo_id,
                                             org_id=org_id,
                                             skill_id=skill_id,
                                             endo=endo,
+                                            type=type,
                                             description=description,
                                             proj_id=proj_id)
 
