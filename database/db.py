@@ -502,13 +502,13 @@ class DataBase:
             return delete_proposed_skill(session=session, user_id=user_id, skill_id=skill_id)
 
     @staticmethod
-    def create_project_assignment_proposal(user_id, role_id, dept_id, comment, proposal, id, assignment_id, read):
+    def create_project_assignment_proposal(user_id, role_ids, dept_id, comment, proposal, id, assignment_id, read):
         with session_scope() as session:
             return create_project_assignment_proposal(session=session,
                                                       id=id,
                                                       assignment_id=assignment_id,
                                                       user_id=user_id,
-                                                      role_id=role_id,
+                                                      role_ids=role_ids,
                                                       dept_id=dept_id,
                                                       comment=comment,
                                                       read=read,
@@ -762,13 +762,13 @@ class DataBase:
     # PROJECT ASSIGNMENTS
 
     @staticmethod
-    def create_project_assignment(project_assignments_id, proj_id, user_id, proposal, deallocated, dealloc_reason, work_hours, comment, org_id, role_id):
+    def create_project_assignment(project_assignments_id, proj_id, user_id, proposal, deallocated, dealloc_reason, work_hours, comment, org_id, role_ids):
         with session_scope() as session:
             return create_project_assignments(session=session,
                                               project_assignments_id=project_assignments_id,
                                               proj_id=proj_id,
                                               org_id=org_id,
-                                              role_id=role_id,
+                                              role_ids=role_ids,
                                               user_id=user_id,
                                               proposal=proposal,
                                               deallocated=deallocated,

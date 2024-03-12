@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, TIMESTAMP, ForeignKey, Integer, Boolean
+from sqlalchemy import Column, String, TIMESTAMP, ForeignKey, Integer, Boolean, ARRAY
 from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
@@ -126,7 +126,7 @@ class Skill_proposals(Base):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     dealloc_reason = Column(String, nullable=True)
     comment = Column(String, nullable=True)
-    role_id = Column(UUID(as_uuid=True), ForeignKey("team_roles.id"), nullable=True)
+    role_ids = Column(ARRAY(UUID), ForeignKey("team_roles.id"), nullable=True)
     proposal = Column(Boolean, nullable=False)
     deallocated = Column(Boolean, nullable=True)
     assignment_id = Column(UUID(as_uuid=True), ForeignKey("project_assignments.id"), nullable=True)
@@ -140,7 +140,7 @@ class Skill_proposals(Base):
                 "skill_id": str(skill_proposal.skill_id),
                 "assignment_id": str(skill_proposal.assignment_id),
                 "dept_id": str(skill_proposal.dept_id),
-                "role_id": str(skill_proposal.role_id),
+                "role_ids": [str(role) for role in skill_proposal.role_ids],
                 "level": str(skill_proposal.level),
                 "experience": str(skill_proposal.experience),
                 "user_id": str(skill_proposal.user_id),

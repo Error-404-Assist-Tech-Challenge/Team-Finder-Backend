@@ -169,11 +169,11 @@ def delete_proposed_skill(session, user_id, skill_id):
         return error
 
 
-def create_project_assignment_proposal(session, user_id, role_id, comment, proposal, dept_id, id, assignment_id, read):
+def create_project_assignment_proposal(session, user_id, role_ids, comment, proposal, dept_id, id, assignment_id, read):
     try:
         obj = Skill_proposals(user_id=user_id,
                               assignment_id=assignment_id,
-                              role_id=role_id,
+                              role_ids=role_ids,
                               comment=comment,
                               proposal=proposal,
                               dept_id=dept_id,
