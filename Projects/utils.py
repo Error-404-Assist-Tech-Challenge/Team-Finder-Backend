@@ -82,6 +82,16 @@ def update_project(data, user_id):
                           description=project_data.get("description"),
                           created_at=project_data.get("created_at"),
                           can_be_deleted=can_be_deleted)
+    else:
+        db.update_project(name=project_data.get("name"),
+                          project_id=project_id,
+                          period=project_data.get("period"),
+                          start_date=project_data.get("start_date"),
+                          deadline_date=project_data.get("deadline_date"),
+                          status=status,
+                          description=project_data.get("description"),
+                          created_at=project_data.get("created_at"),
+                          can_be_deleted=True)
 
     # Update tech stack skills
     db.update_project_tech_stack_skills(project_id, project_data.get("tech_stack"))
