@@ -200,6 +200,7 @@ def search_employees(proj_id, user_id):
                 if assignment.get("proj_id") == proj_id:
                     if assignment.get("proposal") and not assignment.get("deallocated"):
                         employee["comment"] = assignment.get("comment")
+                        work_hours -= int(assignment.get("work_hours"))
                         employee["proposed_work_hours"] = assignment.get("work_hours")
                         employee["assignment_id"] = assignment.get("id")
                         proposed_employees.append(employee)
@@ -221,7 +222,7 @@ def search_employees(proj_id, user_id):
                         employee["roles"].append({"id": role_id, "name": employee_role_name})
 
                     if employee in proposed_employees:
-                        employee["proposed_roles"] = employee["roles"]
+                        employee["proposed_roles"] = user_role_ids
 
                 else:
                     employee_project_info = db.get_projects_id(assignment.get("proj_id"))[0]
@@ -238,8 +239,7 @@ def search_employees(proj_id, user_id):
 
         employee["deadline"] = nearest_deadline_str
 
-        if employee.get("user_id") not in user_ids_to_remove:
-            employee["work_hours"] = work_hours
+        employee["work_hours"] = work_hours
 
         del employee["created_at"], employee["skill_id"], employee["experience"], employee["level"]
 

@@ -71,10 +71,11 @@ class ProposedUserResponse(BaseModel):
     user_id: UUID
     name: str
     assignment_id: UUID
-    proposed_roles: List[RoleResponse]
+    proposed_roles: List[UUID]
     skills: List[SkillResponse]
     dept_name: str
     comment: str
+    work_hours: int
     proposed_work_hours: int
 
 
