@@ -436,7 +436,7 @@ def get_skill_proposals(user_id):
             # Put the info in each proposal
             for skill_proposal in skill_proposals:
                 # Check if it is skill proposal or project assignment
-                role_ids = skill_proposal.get("role_id")
+                role_ids = skill_proposal.get("role_ids")
                 skill_id = skill_proposal.get("skill_id")
                 if str(role_ids) == "None":
                     user_data = db.get_user(skill_proposal.get("user_id"))

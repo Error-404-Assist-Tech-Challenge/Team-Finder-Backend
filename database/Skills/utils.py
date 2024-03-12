@@ -169,13 +169,14 @@ def delete_proposed_skill(session, user_id, skill_id):
         return error
 
 
-def create_project_assignment_proposal(session, user_id, role_ids, comment, proposal, dept_id, id, assignment_id, read):
+def create_project_assignment_proposal(session, user_id, role_ids, comment, proposal, deallocated, dept_id, id, assignment_id, read):
     try:
         obj = Skill_proposals(user_id=user_id,
                               assignment_id=assignment_id,
                               role_ids=role_ids,
                               comment=comment,
                               proposal=proposal,
+                              deallocated=deallocated,
                               dept_id=dept_id,
                               id=id,
                               read=read)
@@ -208,6 +209,7 @@ def get_department_skills(session):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
 
 def update_department_skill(session, dept_id, skill_id, new_dept_id, new_skill_id):
     try:
