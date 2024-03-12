@@ -5,7 +5,7 @@ from database.Projects.models import *
 # PROJECTS
 
 
-def create_project(session, project_id, org_id, name, period, start_date, deadline_date, status, description, manager_id, created_at):
+def create_project(session, project_id, org_id, name, period, start_date, deadline_date, status, description, manager_id, created_at, can_be_deleted):
     try:
         obj = Projects(id=project_id,
                        org_id=org_id,
@@ -14,6 +14,7 @@ def create_project(session, project_id, org_id, name, period, start_date, deadli
                        start_date=start_date,
                        deadline_date=deadline_date,
                        status=status,
+                       can_be_deleted=can_be_deleted,
                        description=description,
                        manager_id=manager_id,
                        created_at=created_at)
@@ -37,7 +38,7 @@ def remove_project_manager_id(session, proj_id, manager_id):
         return error
 
 
-def update_project(session, project_id, name, period, start_date, deadline_date, status, description, created_at):
+def update_project(session, project_id, name, period, start_date, deadline_date, status, description, created_at, can_be_deleted):
     try:
         project = session.query(Projects).filter(Projects.id == project_id).first()
         if project:
@@ -48,6 +49,7 @@ def update_project(session, project_id, name, period, start_date, deadline_date,
             project.status = status
             project.description = description
             project.created_at = created_at
+            project.can_be_deleted = can_be_deleted
             session.commit()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])

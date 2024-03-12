@@ -46,7 +46,8 @@ def create_projects(data, user_id):
                       deadline_date=project_data.get("deadline_date"),
                       status=project_data.get("status"),
                       description=project_data.get("description"),
-                      created_at=project_data.get("created_at"))
+                      created_at=project_data.get("created_at"),
+                      can_be_deleted=True)
     # Create project tech stack
     db.create_project_tech_stack_skills(project_id, project_data.get("tech_stack"))
 
@@ -68,15 +69,19 @@ def delete_project(data, user_id):
 def update_project(data, user_id):
     project_data = data.model_dump()
     project_id = project_data.get("proj_id")
-    # Update project
-    db.update_project(name=project_data.get("name"),
-                      project_id=project_id,
-                      period=project_data.get("period"),
-                      start_date=project_data.get("start_date"),
-                      deadline_date=project_data.get("deadline_date"),
-                      status=project_data.get("status"),
-                      description=project_data.get("description"),
-                      created_at=project_data.get("created_at"))
+    status = project_data.get("status")
+    if str(status) in ["In Progress", "Closed", "Closing"]:
+        can_be_deleted = False
+        # Update project
+        db.update_project(name=project_data.get("name"),
+                          project_id=project_id,
+                          period=project_data.get("period"),
+                          start_date=project_data.get("start_date"),
+                          deadline_date=project_data.get("deadline_date"),
+                          status=status,
+                          description=project_data.get("description"),
+                          created_at=project_data.get("created_at"),
+                          can_be_deleted=can_be_deleted)
 
     # Update tech stack skills
     db.update_project_tech_stack_skills(project_id, project_data.get("tech_stack"))
