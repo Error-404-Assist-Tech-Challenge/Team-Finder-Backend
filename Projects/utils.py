@@ -29,7 +29,9 @@ def get_projects(user_id):
             # Getting project approved members
             members = db.get_project_approved_members(project_id)
             current_project["projects"] = members
-    return returned_user_projects
+
+    sorted_projects = sorted(returned_user_projects, key=lambda x: x["name"])
+    return sorted_projects
 
 
 def create_projects(data, user_id):
