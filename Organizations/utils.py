@@ -148,7 +148,7 @@ def create_organization_skill(data, user_id):
                                          description=skill_data.get("description"),
                                          created_at=current_time)
 
-    if skill_data.get("assign_department"):
+    if str(skill_data.get("assign_department")) == "true":
         departments = db.get_department(org_id)
 
         for key in departments:
