@@ -126,7 +126,7 @@ class Skill_proposals(Base):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     dealloc_reason = Column(String, nullable=True)
     comment = Column(String, nullable=True)
-    role_ids = Column(ARRAY(UUID), ForeignKey("team_roles.id"), nullable=True)
+    role_ids = Column(ARRAY(UUID), nullable=True)
     proposal = Column(Boolean, nullable=False)
     deallocated = Column(Boolean, nullable=True)
     assignment_id = Column(UUID(as_uuid=True), ForeignKey("project_assignments.id"), nullable=True)

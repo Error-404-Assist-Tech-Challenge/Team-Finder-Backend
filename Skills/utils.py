@@ -477,4 +477,3 @@ def get_skill_proposals(user_id):
 
 
 
-
