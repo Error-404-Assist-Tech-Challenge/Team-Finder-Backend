@@ -8,6 +8,7 @@ from datetime import datetime
 
 
 class Endorsements(BaseModel):
+    type: Literal['Course', 'Training', 'Project']
     endorsement: str
     description: str
     proj_id: Optional[str]

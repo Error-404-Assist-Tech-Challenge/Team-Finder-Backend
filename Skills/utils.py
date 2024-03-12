@@ -89,14 +89,16 @@ def create_user_skills(data, user_id):
                                             skill_id=user_skill_data.get("skill_id"),
                                             endo=endo.get("endorsement"),
                                             description=endo.get("description"),
-                                            proj_id=None)
+                                            proj_id=None,
+                                            type=endo.get("type"))
             else:
                 db.create_skill_endorsement(endo_id=endo_id,
                                             org_id=organization_id,
                                             skill_id=user_skill_data.get("skill_id"),
                                             endo=endo.get("endorsement"),
                                             description=endo.get("description"),
-                                            proj_id=endo.get("proj_id"))
+                                            proj_id=endo.get("proj_id"),
+                                            type=endo.get("type"))
 
     # Logic skill proposal
     skill_id = user_skill_data.get("skill_id")

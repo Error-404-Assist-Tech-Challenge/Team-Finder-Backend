@@ -160,6 +160,7 @@ class Endorsements(Base):
     endo = Column(String, nullable=False)
     description = Column(String, nullable=False)
     proj_id = Column(UUID(as_uuid=True), ForeignKey("projects.id"), nullable=True)
+    type = Column(String, nullable=False)
 
     @staticmethod
     def serialize_endorsements(skill_endorsements):
@@ -170,6 +171,7 @@ class Endorsements(Base):
                 "skill_id": str(endo.skill_id),
                 "org_id": str(endo.org_id),
                 "endo": str(endo.endo),
+                "type": str(endo.type),
                 "description": str(endo.description),
                 "proj_id": str(endo.proj_id)
             }
