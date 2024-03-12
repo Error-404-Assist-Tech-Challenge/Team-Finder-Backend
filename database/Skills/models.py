@@ -130,6 +130,7 @@ class Skill_proposals(Base):
     proposal = Column(Boolean, nullable=False)
     deallocated = Column(Boolean, nullable=True)
     assignment_id = Column(UUID(as_uuid=True), ForeignKey("project_assignments.id"), nullable=True)
+    read = Column(Boolean, nullable=False)
 
     @staticmethod
     def serialize_skill_proposals(skill_proposals):
@@ -146,6 +147,7 @@ class Skill_proposals(Base):
                 "dealloc_reason": str(skill_proposal.dealloc_reason),
                 "comment": str(skill_proposal.comment),
                 "proposal": str(skill_proposal.proposal),
+                "read": str(skill_proposal.read),
                 "deallocated": str(skill_proposal.deallocated),
             }
         return serialized_skill

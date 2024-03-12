@@ -469,7 +469,7 @@ class DataBase:
     # SKILL PROPOSALS
 
     @staticmethod
-    def propose_skill(skill_id, id, user_id, dept_id, level, experience, proposal):
+    def propose_skill(skill_id, id, user_id, dept_id, level, experience, proposal, read):
         with session_scope() as session:
             return propose_skill(session=session,
                                  id=id,
@@ -477,6 +477,7 @@ class DataBase:
                                  user_id=user_id,
                                  skill_id=skill_id,
                                  level=level,
+                                 read=read,
                                  experience=experience,
                                  proposal=proposal)
 

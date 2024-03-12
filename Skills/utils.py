@@ -122,6 +122,7 @@ def create_user_skills(data, user_id):
                          dept_id=department_id,
                          level=user_skill_data.get("level"),
                          experience=user_skill_data.get("experience"),
+                         read=False,
                          proposal=False)
         return get_skills_by_users_id(user_id)
     # If user is manager auto accept is implemented
@@ -148,6 +149,29 @@ def create_user_skills(data, user_id):
     # If user doesn't have a skill he cannot propose to anybody therefore we throw error 409
     else:
         raise HTTPException(status_code=409, detail="Department not found for the user")
+
+
+def get_department_notifications(user_id):
+    dep_skill_proposals = get_skill_proposals(user_id)
+    returned_notifications = []
+    for proposal in dep_skill_proposals:
+        if str(proposal.get("read")) == "False":
+            role_id = proposal.get("role_id")
+            skill_id = proposal.get("skill_id")
+            if str(skill_id) != "None":
+                returned_body = {
+                    "skill_id": skill_id,
+                    "user_name": proposal.get("user_name"),
+                    "skill_name": proposal.get("skill_name")
+                }
+                returned_notifications.append(returned_body)
+            else:
+                returned_body = {
+                    "role_id": role_id,
+                    "project_name": proposal.get("project_name")
+                }
+                returned_notifications.append(returned_body)
+    return returned_notifications
 
 
 def remove_user_skill(data, user_id):
@@ -180,7 +204,8 @@ def update_user_skills(data, user_id):
                          user_id=user_id,
                          dept_id=department_id,
                          level=user_skill_data.get("level"),
-                         experience=user_skill_data.get("experience"))
+                         experience=user_skill_data.get("experience"),
+                         read=False)
         returned_data = get_skills_by_users_id(user_id)
         return returned_data
     elif is_manager:
