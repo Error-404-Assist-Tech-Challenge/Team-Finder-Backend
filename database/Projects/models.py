@@ -19,6 +19,8 @@ class Projects(Base):
     status = Column(String, nullable=False)
     description = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
+    can_be_deleted = Column(Boolean, nullable=False)
+
 
     @staticmethod
     def serialize_projects(projects):
@@ -34,7 +36,8 @@ class Projects(Base):
                 "deadline_date": str(project.deadline_date),
                 "status": str(project.status),
                 "description": str(project.description),
-                "created_at": str(project.created_at)
+                "created_at": str(project.created_at),
+                "can_be_deleted": str(project.can_be_deleted)
             }
         return serialized_projects
 

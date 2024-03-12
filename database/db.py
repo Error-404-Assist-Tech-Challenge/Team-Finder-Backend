@@ -683,7 +683,7 @@ class DataBase:
 
 #PROJECTS===============================================================================================================
     @staticmethod
-    def create_project(project_id, org_id, name, manager_id, period, start_date, deadline_date, status, description, created_at):
+    def create_project(project_id, org_id, name, manager_id, period, start_date, deadline_date, status, description, created_at, can_be_deleted):
         with session_scope() as session:
             return create_project(session=session,
                                   project_id=project_id,
@@ -695,7 +695,8 @@ class DataBase:
                                   deadline_date=deadline_date,
                                   status=status,
                                   description=description,
-                                  created_at=created_at)
+                                  created_at=created_at,
+                                  can_be_deleted=can_be_deleted)
 
     @staticmethod
     def remove_project_manager_id(proj_id, manager_id):
@@ -742,7 +743,7 @@ class DataBase:
             db.delete_project_needed_roles(project_id)
 
     @staticmethod
-    def update_project(name, period, start_date, deadline_date, status, description, created_at, project_id):
+    def update_project(name, period, start_date, deadline_date, status, description, created_at, project_id, can_be_deleted):
         with session_scope() as session:
             return update_project(session=session,
                                   project_id=project_id,
@@ -752,7 +753,8 @@ class DataBase:
                                   deadline_date=deadline_date,
                                   status=status,
                                   description=description,
-                                  created_at=created_at)
+                                  created_at=created_at,
+                                  can_be_deleted=can_be_deleted)
     # PROJECT ASSIGNMENTS
 
     @staticmethod
