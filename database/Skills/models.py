@@ -171,6 +171,7 @@ class Endorsements(Base):
             skill_endorsement = {
                 "endorsement": str(endo.endo),
                 "type": str(endo.type),
+                "skill_id": str(endo.skill_id),
                 "description": str(endo.description),
                 "proj_id": str(endo.proj_id)
             }

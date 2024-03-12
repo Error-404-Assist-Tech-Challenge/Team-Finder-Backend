@@ -200,7 +200,34 @@ def update_user_skills(data, user_id):
                 is_manager = True
 
     if department_id and not is_manager:
-        db.propose_skill(skill_id=skill_id,
+
+        # Update endorsements
+        endorsements = user_skill_data.get("endorsements")
+        if endorsements is not None:
+            db.delete_user_endorsements(skill_id=skill_id, org_id=db.get_user(user_id).get("org_id"))
+            for endo in endorsements:
+                proj_id = endo.get("proj_id")
+                if proj_id == '':
+                    db.create_skill_endorsement(endo_id=str(uuid4()),
+                                                org_id=db.get_user(user_id).get("org_id"),
+                                                skill_id=user_skill_data.get("skill_id"),
+                                                endo=endo.get("endorsement"),
+                                                description=endo.get("description"),
+                                                proj_id=None,
+                                                type=endo.get("type"))
+                else:
+                    db.create_skill_endorsement(endo_id=str(uuid4()),
+                                                org_id=db.get_user(user_id).get("org_id"),
+                                                skill_id=user_skill_data.get("skill_id"),
+                                                endo=endo.get("endorsement"),
+                                                description=endo.get("description"),
+                                                proj_id=endo.get("proj_id"),
+                                                type=endo.get("type"))
+        else:
+            db.delete_user_endorsements(skill_id=skill_id, org_id=db.get_user(user_id).get("org_id"))
+        db.propose_skill(id=str(uuid4()),
+                         proposal=False,
+                         skill_id=skill_id,
                          user_id=user_id,
                          dept_id=department_id,
                          level=user_skill_data.get("level"),
