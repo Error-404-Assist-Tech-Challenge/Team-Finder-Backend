@@ -211,7 +211,7 @@ def search_employees(proj_id, user_id):
                     if not assignment.get("proposal") and not assignment.get("deallocated"):
                         active_employees.append(employee)
 
-                    employee["work_hours"] = assignment.get("work_hours")
+                    employee["current_work_hours"] = assignment.get("work_hours")
 
                     user_ids_to_remove.append(employee_id)
                     user_role_ids = assignment.get("role_ids")
@@ -282,7 +282,7 @@ def create_project_assignment(data, user_id):
     dept_id = None
     # Check if the employee is assigned to a department
     for dept_member in dept_members:
-        if dept_member.get("user_id") == assigned_user_id:
+        if str(dept_member.get("user_id")) == str(assigned_user_id):
             dept_id = dept_member.get("dept_id")
 
     # Check if the employee manages a department
