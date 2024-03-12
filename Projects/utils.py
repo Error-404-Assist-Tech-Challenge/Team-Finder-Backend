@@ -237,7 +237,8 @@ def create_project_assignment(data, user_id):
                                           comment=project_assignments_data.get("comment"),
                                           user_id=project_assignments_data.get("user_id"),
                                           assignment_id=project_assignments_id,
-                                          proposal=False)
+                                          proposal=False,
+                                          read=False)
     return project_assignments_data
 
 
