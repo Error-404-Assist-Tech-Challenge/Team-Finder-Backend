@@ -113,7 +113,6 @@ class AssignmentProposal(BaseModel):
 class DeallocationProposal(BaseModel):
     assignment_id: UUID
     user_id: UUID
-    role_ids: List[UUID]
     proj_id: UUID
     comment: str
 
