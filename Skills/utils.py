@@ -156,22 +156,25 @@ def get_department_notifications(user_id):
     returned_notifications = []
     for proposal in dep_skill_proposals:
         if str(proposal.get("read")) == "False":
-            role_id = proposal.get("role_id")
             skill_id = proposal.get("skill_id")
             if str(skill_id) != "None":
                 returned_body = {
-                    "skill_id": skill_id,
+                    "proposal_id": proposal.get("id"),
                     "user_name": proposal.get("user_name"),
-                    "skill_name": proposal.get("skill_name")
-                }
-                returned_notifications.append(returned_body)
-            else:
-                returned_body = {
-                    "role_id": role_id,
-                    "project_name": proposal.get("project_name")
+                    "skill_id": proposal.get("skill_id"),
+                    "skill_name": proposal.get("skill_name"),
+                    "proposal": proposal.get("proposal"),
+                    "project_name": proposal.get("project_name"),
+                    "type": proposal.get("type")
                 }
                 returned_notifications.append(returned_body)
     return returned_notifications
+
+
+def update_department_notifications(data, user_id):
+    proposal_data = data.model_dump()
+    db.read_notification(proposal_data.get("proposal_id"))
+    return get_department_notifications(user_id)
 
 
 def remove_user_skill(data, user_id):
@@ -437,14 +440,6 @@ def update_skill_proposal(data, user_id):
                                                   created_at=datetime.now().isoformat())
                         db.delete_proposed_skill(user_id=update_data.get("user_id"), skill_id=skill_id)
                         return get_skill_proposals(user_id)
-                elif role_id:
-                    print("Entered Role")
-                    if proposal:
-                        # Make project assignment true
-                        continue
-                    else:
-                        # Make project assignment false
-                        continue
                 else:
                     db.delete_proposed_skill(user_id=user_id, skill_id=skill_id)
                     return get_skill_proposals(user_id)
@@ -462,12 +457,12 @@ def get_skill_proposals(user_id):
             skill_proposals = db.get_skill_proposals(dep)
             # Put the info in each proposal
             for skill_proposal in skill_proposals:
+                skill_proposal["id"] = skill_proposal.get("id")
                 # Check if it is skill proposal or project assignment
                 role_ids = skill_proposal.get("role_ids")
                 skill_id = skill_proposal.get("skill_id")
                 if str(role_ids) == "None":
                     user_data = db.get_user(skill_proposal.get("user_id"))
-
                     # Put username in response
                     skill_proposal["user_name"] = user_data.get("name")
                     users_skills = get_skills_by_users_id(skill_proposal.get("user_id"))
@@ -479,7 +474,6 @@ def get_skill_proposals(user_id):
                     returned_skills.append(skill_proposal)
                 elif str(skill_id) == "None":
                     user_data = db.get_user(skill_proposal.get("user_id"))
-
                     # Put username in response
                     skill_proposal["user_name"] = user_data.get("name")
 

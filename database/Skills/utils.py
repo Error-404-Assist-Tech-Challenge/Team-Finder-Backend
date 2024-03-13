@@ -189,6 +189,20 @@ def create_project_assignment_proposal(session, dept_id, id, assignment_id, read
         return error
 
 
+def read_notification(session, proposal_id):
+    try:
+        proposed_skill = session.query(Skill_proposals).filter(Skill_proposals.id == proposal_id).first()
+        if proposed_skill:
+            proposed_skill.read = True
+            session.commit()
+        else:
+            return None
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
 # DEPARTMENT_SKILLS
 
 def create_department_skill(session, dept_id, skill_id, id):
