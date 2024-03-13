@@ -168,6 +168,17 @@ def get_department_notifications(user_id):
                     "type": proposal.get("type")
                 }
                 returned_notifications.append(returned_body)
+            else:
+                returned_body = {
+                    "proposal_id": proposal.get("id"),
+                    "user_name": proposal.get("user_name"),
+                    "skill_id": proposal.get("skill_name"),
+                    "skill_name": proposal.get("skill_name"),
+                    "proposal": proposal.get("proposal"),
+                    "project_name": proposal.get("project_name"),
+                    "type": proposal.get("type")
+                }
+                returned_notifications.append(returned_body)
     return returned_notifications
 
 
@@ -226,7 +237,7 @@ def update_user_skills(data, user_id):
                                                 description=endo.get("description"),
                                                 proj_id=endo.get("proj_id"),
                                                 type=endo.get("type"))
-        else:
+        elif endorsements is None:
             db.delete_user_endorsements(skill_id=skill_id, org_id=db.get_user(user_id).get("org_id"))
         db.propose_skill(id=str(uuid4()),
                          proposal=False,
@@ -449,7 +460,6 @@ def get_skill_proposals(user_id):
     organization_id = db.get_user(user_id).get("org_id")
     # Find user department
     departments = db.get_department(organization_id)
-    returned_skills = []
     # Check user department
     for dep in departments:
         department = departments[dep]
@@ -471,7 +481,7 @@ def get_skill_proposals(user_id):
                     else:
                         skill_proposal["type"] = "post"
                     skill_proposal["skill_name"] = db.get_skill_info(skill_id, organization_id).get("name")
-                    returned_skills.append(skill_proposal)
+
                 elif str(skill_id) == "None":
                     user_data = db.get_user(skill_proposal.get("user_id"))
                     # Put username in response
@@ -493,12 +503,3 @@ def get_skill_proposals(user_id):
                     skill_proposal["project_manager"] = db.get_user(project.get("manager_id")).get("name")
                     skill_proposal["work_hours"] = assignment.get("work_hours")
             return skill_proposals
-
-
-
-
-
-
-
-
-

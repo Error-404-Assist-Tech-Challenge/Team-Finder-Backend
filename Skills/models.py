@@ -117,22 +117,22 @@ class Update_skill(BaseModel):
     proposal: bool
 
 
-# class Proposal(BaseModel):
-#     assignment_id: Optional[UUID]
-#     comment: Optional[str]
-#     dealloc_reason: Optional[bool]
-#     deallocated: Optional[bool]
-#     experience: Optional[int]
-#     level: Optional[int]
-#     project_id: Optional[UUID]
-#     project_name: Optional[str]
-#     proposal: Optional[bool]
-#     role_ids: Optional[List[UUID]]
-#     role_names: Optional[List[str]]
-#     skill_id: Optional[UUID]
-#     user_id: UUID
-#     user_name: str
-#     work_hours: Optional[int]
+class Proposal(BaseModel):
+    assignment_id: Optional[UUID]
+    comment: Optional[str] = None
+    dealloc_reason: Optional[bool] = None
+    deallocated: Optional[bool] = None
+    experience: Optional[int] = None
+    level: Optional[int] = None
+    project_id: Optional[UUID] = None
+    project_name: Optional[str] = None
+    proposal: Optional[bool] = None
+    role_ids: Optional[List[UUID]] = None
+    role_names: Optional[List[str]] = None
+    skill_id: Optional[UUID]
+    user_id: UUID
+    user_name: str
+    work_hours: Optional[int] = None
 
 # NOTIFICATIONS
 
@@ -144,7 +144,7 @@ class Notification(BaseModel):
     proposal: bool
     project_name: Optional[str]
     user_name: str
-    type: str
+    type: Optional[str]
 
 
 class Put_Notifications(BaseModel):
