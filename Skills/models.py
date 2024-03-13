@@ -114,7 +114,6 @@ class Remove_department_skill(BaseModel):
 class Update_skill(BaseModel):
     user_id: UUID
     skill_id: Optional[str]
-    role_id: Optional[str]
     proposal: bool
 
 

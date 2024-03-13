@@ -125,7 +125,7 @@ def get_department_statistics(user_id):
             return statistics
 
 
-def get_projects_department(user_id): # Endpoint where department manager can see the projects if one of  his members are on the project
+def get_projects_department(user_id): # Endpoint where department manager can see the projects if one of his members are on the project
     returned_projects = []
     department_members = []
     user = db.get_user(user_id)

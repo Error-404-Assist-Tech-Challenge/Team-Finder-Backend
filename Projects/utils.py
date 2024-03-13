@@ -105,6 +105,46 @@ def update_project(data, user_id):
         project_needed_role_id = str(uuid4())
         db.create_project_needed_roles(project_needed_role_id, project_id, team_role.get("role_id"), team_role.get("count"))
     return get_projects(user_id)
+
+# EMPLOYEE PROJECT
+
+
+def get_user_projects(user_id):
+    active = []
+    past = []
+    organization_id = db.get_user(user_id).get("org_id")
+    project_assignments = db.get_project_assignments(organization_id)
+    for assign in project_assignments:
+        if str(assign.get("user_id")) == user_id:
+            project_id = assign.get("proj_id")
+            # See if user is active in a project
+            if assign.get("proposal") is False and assign.get("deallocated") is False:
+                project_info = db.get_project_info(project_id)
+                assign["project_name"] = project_info.get("name")
+                assign["start_date"] = project_info.get("start_date")
+                assign["deadline_date"] = project_info.get("deadline_date")
+                assign["status"] = project_info.get("status")
+                assign["description"] = project_info.get("description")
+                assign["technology_stack"] = db.get_project_tech_stack_skills(project_id, organization_id)
+                assign["role_names"] = db.get_project_needed_roles_names(project_id, organization_id)
+                active.append(assign)
+            elif assign.get("proposal") is False and assign.get("deallocated") is True:
+                project_info = db.get_project_info(project_id)
+                assign["project_name"] = project_info.get("name")
+                assign["start_date"] = project_info.get("start_date")
+                assign["deadline_date"] = project_info.get("deadline_date")
+                assign["status"] = project_info.get("status")
+                assign["description"] = project_info.get("description")
+                assign["technology_stack"] = db.get_project_tech_stack_skills(project_id, organization_id)
+                assign["role_names"] = db.get_project_needed_roles_names(project_id, organization_id)
+                past.append(assign)
+
+    returned_body = {
+        "active": active,
+        "past": past
+    }
+    return returned_body
+
 # PROJECTS MEMBERS
 
 
