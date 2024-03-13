@@ -502,7 +502,7 @@ class DataBase:
             return delete_proposed_skill(session=session, user_id=user_id, skill_id=skill_id)
 
     @staticmethod
-    def create_project_assignment_proposal(user_id, role_ids, dept_id, comment, proposal, deallocated, id, assignment_id, read):
+    def create_project_assignment_proposal(id, assignment_id, read, user_id, role_ids, dept_id, proposal, comment = None, dealloc_reason = None, deallocated = None):
         with session_scope() as session:
             return create_project_assignment_proposal(session=session,
                                                       id=id,
@@ -513,7 +513,8 @@ class DataBase:
                                                       comment=comment,
                                                       read=read,
                                                       proposal=proposal,
-                                                      deallocated=deallocated)
+                                                      deallocated=deallocated,
+                                                      dealloc_reason=dealloc_reason)
 
     @staticmethod
     def get_assignment_info(id):
@@ -778,19 +779,28 @@ class DataBase:
                                               comment=comment)
 
     @staticmethod
-    def update_project_assignment(assignment_id, role_ids, work_hours, comment):
+    def update_project_assignment(assignment_id, role_ids = None, work_hours = None, comment = None, proposal = None, deallocated = None, dealloc_reason = None):
         with session_scope() as session:
             return update_project_assignments(session=session,
                                               assignment_id=assignment_id,
                                               role_ids=role_ids,
                                               work_hours=work_hours,
-                                              comment=comment)
+                                              comment=comment,
+                                              proposal=proposal,
+                                              deallocated=deallocated,
+                                              dealloc_reason=dealloc_reason)
 
     @staticmethod
     def delete_project_assignment(assignment_id):
         with session_scope() as session:
             return delete_project_assignments(session=session,
                                               assignment_id=assignment_id)
+
+    @staticmethod
+    def delete_project_assignment_proposal(assignment_id):
+        with session_scope() as session:
+            return delete_project_assignment_proposal(session=session,
+                                                      assignment_id=assignment_id)
 
     @staticmethod
     def accept_project_assignment(assignment_id):
