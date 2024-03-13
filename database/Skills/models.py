@@ -144,6 +144,7 @@ class Skill_proposals(Base):
                     "dept_id": str(skill_proposal.dept_id),
                     "role_ids": [str(role) for role in skill_proposal.role_ids],
                     "level": None,
+                    "skill_name": None,
                     "experience": None,
                     "user_id": str(skill_proposal.user_id),
                     "dealloc_reason": None,

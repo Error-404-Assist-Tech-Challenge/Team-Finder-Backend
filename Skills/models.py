@@ -130,6 +130,7 @@ class Proposal(BaseModel):
     role_ids: Optional[List[UUID]] = None
     role_names: Optional[List[str]] = None
     skill_id: Optional[UUID]
+    skill_name: Optional[str]
     user_id: UUID
     user_name: str
     work_hours: Optional[int] = None

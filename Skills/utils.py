@@ -481,7 +481,6 @@ def get_skill_proposals(user_id):
                     else:
                         skill_proposal["type"] = "post"
                     skill_proposal["skill_name"] = db.get_skill_info(skill_id, organization_id).get("name")
-
                 elif str(skill_id) == "None":
                     user_data = db.get_user(skill_proposal.get("user_id"))
                     # Put username in response
