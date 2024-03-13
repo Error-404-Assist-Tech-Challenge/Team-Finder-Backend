@@ -116,19 +116,14 @@ def create_user_skills(data, user_id):
     # If user is not a manager and has a department user can propose skill
     if department_id and not is_manager:
         propose_skill = str(uuid4())
-        # Find skill department
-        dep_skills = get_department_skills()
-        for dep in dep_skills:
-            current_department_skill = dep_skills[dep]
-            if str(current_department_skill.get("skill_id")) == str(skill_id):
-                db.propose_skill(id=propose_skill,
-                                 skill_id=skill_id,
-                                 user_id=user_id,
-                                 dept_id=current_department_skill.get("dept_id"),
-                                 level=user_skill_data.get("level"),
-                                 experience=user_skill_data.get("experience"),
-                                 read=False,
-                                 proposal=False)
+        db.propose_skill(id=propose_skill,
+                         skill_id=skill_id,
+                         user_id=user_id,
+                         dept_id=department_id,
+                         level=user_skill_data.get("level"),
+                         experience=user_skill_data.get("experience"),
+                         read=False,
+                         proposal=False)
         return get_skills_by_users_id(user_id)
     # If user is manager auto accept is implemented
     elif is_manager:
@@ -459,7 +454,7 @@ def get_skill_proposals(user_id):
     organization_id = db.get_user(user_id).get("org_id")
     # Find user department
     departments = db.get_department(organization_id)
-
+    returned_skills = []
     # Check user department
     for dep in departments:
         department = departments[dep]
@@ -481,6 +476,7 @@ def get_skill_proposals(user_id):
                     else:
                         skill_proposal["type"] = "post"
                     skill_proposal["skill_name"] = db.get_skill_info(skill_id, organization_id).get("name")
+                    returned_skills.append(skill_proposal)
                 elif str(skill_id) == "None":
                     user_data = db.get_user(skill_proposal.get("user_id"))
 

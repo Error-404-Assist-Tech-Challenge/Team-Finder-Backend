@@ -492,7 +492,7 @@ class DataBase:
             all_proposed_skills = get_proposed_skills(session=session)
             for skill in all_proposed_skills:
                 current_skill = all_proposed_skills[skill]
-                if current_skill.get("dept_id") == department_id:
+                if str(current_skill.get("dept_id")) == str(department_id):
                     proposed_skills.append(all_proposed_skills[skill])
             return proposed_skills
 
