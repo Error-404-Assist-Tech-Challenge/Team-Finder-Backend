@@ -202,16 +202,18 @@ def search_employees(proj_id, user_id):
                         employee["comment"] = assignment.get("comment")
                         work_hours -= int(assignment.get("work_hours"))
                         employee["proposed_work_hours"] = assignment.get("work_hours")
-                        employee["assignment_id"] = assignment.get("id")
                         proposed_employees.append(employee)
                     if not assignment.get("proposal") and assignment.get("deallocated"):
                         deallocated_employees.append(employee)
                     if assignment.get("proposal") and assignment.get("deallocated"):
+                        employee["deallocate_proposal"] = True
+                        employee["deallocate_comment"] = assignment.get("dealloc_reason")
                         active_employees.append(employee)
                     if not assignment.get("proposal") and not assignment.get("deallocated"):
                         active_employees.append(employee)
 
                     employee["current_work_hours"] = assignment.get("work_hours")
+                    employee["assignment_id"] = assignment.get("id")
 
                     user_ids_to_remove.append(employee_id)
                     user_role_ids = assignment.get("role_ids")
@@ -270,12 +272,12 @@ def get_project_assignments(user_id):
 
 
 def create_project_assignment(data, user_id):
-    project_assignments_data = data.model_dump()
+    deallocation_data = data.model_dump()
     project_assignments_id = str(uuid4())
-    project_assignments_data["id"] = project_assignments_id
-    proj_id = project_assignments_data.get("proj_id")
+    deallocation_data["id"] = project_assignments_id
+    proj_id = deallocation_data.get("proj_id")
     organization_id = db.get_user(user_id).get("org_id")
-    assigned_user_id = project_assignments_data.get("user_id")
+    assigned_user_id = deallocation_data.get("user_id")
     org_departments = db.get_department(db.get_user(user_id).get("org_id"))
     dept_members = db.get_all_department_members()
 
@@ -294,17 +296,17 @@ def create_project_assignment(data, user_id):
     db.create_project_assignment(proj_id=proj_id,
                                  user_id=assigned_user_id,
                                  org_id=organization_id,
-                                 role_ids=project_assignments_data.get("role_ids"),
+                                 role_ids=deallocation_data.get("role_ids"),
                                  proposal=True,
                                  deallocated=False,
-                                 dealloc_reason=project_assignments_data.get("dealloc_reason"),
-                                 work_hours=project_assignments_data.get("work_hours"),
-                                 comment=project_assignments_data.get("comment"),
+                                 dealloc_reason=deallocation_data.get("dealloc_reason"),
+                                 work_hours=deallocation_data.get("work_hours"),
+                                 comment=deallocation_data.get("comment"),
                                  project_assignments_id=project_assignments_id)
     db.create_project_assignment_proposal(id=str(uuid4()),
                                           dept_id=dept_id,
-                                          role_ids=project_assignments_data.get("role_ids"),
-                                          comment=project_assignments_data.get("comment"),
+                                          role_ids=deallocation_data.get("role_ids"),
+                                          comment=deallocation_data.get("comment"),
                                           user_id=assigned_user_id,
                                           assignment_id=project_assignments_id,
                                           proposal=True,
@@ -326,10 +328,74 @@ def update_project_assignment(data, user_id):
 
 
 def delete_project_assignment(data, user_id):
+    delete_data = data.model_dump()
+    proj_id = delete_data.get("proj_id")
+
+    db.delete_project_assignment(delete_data.get("assignment_id"))
+
+    return search_employees(proj_id, user_id)
+
+
+def create_project_deallocation(data, user_id):
+    deallocation_data = data.model_dump()
+    project_assignments_id = deallocation_data.get("assignment_id")
+    proj_id = deallocation_data.get("proj_id")
+    assigned_user_id = deallocation_data.get("user_id")
+    org_departments = db.get_department(db.get_user(user_id).get("org_id"))
+    dept_members = db.get_all_department_members()
+
+    dept_id = None
+    # Check if the employee is assigned to a department
+    for dept_member in dept_members:
+        if str(dept_member.get("user_id")) == str(assigned_user_id):
+            dept_id = dept_member.get("dept_id")
+
+    # Check if the employee manages a department
+    if not dept_id:
+        for key in org_departments:
+            if str(org_departments[key].get("manager_id")) == str(assigned_user_id):
+                dept_id = key
+
+    db.update_project_assignment(assignment_id=deallocation_data.get("assignment_id"),
+                                 proposal=True,
+                                 deallocated=True,
+                                 dealloc_reason=deallocation_data.get("comment"))
+
+    db.create_project_assignment_proposal(id=str(uuid4()),
+                                          dept_id=dept_id,
+                                          role_ids=deallocation_data.get("role_ids"),
+                                          dealloc_reason=deallocation_data.get("comment"),
+                                          user_id=assigned_user_id,
+                                          assignment_id=project_assignments_id,
+                                          proposal=True,
+                                          deallocated=True,
+                                          read=False)
+
+    return search_employees(proj_id, user_id)
+
+
+def update_project_deallocation(data, user_id):
     update_data = data.model_dump()
     proj_id = update_data.get("proj_id")
 
-    db.delete_project_assignment(update_data.get("assignment_id"))
+    db.update_project_assignment(assignment_id=update_data.get("assignment_id"),
+                                 proposal=True,
+                                 deallocated=True,
+                                 dealloc_reason=update_data.get("comment"))
+
+    return search_employees(proj_id, user_id)
+
+
+def delete_project_deallocation(data, user_id):
+    delete_data = data.model_dump()
+    proj_id = delete_data.get("proj_id")
+
+    db.update_project_assignment(assignment_id=delete_data.get("assignment_id"),
+                                 proposal=False,
+                                 deallocated=False,
+                                 dealloc_reason="")
+
+    db.delete_project_assignment_proposal(assignment_id=delete_data.get("assignment_id"))
 
     return search_employees(proj_id, user_id)
 
@@ -337,12 +403,26 @@ def delete_project_assignment(data, user_id):
 def manage_proposal(data, user_id):
     manage_data = data.model_dump()
     assignment_id = manage_data.get("assignment_id")
+    type = manage_data.get("type")
     action = manage_data.get("action")
 
     if action == "Accept":
-        db.accept_project_assignment(assignment_id)
+        if type == "Assignment":
+            db.accept_project_assignment(assignment_id)
+        elif type == "Deallocation":
+            db.update_project_assignment(assignment_id=manage_data.get("assignment_id"),
+                                         proposal=False,
+                                         deallocated=True)
+            db.delete_project_assignment_proposal(assignment_id=assignment_id)
     elif action == "Reject":
-        db.delete_project_assignment(assignment_id)
+        if type == "Assignment":
+            db.delete_project_assignment(assignment_id)
+        elif type == "Deallocation":
+            db.update_project_assignment(assignment_id=manage_data.get("assignment_id"),
+                                         proposal=False,
+                                         deallocated=False,
+                                         dealloc_reason="")
+            db.delete_project_assignment_proposal(assignment_id=assignment_id)
 
     return get_skill_proposals(user_id)
 

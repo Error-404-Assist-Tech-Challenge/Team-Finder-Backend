@@ -61,6 +61,9 @@ class RoleResponse(BaseModel):
 class UserResponse(BaseModel):
     user_id: UUID
     name: str
+    assignment_id: UUID
+    deallocate_proposal: bool = False
+    deallocate_comment: str = ""
     roles: List[RoleResponse]
     skills: List[SkillResponse]
     dept_name: str
@@ -107,6 +110,25 @@ class AssignmentProposal(BaseModel):
     comment: str
 
 
+class DeallocationProposal(BaseModel):
+    assignment_id: UUID
+    user_id: UUID
+    role_ids: List[UUID]
+    proj_id: UUID
+    comment: str
+
+
+class DeleteDeallocationProposal(BaseModel):
+    assignment_id: UUID
+    proj_id: UUID
+
+
+class UpdateDeallocationProposal(BaseModel):
+    assignment_id: UUID
+    proj_id: UUID
+    comment: str
+
+
 class UpdateAssignmentProposal(BaseModel):
     assignment_id: UUID
     role_ids: List[UUID]
@@ -123,6 +145,7 @@ class DeleteAssignmentProposal(BaseModel):
 class ManageProposal(BaseModel):
     assignment_id: UUID
     action: Literal['Accept', 'Reject']
+    type: Literal['Assignment', 'Deallocation']
 
 
 # USER TEAM ROLES
