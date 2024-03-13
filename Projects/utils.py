@@ -338,10 +338,12 @@ def delete_project_assignment(data, user_id):
 
 def create_project_deallocation(data, user_id):
     deallocation_data = data.model_dump()
-    project_assignments_id = deallocation_data.get("assignment_id")
+    project_assignment_id = deallocation_data.get("assignment_id")
     proj_id = deallocation_data.get("proj_id")
+    org_id = db.get_user(user_id).get("org_id")
     assigned_user_id = deallocation_data.get("user_id")
-    org_departments = db.get_department(db.get_user(user_id).get("org_id"))
+    org_departments = db.get_department(org_id)
+    org_assignments = db.get_project_assignments(org_id)
     dept_members = db.get_all_department_members()
 
     dept_id = None
@@ -356,17 +358,22 @@ def create_project_deallocation(data, user_id):
             if str(org_departments[key].get("manager_id")) == str(assigned_user_id):
                 dept_id = key
 
-    db.update_project_assignment(assignment_id=deallocation_data.get("assignment_id"),
+    role_ids = []
+    for assignment in org_assignments:
+        if str(assignment.get("id")) == str(project_assignment_id):
+            role_ids = assignment.get("role_ids")
+
+    db.update_project_assignment(assignment_id=project_assignment_id,
                                  proposal=True,
                                  deallocated=True,
                                  dealloc_reason=deallocation_data.get("comment"))
 
     db.create_project_assignment_proposal(id=str(uuid4()),
                                           dept_id=dept_id,
-                                          role_ids=deallocation_data.get("role_ids"),
+                                          role_ids=role_ids,
                                           dealloc_reason=deallocation_data.get("comment"),
                                           user_id=assigned_user_id,
-                                          assignment_id=project_assignments_id,
+                                          assignment_id=project_assignment_id,
                                           proposal=True,
                                           deallocated=True,
                                           read=False)
