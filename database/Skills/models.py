@@ -138,6 +138,7 @@ class Skill_proposals(Base):
         for skill_proposal in skill_proposals:
             if skill_proposal.role_ids is not None:
                 serialized_skill[str(skill_proposal.id)] = {
+                    "id": str(skill_proposal.id),
                     "skill_id": str(skill_proposal.skill_id),
                     "assignment_id": str(skill_proposal.assignment_id),
                     "dept_id": str(skill_proposal.dept_id),
@@ -153,6 +154,7 @@ class Skill_proposals(Base):
                 }
             else:
                 serialized_skill[str(skill_proposal.id)] = {
+                    "id": str(skill_proposal.id),
                     "skill_id": str(skill_proposal.skill_id),
                     "assignment_id": str(skill_proposal.assignment_id),
                     "dept_id": str(skill_proposal.dept_id),

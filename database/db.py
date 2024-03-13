@@ -473,6 +473,11 @@ class DataBase:
     # SKILL PROPOSALS
 
     @staticmethod
+    def read_notification(proposal_id):
+        with session_scope() as session:
+            return read_notification(session=session, proposal_id=proposal_id)
+
+    @staticmethod
     def propose_skill(skill_id, id, user_id, dept_id, level, experience, proposal, read):
         with session_scope() as session:
             return propose_skill(session=session,
