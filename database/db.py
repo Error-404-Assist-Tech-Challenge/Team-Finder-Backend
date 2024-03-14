@@ -895,6 +895,13 @@ class DataBase:
                                               count=count)
 
     @staticmethod
+    def update_project_needed_role(id, count):
+        with session_scope() as session:
+            return update_project_needed_role(session=session,
+                                              id=id,
+                                              count=count)
+
+    @staticmethod
     def get_project_needed_roles(proj_id, org_id):
         with session_scope() as session:
             all_needed_roles = get_project_needed_roles(session=session)

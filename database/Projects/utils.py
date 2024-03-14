@@ -330,6 +330,18 @@ def create_project_needed_role(session, proj_id, id, role_id, count):
         return error
 
 
+def update_project_needed_role(session, id, count):
+    try:
+        project_needed_role = session.query(Project_needed_roles).filter(Project_needed_roles.id == id).first()
+        if project_needed_role:
+            project_needed_role.count = count
+            session.commit()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
 def get_project_needed_roles(session):
     try:
         project_needed_roles = session.query(Project_needed_roles).all()
