@@ -710,6 +710,17 @@ class DataBase:
                                   can_be_deleted=can_be_deleted)
 
     @staticmethod
+    def get_org_projects(org_id):
+        with session_scope() as session:
+            returned_projects = []
+            all_projects = get_projects(session)
+            for project in all_projects:
+                current_project = all_projects[project]
+                if str(current_project.get("org_id")) == str(org_id):
+                    returned_projects.append(project)
+            return returned_projects
+
+    @staticmethod
     def remove_project_manager_id(proj_id, manager_id):
         with session_scope() as session:
             return remove_project_manager_id(session=session, proj_id=proj_id, manager_id=manager_id)
@@ -936,12 +947,14 @@ class DataBase:
 
 #CHAT GPT FEATURE=======================================================================================================
     @staticmethod
-    def get_all_details(org_id, user_id):
+    def get_all_details(org_id):
         all_details = {
             'users': db.get_organization_users(org_id),
             'user_skills': db.get_users_skills(),
-            #'projects': db.get_project_info(user_id),
-            'employee_assignments': db.get_project_assignments(org_id)
+            'projects_members': db.get_project_members(),
+            'projects': db.get_org_projects(org_id),
+            'employee_assignments': db.get_project_assignments(org_id),
+            'department_skills': db.get_department_skills()
         }
         return all_details
 
