@@ -501,8 +501,7 @@ class DataBase:
             return delete_proposed_skill(session=session, user_id=user_id, skill_id=skill_id)
 
     @staticmethod
-    def create_project_assignment_proposal(user_id, role_ids, dept_id, comment, proposal, deallocated, id,
-                                           assignment_id, read):
+    def create_project_assignment_proposal(id, assignment_id, read, user_id, role_ids, dept_id, proposal, comment = None, dealloc_reason = None, deallocated = None):
         with session_scope() as session:
             return create_project_assignment_proposal(session=session,
                                                       id=id,
