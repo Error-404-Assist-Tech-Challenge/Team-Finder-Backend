@@ -34,7 +34,7 @@ Base.metadata.create_all(engine)
 
 class DataBase:
 
-#USERS==================================================================================================================
+    # USERS==================================================================================================================
 
     @staticmethod
     def create_admin(name, email, password, user_id, created_at, org_id):
@@ -79,7 +79,7 @@ class DataBase:
                 returned_users[current_user.get("id")] = current_user
         return returned_users
 
-    #SIGNUP_TOKENS
+    # SIGNUP_TOKENS
     @staticmethod
     def create_signup_token(id, org_id, expires_at):
         with session_scope() as session:
@@ -108,8 +108,7 @@ class DataBase:
         with session_scope() as session:
             return get_signup_token(session=session, id=id)
 
-
-#ORGANIZATIONS==========================================================================================================
+    # ORGANIZATIONS==========================================================================================================
 
     @staticmethod
     def create_organization(name, hq_address, organization_id, created_at):
@@ -147,18 +146,15 @@ class DataBase:
                                              description=description,
                                              created_at=created_at)
 
-
     @staticmethod
     def get_organizations():
         with session_scope() as session:
             return get_organizations(session=session)
 
-
     @staticmethod
     def get_organization(id):
         with session_scope() as session:
             return get_organization(session=session, id=id)
-
 
     # USER ROLES
     @staticmethod
@@ -178,7 +174,6 @@ class DataBase:
                     returned_user_roles[role_id] = user_id
             return returned_user_roles
 
-
     @staticmethod
     def get_org_user_roles(org_id):
         with session_scope() as session:
@@ -196,7 +191,7 @@ class DataBase:
         with session_scope() as session:
             return remove_user_role(session=session, user_id=user_id, role_id=role_id)
 
-    #ORGANIZATION_ROLES
+    # ORGANIZATION_ROLES
     @staticmethod
     def create_organization_role(organization_role_id, name):
         with session_scope() as session:
@@ -207,7 +202,7 @@ class DataBase:
         with session_scope() as session:
             return get_organization_roles(session=session)
 
-    #TEAM_ROLES
+    # TEAM_ROLES
     @staticmethod
     def create_team_role(id, org_id, name):
         with session_scope() as session:
@@ -233,8 +228,7 @@ class DataBase:
         with session_scope() as session:
             return get_team_roles(session=session, org_id=org_id)
 
-
-#DEPARTMENTS============================================================================================================
+    # DEPARTMENTS============================================================================================================
 
     @staticmethod
     def create_department(name, org_id, department_id, created_at):
@@ -342,7 +336,7 @@ class DataBase:
                 if str(current_role.get("name")) == "dept_manager":
                     return role
 
-# SKILLS=================================================================================================================
+    # SKILLS=================================================================================================================
 
     @staticmethod
     def create_skill(category_id, name, description, created_at, skill_id, author_id, org_id):
@@ -380,7 +374,6 @@ class DataBase:
         with session_scope() as session:
             skill = get_skill(session=session, skill_id=skill_id)
             return skill
-
 
     # USER_SKILLS
     @staticmethod
@@ -469,7 +462,8 @@ class DataBase:
     @staticmethod
     def delete_user_endorsements(skill_id, org_id):
         with session_scope() as session:
-            return delete_skill_endorsement(session=session,skill_id=skill_id, org_id=org_id)
+            return delete_skill_endorsement(session=session, skill_id=skill_id, org_id=org_id)
+
     # SKILL PROPOSALS
 
     @staticmethod
@@ -507,7 +501,8 @@ class DataBase:
             return delete_proposed_skill(session=session, user_id=user_id, skill_id=skill_id)
 
     @staticmethod
-    def create_project_assignment_proposal(user_id, role_ids, dept_id, comment, proposal, deallocated, id, assignment_id, read):
+    def create_project_assignment_proposal(user_id, role_ids, dept_id, comment, proposal, deallocated, id,
+                                           assignment_id, read):
         with session_scope() as session:
             return create_project_assignment_proposal(session=session,
                                                       id=id,
@@ -524,6 +519,7 @@ class DataBase:
     def get_assignment_info(id):
         with session_scope() as session:
             return get_assignment_info(session=session, id=id)
+
     # SKILL_CATEGORIES
     @staticmethod
     def create_skill_category(name, org_id, created_at, skill_category_id):
@@ -582,7 +578,7 @@ class DataBase:
             return get_department_skills(session=session)
 
     @staticmethod
-    def get_department_skill(skill_id, dept_id = None):
+    def get_department_skill(skill_id, dept_id=None):
         with session_scope() as session:
             department_skills = get_department_skills(session=session)
             skill_departments = []
@@ -590,7 +586,8 @@ class DataBase:
                 current_department = department_skills[department]
 
                 if dept_id:
-                    if str(dept_id) == str(current_department.get("dept_id")) and str(skill_id) == str(current_department.get("skill_id")):
+                    if str(dept_id) == str(current_department.get("dept_id")) and str(skill_id) == str(
+                            current_department.get("skill_id")):
                         skill_departments.append(department)
                 elif current_department.get("skill_id") == str(skill_id):
                     skill_departments.append(department)
@@ -682,7 +679,7 @@ class DataBase:
                         total_users_skills = total_users_skills + 1
                         current_user_skill_info = reference_user_skill[user_skill]
                         current_user_skill_level = int(current_user_skill_info.get("level"))
-                        levels[current_user_skill_level] = levels[current_user_skill_level]+1
+                        levels[current_user_skill_level] = levels[current_user_skill_level] + 1
                 returned_skill = {
                     "skill_name": skill_info.get("name"),
                     "levels": levels,
@@ -691,9 +688,10 @@ class DataBase:
                 returned_body.append(returned_skill)
         return returned_body
 
-#PROJECTS===============================================================================================================
+    # PROJECTS===============================================================================================================
     @staticmethod
-    def create_project(project_id, org_id, name, manager_id, period, start_date, deadline_date, status, description, created_at, can_be_deleted):
+    def create_project(project_id, org_id, name, manager_id, period, start_date, deadline_date, status, description,
+                       created_at, can_be_deleted):
         with session_scope() as session:
             return create_project(session=session,
                                   project_id=project_id,
@@ -764,7 +762,8 @@ class DataBase:
             db.delete_project_needed_roles(project_id)
 
     @staticmethod
-    def update_project(name, period, start_date, deadline_date, status, description, created_at, project_id, can_be_deleted):
+    def update_project(name, period, start_date, deadline_date, status, description, created_at, project_id,
+                       can_be_deleted):
         with session_scope() as session:
             return update_project(session=session,
                                   project_id=project_id,
@@ -776,10 +775,12 @@ class DataBase:
                                   description=description,
                                   created_at=created_at,
                                   can_be_deleted=can_be_deleted)
+
     # PROJECT ASSIGNMENTS
 
     @staticmethod
-    def create_project_assignment(project_assignments_id, proj_id, user_id, proposal, deallocated, dealloc_reason, work_hours, comment, org_id, role_ids):
+    def create_project_assignment(project_assignments_id, proj_id, user_id, proposal, deallocated, dealloc_reason,
+                                  work_hours, comment, org_id, role_ids):
         with session_scope() as session:
             return create_project_assignments(session=session,
                                               project_assignments_id=project_assignments_id,
@@ -823,6 +824,7 @@ class DataBase:
     def get_project_approved_members(proj_id):
         with session_scope() as session:
             all_project_assigned_members = get_project_assigned_members(session=session, proj_id=proj_id)
+
     # USER TEAM ROLES
 
     @staticmethod
@@ -921,6 +923,7 @@ class DataBase:
     def delete_project_needed_roles(project_id):
         with session_scope() as session:
             delete_project_needed_roles(session=session, project_id=project_id)
+
     # PROJECT MEMBERS
 
     @staticmethod
@@ -935,18 +938,15 @@ class DataBase:
         with session_scope() as session:
             return get_project_members(session=session)
 
-#CHAT GPT FEATURE=======================================================================================================
+    # CHAT GPT FEATURE=======================================================================================================
     @staticmethod
-    def get_all_details(org_id):
-        all_details = {
-            'users': db.get_organization_users(org_id),
-            'user_skills': db.get_users_skills(),
-            'projects_members': db.get_project_members(),
-            'projects': db.get_org_projects(org_id),
-            'employee_assignments': db.get_project_assignments(org_id),
-            'department_skills': db.get_department_skills()
-        }
+    def get_all_details(org_id, user_id):
+        with session_scope() as session:
+            all_details = {
+                'employee_assignments': get_project_assignments(session=session, org_id=org_id),
+                'projects': db.get_org_projects(org_id=org_id),
+                'team_roles': db.get_team_roles(org_id=org_id)
+            }
         return all_details
-
 
 db = DataBase()

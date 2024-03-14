@@ -1,34 +1,8 @@
-import json
+import re
 
 from openai import OpenAI
 from database.db import db
 import os
-from typing import Dict
-from openai_feature.models import UserResponse
-
-response_model ={ "user_id": "abc51a44-cd8b-4835-afad-2a3af477efbd",
-            "name": "Emily Brown",
-            "roles": [
-                {
-                    "id": "af617841-728c-4eb6-8af5-3162d0dc91db",
-                    "name": "Programmer"
-                }
-            ],
-            "skills": [
-                {
-                    "name": "C++",
-                    "experience": 3,
-                    "level": 3
-                },
-                {
-                    "name": "Swift",
-                    "experience": 6,
-                    "level": 3
-                }
-            ],
-            "dept_name": "Frontend",
-            "current_work_hours": 1,
-            "work_hours": 1}
 
 openai_secretkey = os.environ["CHAT_SECRET_KEY"]
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", f"{openai_secretkey}"))
@@ -43,25 +17,55 @@ def make_chat_gpt_request(data, user_id):
     project_members = chat_data.get("project_members")
     project = chat_data.get("project")
 
-    all_details = db.get_all_details(org_id=organization_id)
+    all_details = db.get_all_details(org_id=organization_id, user_id=user_id)
+    projects = all_details.get("projects")
+    employee_assignments = all_details.get("employee_assignments")
+    team_roles = all_details.get("team_roles")
+
     system_message = (
-        f"You are a team finder expert who suggests the best team for this project: {project}"
-        "All the current team members are in an array called 'new'"
-        "All the past team members are in an array called 'past'"
-        "All the new team members that have already been proposed are in an array called 'proposed'"
-        "All the new team members that you can choose from are in an array called 'new'"
-        f"Here are all the members: {project_members} "
-        f"For additional context, this is the whole database: {all_details}."
-        f"The response should be structured in this format {response_model}, "
-        "The response should be ONLY a json list of employees from 'new' members in that format"
-        "The response should not contain unnecessary spaces or end lines, so that it can be easily mapped to a list of employees (the team)."
-        "You should look at the team_roles required for the project and return a team that fills all the roles that haven't already been taken"
-        "If you can't determine a full remaining team you should return an empty"
-        "If you can't determine a full remaining team you should return an empty list in JSON, but this is a worst-case scenario. I prefer a weak team over no team"
+        f"You are a team finder expert who needs to suggest the best team for a this project: {project}"
+        "'tech_stack' contains the skills required for the project"
+        "'team_roles' is very important, those are the roles that must be occupied by the team"
+        "The 'count' for every role is the amount of employees needed with that role"
+        "Everyone in the team must have at least one role, so there can't be more members than roles"
+        "'available_roles' are the types of team_roles that are still available, this exists because there might already be members assigned to the project"
+        "In the case that some roles are taken, you must recommend the best team with the reaming roles"
+
+        f"Here are all the members: {project_members}"
+        "In the 'new' array you will find all the members that you can choose from"
+        "'work_hours' are the amount of hours that the employee works daily"
+        "0 work hours means fully available"
+        "1-7 work hours mean partially available"
+        "8 work hours means completely unavailable"
+        "'deadline' represents the amount of weeks until an employees next deadline, meaning that they will be more available for a future project"
+        "'dept_name' represents the department that the employee is in"
+        "each user also has 'skills' with a level (1-5) and experience (1-6)"
+
+        "In the 'past' array you will find past members that have worked on the project, you can choose from these as well"
+
+        "In the 'proposed' array you will find employees that have already been proposed to work on the project"
+        "You can use that information to make a better decision"
+        "Also consider any team roles that have been proposed as team roles that are not available"
+
+        "In the 'active' array you will find employees that are already on the project"
+        "The team_roles they occupy are not available"
+        "Use this information to make a better decision"
+
+        "I'll give you some more information to help you make the best decision possible:"
+
+        f"Here are all the projects in the organization: {projects}"
+        f"Here are all the employees assigned to projects: {employee_assignments}"
+        f"Here are the organization team roles: {team_roles} "
+
+        f"The response should be your best recommendation of team for this project sent as a list of employees UUID's"
+
+        "If you can't determine a full team to fill the remaining positions you should return an empty JSON list"
+        "I must mention that this is a worst-case scenario. I prefer a weak team over no team. So try your best to come up with something"
     )
 
-    user_message = (f"The project manager also sent his comment: {additional_context}."
-                    "You should take his comment into consideration when deciding the team")
+    user_message = (f"The manager of the project himself has also sent a comment: '{additional_context}'."
+                    "Do your best to satisfy his preferences when assembling your team"
+                    "Make sure not to return more users than required roles")
 
     response = client.chat.completions.create(
         model=MODEL,
@@ -71,7 +75,30 @@ def make_chat_gpt_request(data, user_id):
         ],
         temperature=0,
     )
-    return json.loads(response.choices[0].message.content)
+    uuids = re.findall(r'[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12}', response.choices[0].message.content)
+
+    # Fetch user details
+    project_assignments = db.get_project_assignments(organization_id)
+    returned_employees = []
+
+    for user in uuids:
+        employee = {"user_id": user}
+        for assignment in project_assignments:
+            if str(assignment.get("user_id")) == str(user):
+                employee["deadline_date"] = assignment.get("deadline_date")
+                employee["work_hours"] = assignment.get("work_hours")
+            else:
+                employee["deadline_date"] = None
+                employee["work_hours"] = 0
+            employee["name"] = db.get_user(user).get("name")
+            users_skills = db.get_user_skills(user)
+            for skill in users_skills:
+                skill_info = db.get_skill(skill.get("skill_id"))
+                skill['name'] = skill_info.get("name")
+                del skill['created_at'], skill['skill_id'], skill['user_id']
+            employee["skills"] = users_skills
+        returned_employees.append(employee)
+    return returned_employees
 
 
 
