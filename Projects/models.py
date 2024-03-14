@@ -71,6 +71,18 @@ class UserResponse(BaseModel):
     work_hours: int
 
 
+class PastUserResponse(BaseModel):
+    user_id: UUID
+    name: str
+    assignment_id: UUID
+    deallocate_proposal: bool = False
+    deallocate_comment: str = ""
+    past_roles: List[RoleResponse]
+    skills: List[SkillResponse]
+    dept_name: str
+    current_work_hours: int
+    work_hours: int
+
 class ProposedUserResponse(BaseModel):
     user_id: UUID
     name: str
@@ -96,7 +108,7 @@ class NewUserResponse(BaseModel):
 class SearchResponse(BaseModel):
     active: Optional[List[UserResponse]]
     proposed: Optional[List[ProposedUserResponse]]
-    past: Optional[List[UserResponse]]
+    past: Optional[List[PastUserResponse]]
     new: Optional[List[NewUserResponse]]
 
 
