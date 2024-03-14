@@ -156,10 +156,14 @@ class User_team_roles(BaseModel):
     proposal: bool
 
 
-
 # PROJECT NEEDED ROLES
 
-class Project_needed_roles(BaseModel):
+class ProjectNeededRoles(BaseModel):
     proj_id: UUID
     role_id: UUID
+    count: int
+
+
+class UpdateProjectNeededRoles(BaseModel):
+    id: UUID
     count: int

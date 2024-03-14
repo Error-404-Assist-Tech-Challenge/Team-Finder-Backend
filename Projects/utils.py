@@ -321,6 +321,7 @@ def create_project_assignment(data, user_id):
     deallocation_data = data.model_dump()
     project_assignments_id = str(uuid4())
     deallocation_data["id"] = project_assignments_id
+    role_ids = deallocation_data.get("role_ids")
     proj_id = deallocation_data.get("proj_id")
     organization_id = db.get_user(user_id).get("org_id")
     assigned_user_id = deallocation_data.get("user_id")
@@ -342,7 +343,7 @@ def create_project_assignment(data, user_id):
     db.create_project_assignment(proj_id=proj_id,
                                  user_id=assigned_user_id,
                                  org_id=organization_id,
-                                 role_ids=deallocation_data.get("role_ids"),
+                                 role_ids=role_ids,
                                  proposal=True,
                                  deallocated=False,
                                  dealloc_reason=deallocation_data.get("dealloc_reason"),
@@ -351,13 +352,17 @@ def create_project_assignment(data, user_id):
                                  project_assignments_id=project_assignments_id)
     db.create_project_assignment_proposal(id=str(uuid4()),
                                           dept_id=dept_id,
-                                          role_ids=deallocation_data.get("role_ids"),
+                                          role_ids=role_ids,
                                           comment=deallocation_data.get("comment"),
                                           user_id=assigned_user_id,
                                           assignment_id=project_assignments_id,
                                           proposal=True,
                                           deallocated=False,
                                           read=False)
+
+    for id in role_ids:
+        print(id)
+
     return search_employees(proj_id, user_id)
 
 
@@ -519,3 +524,10 @@ def create_project_needed_role(data):
                                    count=project_needed_role.get("count"))
     return project_needed_role
 
+
+def update_project_needed_role(data):
+    project_needed_role = data.model_dump()
+    db.update_project_needed_role(id=project_needed_role.get("id"),
+                                  count=project_needed_role.get("count"))
+
+    return project_needed_role
