@@ -555,7 +555,7 @@ def create_project_tech_stack_skill(data):
 # PROJECT NEEDED ROLES
 def get_project_needed_roles(proj_id, user_id):
     org_id = db.get_user(user_id).get("org_id")
-    project_needed_roles = db.get_project_needed_roles(proj_id=proj_id, org_id=org_id)
+    _, project_needed_roles = db.get_project_needed_roles(proj_id=proj_id, org_id=org_id)
     return project_needed_roles
 
 

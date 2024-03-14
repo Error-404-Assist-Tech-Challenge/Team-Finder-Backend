@@ -923,7 +923,7 @@ class DataBase:
                         available_roles.append({"value": role_id, "label": role_name})
                     del current_role["proj_id"]
                     returned_roles.append(current_role)
-            return available_roles #, returned_roles
+            return returned_roles, available_roles
 
     @staticmethod
     def get_project_needed_roles_names(proj_id, org_id):
