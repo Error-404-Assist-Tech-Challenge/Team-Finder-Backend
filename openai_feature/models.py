@@ -35,10 +35,6 @@ class Project(BaseModel):
     available_roles: List[Available_roles]
 
 
-class Chat_Response(BaseModel):
-    employees: List[str]
-
-
 # Project Employees
 
 class SkillResponse(BaseModel):
@@ -97,3 +93,12 @@ class Chat_basemodel(BaseModel):
     context: str
     project_members: SearchResponse
     project: Project
+
+
+
+class Chat_Response(BaseModel):
+    user_id: UUID
+    deadline_date: Optional[datetime]
+    name: str
+    skills: List[SkillResponse]
+    work_hours: Optional[int]
