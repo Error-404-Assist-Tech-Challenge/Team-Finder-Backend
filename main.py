@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from Users.users import user_router
 
-from openai_feature.chat_gpt_feature import chat_gpt_router
+#from openai_feature.chat_gpt_feature import chat_gpt_router
 
 from Skills.skill_categories import skill_categories_router
 from Skills.skills import skills_router
@@ -43,7 +43,7 @@ app.include_router(user_roles_router)
 app.include_router(organization_router)
 app.include_router(departments_router)
 app.include_router(department_members_router)
-app.include_router(chat_gpt_router)
+#app.include_router(chat_gpt_router)
 app.include_router(user_skills_router)
 app.include_router(skills_router)
 app.include_router(skill_categories_router)
