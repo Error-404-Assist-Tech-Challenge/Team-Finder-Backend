@@ -16,7 +16,7 @@ def admin_create(user_data: AdminCreate, response: Response):
         access_token, refresh_token = auth_handler.generate_tokens(admin_obj.get("id"))
         del admin_obj["id"]
         admin_obj["access_token"] = access_token
-        response.set_cookie(key="refresh_token", value=refresh_token, secure=True, httponly=True, domain="api-team-finder.azurewebsites.net", path="/api", samesite="none")
+        response.set_cookie(key="refresh_token", value=refresh_token, secure=True, httponly=True, domain=".koyeb.app", path="/api", samesite="none")
 
         return admin_obj
     else:
