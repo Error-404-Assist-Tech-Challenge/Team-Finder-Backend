@@ -168,6 +168,11 @@ class Skill_proposals(Base):
                     "proposal": str(skill_proposal.proposal),
                     "read": str(skill_proposal.read),
                     "deallocated": None,
+                    "project_id": None,
+                    "project_name": None,
+                    "project_manager": None,
+                    "work_hours": None,
+                    "role_names": None,
                 }
         return serialized_skill
 

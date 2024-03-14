@@ -119,21 +119,21 @@ class Update_skill(BaseModel):
 
 class Proposal(BaseModel):
     assignment_id: Optional[UUID]
-    comment: Optional[str] = None
-    dealloc_reason: Optional[bool] = None
-    deallocated: Optional[bool] = None
-    experience: Optional[int] = None
-    level: Optional[int] = None
-    project_id: Optional[UUID] = None
-    project_name: Optional[str] = None
-    proposal: Optional[bool] = None
-    role_ids: Optional[List[UUID]] = None
-    role_names: Optional[List[str]] = None
+    comment: Optional[str]
+    dealloc_reason: Optional[str]
+    deallocated: Optional[bool]
+    experience: Optional[int]
+    level: Optional[int]
+    project_id: Optional[UUID]
+    project_name: Optional[str]
+    proposal: Optional[bool]
+    role_ids: Optional[List[UUID]]
+    role_names: Optional[List[str]]
     skill_id: Optional[UUID]
     skill_name: Optional[str]
     user_id: UUID
     user_name: str
-    work_hours: Optional[int] = None
+    work_hours: Optional[int]
 
 # NOTIFICATIONS
 

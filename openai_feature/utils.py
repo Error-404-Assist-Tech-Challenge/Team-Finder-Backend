@@ -43,19 +43,25 @@ def make_chat_gpt_request(data, user_id):
     project_members = chat_data.get("project_members")
     project = chat_data.get("project")
 
-    all_details = db.get_all_details(user_id=user_id,org_id=organization_id)
+    all_details = db.get_all_details(org_id=organization_id)
     system_message = (
-        "You are a team finder expert who suggests the best team made out of 5 persons. "
-        f"This is all the database: {all_details}. "
-        f"The response should be structured as this Response Model {response_model}, "
-        "the response should be returned like this and remove any other information except the JSON containing all the employees. "
-        "The response should not contain unnecessary spaces or end lines, so that it can be easily mapped to a list of employees (the team). "
-        "If you don't find them, return an empty JSON list."
+        f"You are a team finder expert who suggests the best team for this project: {project}"
+        "All the current team members are in an array called 'new'"
+        "All the past team members are in an array called 'past'"
+        "All the new team members that have already been proposed are in an array called 'proposed'"
+        "All the new team members that you can choose from are in an array called 'new'"
+        f"Here are all the members: {project_members} "
+        f"For additional context, this is the whole database: {all_details}."
+        f"The response should be structured in this format {response_model}, "
+        "The response should be ONLY a json list of employees from 'new' members in that format"
+        "The response should not contain unnecessary spaces or end lines, so that it can be easily mapped to a list of employees (the team)."
+        "You should look at the team_roles required for the project and return a team that fills all the roles that haven't already been taken"
+        "If you can't determine a full remaining team you should return an empty"
+        "If you can't determine a full remaining team you should return an empty list in JSON, but this is a worst-case scenario. I prefer a weak team over no team"
     )
 
-    user_message = (f"This is the context provided by the project manager: {additional_context}."
-                    f"This is the project that he created: {project}"
-                    f"And these are the project members: {project_members}")
+    user_message = (f"The project manager also sent his comment: {additional_context}."
+                    "You should take his comment into consideration when deciding the team")
 
     response = client.chat.completions.create(
         model=MODEL,
