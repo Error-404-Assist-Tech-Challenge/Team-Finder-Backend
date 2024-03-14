@@ -5,44 +5,6 @@ from uuid import UUID
 from pydantic import BaseModel
 
 
-class Skills(BaseModel):
-    name: str
-    experience: int
-    level: int
-
-
-class Roles(BaseModel):
-    id: UUID
-    name: str
-
-
-class Active_members(BaseModel):
-    user_id: UUID
-    name: str
-    roles: List[Roles]
-    skills: List[Skills]
-    dept_name: str
-    current_work_hours: 1
-    work_hours: int
-
-
-class New(BaseModel):
-    user_id: UUID
-    name: str
-    roles: Optional[List[Roles]]
-    skills: List[Skills]
-    dept_name: str
-    current_work_hours: 1
-    work_hours: int
-
-
-class Project_Members(BaseModel):
-    active: Optional[List[Active_members]]
-    new: Optional[List[str]]
-    past: Optional[List[str]]
-    proposed: Optional[List[str]]
-
-
 class Tech_stack(BaseModel):
     skill_id: UUID
     skill_name: str
@@ -73,11 +35,65 @@ class Project(BaseModel):
     available_roles: List[Available_roles]
 
 
-class Chat_basemodel(BaseModel):
-    context: str
-    project_members: Project_Members
-    project: Project
-
-
 class Chat_Response(BaseModel):
     employees: List[str]
+
+
+# Project Employees
+
+class SkillResponse(BaseModel):
+    name: str
+    experience: int
+    level: int
+
+
+class RoleResponse(BaseModel):
+    id: UUID
+    name: str
+
+
+class UserResponse(BaseModel):
+    user_id: UUID
+    name: str
+    roles: List[RoleResponse]
+    skills: List[SkillResponse]
+    dept_name: str
+    current_work_hours: int
+    work_hours: int
+
+
+class ProposedUserResponse(BaseModel):
+    user_id: UUID
+    name: str
+    assignment_id: UUID
+    proposed_roles: List[UUID]
+    skills: List[SkillResponse]
+    dept_name: str
+    comment: str
+    work_hours: int
+    proposed_work_hours: int
+
+
+class NewUserResponse(BaseModel):
+    user_id: UUID
+    name: str
+    roles: List[RoleResponse]
+    skills: List[SkillResponse]
+    dept_name: str
+    work_hours: int
+    deadline: str
+
+
+class SearchResponse(BaseModel):
+    active: Optional[List[UserResponse]]
+    proposed: Optional[List[ProposedUserResponse]]
+    past: Optional[List[UserResponse]]
+    new: Optional[List[NewUserResponse]]
+
+# Chat gpt request
+
+
+class Chat_basemodel(BaseModel):
+    context: str
+    project_members: SearchResponse
+    project: Project

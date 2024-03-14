@@ -930,8 +930,9 @@ class DataBase:
         all_details = {
             'users': db.get_organization_users(org_id),
             'user_skills': db.get_users_skills(),
-            #'projects': db.get_project_info(user_id),
-            'employee_assignments': db.get_project_assignments(org_id)
+            'projects': db.get_project_members(),
+            'employee_assignments': db.get_project_assignments(org_id),
+            'department_skills': db.get_department_skills()
         }
         return all_details
 
