@@ -164,7 +164,6 @@ def search_employees(proj_id, user_id):
     org_departments = db.get_department(org_id)
     proj_assignments = db.get_project_assignments(org_id)
     tech_stack_skills = db.get_project_tech_stack_skills(org_id=org_id, proj_id=proj_id)
-    user_team_roles = db.get_user_team_roles()
     org_team_roles = db.get_team_roles(org_id)
 
     stack_skill_ids = []
@@ -232,26 +231,37 @@ def search_employees(proj_id, user_id):
         # to determine their status and get their work hours
         for assignment in proj_assignments:
             if assignment.get("user_id") == employee_id:
-                work_hours += int(assignment.get("work_hours"))
+
+                if not assignment.get("proposal") and assignment.get("deallocated"):
+                    pass
+                else:
+                    work_hours += int(assignment.get("work_hours"))
+
                 if assignment.get("proj_id") == proj_id:
+
                     if assignment.get("proposal") and not assignment.get("deallocated"):
                         employee["comment"] = assignment.get("comment")
                         work_hours -= int(assignment.get("work_hours"))
                         employee["proposed_work_hours"] = assignment.get("work_hours")
                         proposed_employees.append(employee)
+                        user_ids_to_remove.append(employee_id)
+
                     if not assignment.get("proposal") and assignment.get("deallocated"):
                         deallocated_employees.append(employee)
+
                     if assignment.get("proposal") and assignment.get("deallocated"):
                         employee["deallocate_proposal"] = True
                         employee["deallocate_comment"] = assignment.get("dealloc_reason")
                         active_employees.append(employee)
+                        user_ids_to_remove.append(employee_id)
+
                     if not assignment.get("proposal") and not assignment.get("deallocated"):
                         active_employees.append(employee)
+                        user_ids_to_remove.append(employee_id)
 
                     employee["current_work_hours"] = assignment.get("work_hours")
                     employee["assignment_id"] = assignment.get("id")
 
-                    user_ids_to_remove.append(employee_id)
                     user_role_ids = assignment.get("role_ids")
 
                     # Get employee team roles
