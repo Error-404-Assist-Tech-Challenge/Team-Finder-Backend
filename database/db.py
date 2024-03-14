@@ -902,6 +902,11 @@ class DataBase:
                                               count=count)
 
     @staticmethod
+    def get_project_needed_role(role_id, proj_id):
+        with session_scope() as session:
+            return get_project_needed_role(session=session, role_id=role_id, proj_id=proj_id)
+
+    @staticmethod
     def get_project_needed_roles(proj_id, org_id):
         with session_scope() as session:
             all_needed_roles = get_project_needed_roles(session=session)

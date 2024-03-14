@@ -212,6 +212,7 @@ def search_employees(proj_id, user_id):
         employee_id = employee.get("user_id")
         employee["dept_name"] = ""
         employee["roles"] = []
+        employee["past_roles"] = []
 
         # Check if the employee is assigned to a department
         for dept_member in dept_members:
@@ -238,6 +239,7 @@ def search_employees(proj_id, user_id):
                     work_hours += int(assignment.get("work_hours"))
 
                 if assignment.get("proj_id") == proj_id:
+                    user_role_ids = assignment.get("role_ids")
 
                     if assignment.get("proposal") and not assignment.get("deallocated"):
                         employee["comment"] = assignment.get("comment")
@@ -248,6 +250,11 @@ def search_employees(proj_id, user_id):
 
                     if not assignment.get("proposal") and assignment.get("deallocated"):
                         deallocated_employees.append(employee)
+
+                        # Get past employee team roles
+                        for role_id in user_role_ids:
+                            employee_role_name = org_team_roles.get(role_id).get("name")
+                            employee["past_roles"].append({"id": role_id, "name": employee_role_name})
 
                     if assignment.get("proposal") and assignment.get("deallocated"):
                         employee["deallocate_proposal"] = True
@@ -262,12 +269,13 @@ def search_employees(proj_id, user_id):
                     employee["current_work_hours"] = assignment.get("work_hours")
                     employee["assignment_id"] = assignment.get("id")
 
-                    user_role_ids = assignment.get("role_ids")
-
                     # Get employee team roles
-                    for role_id in user_role_ids:
-                        employee_role_name = org_team_roles.get(role_id).get("name")
-                        employee["roles"].append({"id": role_id, "name": employee_role_name})
+                    if not assignment.get("proposal") and assignment.get("deallocated"):
+                        pass
+                    else:
+                        for role_id in user_role_ids:
+                            employee_role_name = org_team_roles.get(role_id).get("name")
+                            employee["roles"].append({"id": role_id, "name": employee_role_name})
 
                     if employee in proposed_employees:
                         employee["proposed_roles"] = user_role_ids
@@ -361,7 +369,11 @@ def create_project_assignment(data, user_id):
                                           read=False)
 
     for id in role_ids:
-        print(id)
+        role_info = db.get_project_needed_role(role_id=id, proj_id=proj_id)
+        needed_role_id = role_info.get("id")
+        count = role_info.get("count")
+
+        db.update_project_needed_role(id=needed_role_id, count=int(count)-1)
 
     return search_employees(proj_id, user_id)
 
@@ -382,7 +394,15 @@ def delete_project_assignment(data, user_id):
     delete_data = data.model_dump()
     proj_id = delete_data.get("proj_id")
 
-    db.delete_project_assignment(delete_data.get("assignment_id"))
+    assignment_info = db.delete_project_assignment(delete_data.get("assignment_id"))
+    role_ids = assignment_info.get("role_ids")
+
+    for id in role_ids:
+        role_info = db.get_project_needed_role(role_id=id, proj_id=proj_id)
+        needed_role_id = role_info.get("id")
+        count = role_info.get("count")
+
+        db.update_project_needed_role(id=needed_role_id, count=int(count)+1)
 
     return search_employees(proj_id, user_id)
 
@@ -468,13 +488,32 @@ def manage_proposal(data, user_id):
         if type == "Assignment":
             db.accept_project_assignment(assignment_id)
         elif type == "Deallocation":
-            db.update_project_assignment(assignment_id=manage_data.get("assignment_id"),
-                                         proposal=False,
-                                         deallocated=True)
+            assignment_info = db.update_project_assignment(assignment_id=manage_data.get("assignment_id"),
+                                                           proposal=False,
+                                                           deallocated=True)
             db.delete_project_assignment_proposal(assignment_id=assignment_id)
+
+            role_ids = assignment_info.get("role_ids")
+            proj_id = assignment_info.get("proj_id")
+
+            for id in role_ids:
+                role_info = db.get_project_needed_role(role_id=id, proj_id=proj_id)
+                needed_role_id = role_info.get("id")
+                count = role_info.get("count")
+
+                db.update_project_needed_role(id=needed_role_id, count=int(count)+1)
     elif action == "Reject":
         if type == "Assignment":
-            db.delete_project_assignment(assignment_id)
+            assignment_info = db.delete_project_assignment(assignment_id)
+            role_ids = assignment_info.get("role_ids")
+            proj_id = assignment_info.get("proj_id")
+
+            for id in role_ids:
+                role_info = db.get_project_needed_role(role_id=id, proj_id=proj_id)
+                needed_role_id = role_info.get("id")
+                count = role_info.get("count")
+
+                db.update_project_needed_role(id=needed_role_id, count=int(count)+1)
         elif type == "Deallocation":
             db.update_project_assignment(assignment_id=manage_data.get("assignment_id"),
                                          proposal=False,
