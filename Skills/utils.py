@@ -177,6 +177,7 @@ def get_department_notifications(user_id):
                     "proposal": proposal.get("proposal"),
                     "project_name": proposal.get("project_name"),
                     "deallocated": proposal.get("deallocated"),
+                    "dealloc_reason": proposal.get("dealloc_reason"),
                     "type": proposal.get("type")
                 }
                 returned_notifications.append(returned_body)

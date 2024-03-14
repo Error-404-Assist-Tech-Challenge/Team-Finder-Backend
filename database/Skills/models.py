@@ -147,7 +147,7 @@ class Skill_proposals(Base):
                     "skill_name": None,
                     "experience": None,
                     "user_id": str(skill_proposal.user_id),
-                    "dealloc_reason": None,
+                    "dealloc_reason": str(skill_proposal.dealloc_reason),
                     "comment": str(skill_proposal.comment),
                     "proposal": str(skill_proposal.proposal),
                     "read": str(skill_proposal.read),
