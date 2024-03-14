@@ -133,11 +133,11 @@ def get_projects_department(user_id): # Endpoint where department manager can se
     departments = db.get_department(organization_id)
     for department in departments:
         current_department = departments[department]
-        if current_department.get("manager_id") == user_id:
+        if str(current_department.get("manager_id")) == user_id:
             current_department_members = db.get_department_members(current_department.get("id"))
             for member in current_department_members:
                 department_members.append(member.get("user_id"))
-
+    print(department_members)
     project_members = db.get_project_members()
     for member in project_members:
         if member.get("user_id") in department_members:

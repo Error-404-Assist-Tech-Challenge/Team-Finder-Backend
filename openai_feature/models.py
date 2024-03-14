@@ -58,6 +58,32 @@ class UserResponse(BaseModel):
     work_hours: Optional[int]
 
 
+class ActiveResponse(BaseModel):
+    assignment_id: Optional[UUID]
+    user_id: UUID
+    name: str
+    roles: List[RoleResponse]
+    skills: List[SkillResponse]
+    deallocate_comment: Optional[str]
+    deallocate_proposal: Optional[bool]
+    dept_name: str
+    current_work_hours: Optional[int]
+    work_hours: Optional[int]
+
+
+class PastResponse(BaseModel):
+    assignment_id: Optional[UUID]
+    user_id: UUID
+    name: str
+    past_roles: List[RoleResponse]
+    skills: List[SkillResponse]
+    deallocate_comment: Optional[str]
+    deallocate_proposal: Optional[bool]
+    dept_name: str
+    current_work_hours: Optional[int]
+    work_hours: Optional[int]
+
+
 class ProposedUserResponse(BaseModel):
     user_id: UUID
     name: str
@@ -83,7 +109,7 @@ class NewUserResponse(BaseModel):
 class SearchResponse(BaseModel):
     active: Optional[List[UserResponse]]
     proposed: Optional[List[ProposedUserResponse]]
-    past: Optional[List[UserResponse]]
+    past: Optional[List[PastResponse]]
     new: Optional[List[NewUserResponse]]
 
 # Chat gpt request
@@ -93,7 +119,6 @@ class Chat_basemodel(BaseModel):
     context: str
     project_members: SearchResponse
     project: Project
-
 
 
 class Chat_Response(BaseModel):
