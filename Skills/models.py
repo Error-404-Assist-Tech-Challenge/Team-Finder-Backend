@@ -144,6 +144,8 @@ class Notification(BaseModel):
     skill_id: Optional[UUID]
     proposal: bool
     project_name: Optional[str]
+    deallocated: Optional[bool]
+    dealloc_reason: Optional[str]
     user_name: str
     type: Optional[str]
 
