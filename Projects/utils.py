@@ -68,28 +68,20 @@ def update_project(data, user_id):
     project_data = data.model_dump()
     project_id = project_data.get("proj_id")
     status = project_data.get("status")
+    project_info = db.get_project_info(project_data.get("proj_id"))
+    can_be_deleted = project_info.get("can_be_deleted")
     if str(status) in ["In Progress", "Closed", "Closing"]:
         can_be_deleted = False
         # Update project
-        db.update_project(name=project_data.get("name"),
-                          project_id=project_id,
-                          period=project_data.get("period"),
-                          start_date=project_data.get("start_date"),
-                          deadline_date=project_data.get("deadline_date"),
-                          status=status,
-                          description=project_data.get("description"),
-                          created_at=project_data.get("created_at"),
-                          can_be_deleted=can_be_deleted)
-    else:
-        db.update_project(name=project_data.get("name"),
-                          project_id=project_id,
-                          period=project_data.get("period"),
-                          start_date=project_data.get("start_date"),
-                          deadline_date=project_data.get("deadline_date"),
-                          status=status,
-                          description=project_data.get("description"),
-                          created_at=project_data.get("created_at"),
-                          can_be_deleted=True)
+    db.update_project(name=project_data.get("name"),
+                      project_id=project_id,
+                      period=project_data.get("period"),
+                      start_date=project_data.get("start_date"),
+                      deadline_date=project_data.get("deadline_date"),
+                      status=status,
+                      description=project_data.get("description"),
+                      created_at=project_data.get("created_at"),
+                      can_be_deleted=can_be_deleted)
 
     # Update tech stack skills
     db.update_project_tech_stack_skills(project_id, project_data.get("tech_stack"))
