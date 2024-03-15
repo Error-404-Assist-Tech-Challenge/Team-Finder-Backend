@@ -61,6 +61,7 @@ def make_chat_gpt_request(data, user_id):
 
         "If you can't determine a full team to fill the remaining positions you should return an empty JSON list"
         "I must mention that this is a worst-case scenario. I prefer a weak team over no team. So try your best to come up with something"
+        "But if you can't come up with a team that satisfies the manager's condition, return an empty list"
     )
 
     user_message = (f"The manager of the project himself has also sent a comment: '{additional_context}'."
