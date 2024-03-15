@@ -64,7 +64,7 @@ def get_skills_by_users_id(user_id):
                 user_skill["skill_author"] = db.get_user(skill_author).get("name")
 
                 # Put skill endorsements
-                user_skill["skill_endorsements"] = db.get_skill_endorsements(skill.get("id"))
+                user_skill["skill_endorsements"] = db.get_skill_endorsements(user_id)
                 user_skills_list.append(user_skill)
     user_skills_list.sort(key=lambda x: x.get("skill_name", "").lower())
     return user_skills_list
@@ -90,6 +90,7 @@ def create_user_skills(data, user_id):
                                             endo=endo.get("endorsement"),
                                             description=endo.get("description"),
                                             proj_id=None,
+                                            user_id=user_id,
                                             type=endo.get("type"))
             else:
                 db.create_skill_endorsement(endo_id=endo_id,
@@ -98,6 +99,7 @@ def create_user_skills(data, user_id):
                                             endo=endo.get("endorsement"),
                                             description=endo.get("description"),
                                             proj_id=endo.get("proj_id"),
+                                            user_id=user_id,
                                             type=endo.get("type"))
 
     # Logic skill proposal
@@ -241,8 +243,6 @@ def update_user_skills(data, user_id):
                                                 description=endo.get("description"),
                                                 proj_id=endo.get("proj_id"),
                                                 type=endo.get("type"))
-        elif endorsements is None:
-            db.delete_user_endorsements(skill_id=skill_id, org_id=db.get_user(user_id).get("org_id"))
         db.propose_skill(id=str(uuid4()),
                          proposal=False,
                          skill_id=skill_id,

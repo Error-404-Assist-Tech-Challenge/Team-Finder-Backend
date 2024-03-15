@@ -184,6 +184,7 @@ class Endorsements(Base):
     skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.id"), nullable=False)
     org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
     endo = Column(String, nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     description = Column(String, nullable=False)
     proj_id = Column(UUID(as_uuid=True), ForeignKey("projects.id"), nullable=True)
     type = Column(String, nullable=False)
@@ -194,6 +195,7 @@ class Endorsements(Base):
         for endo in skill_endorsements:
             skill_endorsement = {
                 "endorsement": str(endo.endo),
+                "user_id": str(endo.user_id),
                 "type": str(endo.type),
                 "skill_id": str(endo.skill_id),
                 "description": str(endo.description),

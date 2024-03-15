@@ -42,9 +42,9 @@ def get_skill(session, skill_id):
         return error
 
 
-def create_skill_endorsement(session, endo_id, org_id, skill_id, description, endo, proj_id, type):
+def create_skill_endorsement(session, endo_id, org_id, skill_id, description, endo, proj_id, type, user_id):
     try:
-        obj = Endorsements(id=endo_id, org_id=org_id, skill_id=skill_id, description=description, endo=endo, proj_id=proj_id, type=type)
+        obj = Endorsements(id=endo_id, org_id=org_id, skill_id=skill_id, user_id=user_id, description=description, endo=endo, proj_id=proj_id, type=type)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:

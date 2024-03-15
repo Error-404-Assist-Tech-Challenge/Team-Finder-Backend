@@ -168,12 +168,18 @@ def get_department_members(user_id):
                 member_skills = db.get_user_skills(member.get("user_id"))
                 org_skills = db.get_skills(org_id)
 
+                # Get user skills
+
                 for skill in member_skills:
                     org_skill = org_skills.get(skill.get("skill_id"))
 
                     if org_skill:
                         member_skill_names.append(org_skill.get("name"))
 
+                # Get user skills
+
+                endorsements = db.get_skill_endorsements(member.get("user_id"))
+                member["endorsements"] = endorsements
                 member["skills"] = member_skill_names
 
             return department_members
