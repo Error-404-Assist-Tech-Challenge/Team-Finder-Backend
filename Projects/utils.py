@@ -99,10 +99,9 @@ def update_project(data, user_id):
 # EMPLOYEE PROJECT
 
 
-def get_user_projects():
+def get_user_projects(user_id):
     active = []
     past = []
-    user_id = "e1bd7159-84bb-4009-868b-a01370f88ba2"
     organization_id = db.get_user(user_id).get("org_id")
     project_assignments = db.get_project_assignments(organization_id)
     for assign in project_assignments:
