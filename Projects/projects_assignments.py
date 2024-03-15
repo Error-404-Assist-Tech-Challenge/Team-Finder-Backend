@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
-from Projects.models import AssignmentProposal, UpdateAssignmentProposal, SearchResponse, DeleteAssignmentProposal, ManageProposal
-from Projects.utils import create_project_assignment, get_project_assignments, update_project_assignment, delete_project_assignment, manage_proposal
+from Projects.models import AssignmentProposal, UpdateAssignmentProposal, DeallocationProposal, UpdateDeallocationProposal, DeleteDeallocationProposal, SearchResponse, DeleteAssignmentProposal, ManageProposal
+from Projects.utils import create_project_assignment, get_project_assignments, update_project_assignment, delete_project_assignment, manage_proposal, create_project_deallocation, delete_project_deallocation, update_project_deallocation
 from auth import AuthHandler
 
 project_assignments_router = APIRouter()
@@ -15,6 +15,21 @@ def create_project_assignments_route(project_assignments_data: AssignmentProposa
 @project_assignments_router.put("/api/projects/assignment_proposal", response_model=SearchResponse)
 def create_project_assignments_route(project_assignments_data: UpdateAssignmentProposal, user_id: str = Depends(auth_handler.auth_wrapper)):
     return update_project_assignment(project_assignments_data, user_id)
+
+
+@project_assignments_router.post("/api/projects/deallocation_proposal", response_model=SearchResponse)
+def create_project_deallocation_route(project_assignments_data: DeallocationProposal, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return create_project_deallocation(project_assignments_data, user_id)
+
+
+@project_assignments_router.put("/api/projects/deallocation_proposal", response_model=SearchResponse)
+def create_project_deallocation_route(project_assignments_data: UpdateDeallocationProposal, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return update_project_deallocation(project_assignments_data, user_id)
+
+
+@project_assignments_router.delete("/api/projects/deallocation_proposal", response_model=SearchResponse)
+def create_project_deallocation_route(project_assignments_data: DeleteDeallocationProposal, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return delete_project_deallocation(project_assignments_data, user_id)
 
 
 @project_assignments_router.delete("/api/projects/assignment_proposal", response_model=SearchResponse)

@@ -61,12 +61,27 @@ class RoleResponse(BaseModel):
 class UserResponse(BaseModel):
     user_id: UUID
     name: str
+    assignment_id: UUID
+    deallocate_proposal: bool = False
+    deallocate_comment: str = ""
     roles: List[RoleResponse]
     skills: List[SkillResponse]
     dept_name: str
     current_work_hours: int
     work_hours: int
 
+
+class PastUserResponse(BaseModel):
+    user_id: UUID
+    name: str
+    assignment_id: UUID
+    deallocate_proposal: bool = False
+    deallocate_comment: str = ""
+    past_roles: List[RoleResponse]
+    skills: List[SkillResponse]
+    dept_name: str
+    current_work_hours: int
+    work_hours: int
 
 class ProposedUserResponse(BaseModel):
     user_id: UUID
@@ -93,7 +108,7 @@ class NewUserResponse(BaseModel):
 class SearchResponse(BaseModel):
     active: Optional[List[UserResponse]]
     proposed: Optional[List[ProposedUserResponse]]
-    past: Optional[List[UserResponse]]
+    past: Optional[List[PastUserResponse]]
     new: Optional[List[NewUserResponse]]
 
 
@@ -104,6 +119,24 @@ class AssignmentProposal(BaseModel):
     role_ids: List[UUID]
     proj_id: UUID
     work_hours: int
+    comment: str
+
+
+class DeallocationProposal(BaseModel):
+    assignment_id: UUID
+    user_id: UUID
+    proj_id: UUID
+    comment: str
+
+
+class DeleteDeallocationProposal(BaseModel):
+    assignment_id: UUID
+    proj_id: UUID
+
+
+class UpdateDeallocationProposal(BaseModel):
+    assignment_id: UUID
+    proj_id: UUID
     comment: str
 
 
@@ -123,6 +156,7 @@ class DeleteAssignmentProposal(BaseModel):
 class ManageProposal(BaseModel):
     assignment_id: UUID
     action: Literal['Accept', 'Reject']
+    type: Literal['Assignment', 'Deallocation']
 
 
 # USER TEAM ROLES
@@ -134,10 +168,14 @@ class User_team_roles(BaseModel):
     proposal: bool
 
 
-
 # PROJECT NEEDED ROLES
 
-class Project_needed_roles(BaseModel):
+class ProjectNeededRoles(BaseModel):
     proj_id: UUID
     role_id: UUID
+    count: int
+
+
+class UpdateProjectNeededRoles(BaseModel):
+    id: UUID
     count: int

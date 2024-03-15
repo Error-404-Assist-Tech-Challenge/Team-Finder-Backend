@@ -176,6 +176,12 @@ class Project_needed_roles(Base):
     role_id = Column(UUID, ForeignKey("team_roles.id"), nullable=False)
     count = Column(INTEGER, nullable=False)
 
+    def serialize(self):
+        return {
+            "id": str(self.id),
+            "count": str(self.count)
+        }
+
     @staticmethod
     def serialize_project_needed_roles(project_needed_roles):
         serialize_project_needed_roles = {}

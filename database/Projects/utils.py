@@ -121,19 +121,28 @@ def create_project_assignments(session, project_assignments_id, user_id, proj_id
         return error
 
 
-def update_project_assignments(session, assignment_id, role_ids, work_hours, comment):
+def update_project_assignments(session, assignment_id, role_ids = None, work_hours = None, comment = None, proposal = None, deallocated = None, dealloc_reason = None):
     try:
         project_assignment = session.query(Project_assignments).filter(Project_assignments.id == assignment_id).first()
         if project_assignment:
-            project_assignment.role_ids = role_ids
-            project_assignment.work_hours = work_hours
-            project_assignment.comment = comment
+            if comment and role_ids and work_hours:
+                project_assignment.role_ids = role_ids
+                project_assignment.work_hours = work_hours
+                project_assignment.comment = comment
+
+            project_assignment.proposal = proposal
+            project_assignment.deallocated = deallocated
+            project_assignment.dealloc_reason = dealloc_reason
 
         project_proposal = session.query(Skill_proposals).filter(Skill_proposals.assignment_id == assignment_id).first()
         if project_proposal:
-            project_proposal.role_ids = role_ids
-            # project_proposal.work_hours = work_hours
-            project_proposal.comment = comment
+            if comment and role_ids:
+                project_proposal.role_ids = role_ids
+                # project_proposal.work_hours = work_hours
+                project_proposal.comment = comment
+            project_proposal.dealloc_reason = dealloc_reason
+
+        return project_assignment.serialize()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
@@ -149,6 +158,8 @@ def delete_project_assignments(session, assignment_id):
         assignment = session.query(Project_assignments).filter(Project_assignments.id == assignment_id).first()
         if assignment:
             session.delete(assignment)
+
+        return assignment.serialize()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
@@ -171,6 +182,7 @@ def accept_project_assignment(session, assignment_id):
         project_assignment = session.query(Project_assignments).filter(Project_assignments.id == assignment_id).first()
         if project_assignment:
             project_assignment.proposal = False
+            project_assignment.deallocated = False
 
         project_proposal = session.query(Skill_proposals).filter(Skill_proposals.assignment_id == assignment_id).first()
         if project_proposal:
@@ -316,6 +328,29 @@ def create_project_needed_role(session, proj_id, id, role_id, count):
                                    count=count)
         session.add(obj)
         return obj
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def update_project_needed_role(session, id, count):
+    try:
+        project_needed_role = session.query(Project_needed_roles).filter(Project_needed_roles.id == id).first()
+        if project_needed_role:
+            project_needed_role.count = count
+            session.commit()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def get_project_needed_role(session, role_id, proj_id):
+    try:
+        project_needed_role = session.query(Project_needed_roles).filter(Project_needed_roles.role_id == role_id,
+                                                                         Project_needed_roles.proj_id == proj_id).first()
+        return project_needed_role.serialize()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)

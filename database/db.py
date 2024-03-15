@@ -512,7 +512,8 @@ class DataBase:
                                                       comment=comment,
                                                       read=read,
                                                       proposal=proposal,
-                                                      deallocated=deallocated)
+                                                      deallocated=deallocated,
+                                                      dealloc_reason=dealloc_reason)
 
     @staticmethod
     def get_assignment_info(id):
@@ -794,19 +795,28 @@ class DataBase:
                                               comment=comment)
 
     @staticmethod
-    def update_project_assignment(assignment_id, role_ids, work_hours, comment):
+    def update_project_assignment(assignment_id, role_ids = None, work_hours = None, comment = None, proposal = None, deallocated = None, dealloc_reason = None):
         with session_scope() as session:
             return update_project_assignments(session=session,
                                               assignment_id=assignment_id,
                                               role_ids=role_ids,
                                               work_hours=work_hours,
-                                              comment=comment)
+                                              comment=comment,
+                                              proposal=proposal,
+                                              deallocated=deallocated,
+                                              dealloc_reason=dealloc_reason)
 
     @staticmethod
     def delete_project_assignment(assignment_id):
         with session_scope() as session:
             return delete_project_assignments(session=session,
                                               assignment_id=assignment_id)
+
+    @staticmethod
+    def delete_project_assignment_proposal(assignment_id):
+        with session_scope() as session:
+            return delete_project_assignment_proposal(session=session,
+                                                      assignment_id=assignment_id)
 
     @staticmethod
     def accept_project_assignment(assignment_id):
@@ -884,6 +894,18 @@ class DataBase:
                                               proj_id=proj_id,
                                               role_id=role_id,
                                               count=count)
+
+    @staticmethod
+    def update_project_needed_role(id, count):
+        with session_scope() as session:
+            return update_project_needed_role(session=session,
+                                              id=id,
+                                              count=count)
+
+    @staticmethod
+    def get_project_needed_role(role_id, proj_id):
+        with session_scope() as session:
+            return get_project_needed_role(session=session, role_id=role_id, proj_id=proj_id)
 
     @staticmethod
     def get_project_needed_roles(proj_id, org_id):
