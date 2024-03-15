@@ -1,9 +1,6 @@
 from uuid import uuid4
 from datetime import datetime, timedelta
 import secrets
-
-from fastapi import HTTPException
-
 from database.db import db
 
 
@@ -69,8 +66,16 @@ def get_org_users(admin_id):
     org_roles = db.get_organization_roles()
     org_users = []
 
+    department_members = db.get_all_department_members()
+    users_in_department = []
+    for member in department_members:
+        users_in_department.append(member.get("user_id"))
     for key in users:
         user = users[key]
+        if key in users_in_department:
+            user["is_in_department"] = True
+        else:
+            user["is_in_department"] = False
         del user["password"], user["org_id"]
 
         if user.get("id") == admin_id:
@@ -151,7 +156,7 @@ def create_organization_skill(data, user_id):
                                          description=skill_data.get("description"),
                                          created_at=current_time)
 
-    if skill_data.get("assign_department"):
+    if str(skill_data.get("assign_department")) == "true":
         departments = db.get_department(org_id)
 
         for key in departments:
@@ -266,33 +271,23 @@ def create_organization_user_role(data, admin_id):
     role_data = data.model_dump()
     org_roles = db.get_organization_roles()
     user_roles = db.user_roles_get(str(role_data.get("user_id")))
-    already_in_department = False
-    # Find if user is in a department
-    department_members = db.get_all_department_members()
-    for member in department_members:
-        if str(member.get("user_id")) == str(role_data.get("user_id")):
-            already_in_department = True
 
-    if already_in_department is False:
-        user_role_names = []
-        for role_id in user_roles:
-            if org_roles.get(role_id):
-                user_role_names.append(org_roles.get(role_id).get("name"))
+    user_role_names = []
+    for role_id in user_roles:
+        if org_roles.get(role_id):
+            user_role_names.append(org_roles.get(role_id).get("name"))
 
-        for key in org_roles:
-            if org_roles[key].get("name") == role_data.get("role_name"):
-                if not user_roles.get(key):
-                    role_id = key
-                    user_role_names.append(org_roles[key].get("name"))
-                    db.create_user_role(user_id=role_data.get("user_id"), role_id=role_id)
-                else:
-                    return None, f"User already has the {role_data.get('role_name')} role"
+    for key in org_roles:
+        if org_roles[key].get("name") == role_data.get("role_name"):
+            if not user_roles.get(key):
+                role_id = key
+                user_role_names.append(org_roles[key].get("name"))
+                db.create_user_role(user_id=role_data.get("user_id"), role_id=role_id)
+            else:
+                return None, f"User already has the {role_data.get('role_name')} role"
 
-    if already_in_department is True:
-        raise HTTPException(status_code=409, detail="User is already in a department")
-    else:
-        returned_data = get_org_users(admin_id)
-        return returned_data, None
+    returned_data = get_org_users(admin_id)
+    return returned_data, None
 
 
 # TEAM_ROLES
