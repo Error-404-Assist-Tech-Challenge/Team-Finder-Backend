@@ -6,11 +6,19 @@ from datetime import datetime
 
 
 # DEPARTMENT_MEMBERS
+class Skill_endorsements(BaseModel):
+    type: str
+    endorsement: str
+    description: str
+    proj_id: Optional[str]
+
+
 class DepartmentMember(BaseModel):
     user_id: UUID
     email: str
     name: str
     skills: Optional[List[str]] = Field(default_factory=list)
+    endorsements: List[Skill_endorsements]
 
 
 class CreateMember(BaseModel):

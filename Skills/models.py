@@ -42,7 +42,6 @@ class SkillsResponse(BaseModel):
 
 class UserSkills(BaseModel):
     skill_id: Optional[str]
-    role_id: Optional[str]
     level: int
     experience: int
     created_at: datetime = datetime.now().isoformat()

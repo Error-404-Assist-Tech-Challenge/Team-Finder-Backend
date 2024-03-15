@@ -438,7 +438,7 @@ class DataBase:
     # SKILL ENDORSEMENTS
 
     @staticmethod
-    def create_skill_endorsement(endo_id, org_id, skill_id, endo, description, proj_id, type):
+    def create_skill_endorsement(endo_id, org_id, skill_id, endo, description, proj_id, type, user_id):
         with session_scope() as session:
             return create_skill_endorsement(session=session,
                                             endo_id=endo_id,
@@ -446,16 +446,17 @@ class DataBase:
                                             skill_id=skill_id,
                                             endo=endo,
                                             type=type,
+                                            user_id=user_id,
                                             description=description,
                                             proj_id=proj_id)
 
     @staticmethod
-    def get_skill_endorsements(skill_id):
+    def get_skill_endorsements(user_id):
         with session_scope() as session:
             returned_endorsements = []
             all_endorsements = get_endorsements(session=session)
             for endo in all_endorsements:
-                if str(endo.get("skill_id")) == skill_id:
+                if str(endo.get("user_id")) == user_id:
                     returned_endorsements.append(endo)
             return returned_endorsements
 
