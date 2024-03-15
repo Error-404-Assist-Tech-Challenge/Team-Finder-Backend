@@ -941,6 +941,36 @@ class DataBase:
             return returned_roles
 
     @staticmethod
+    def get_all_project_roles(proj_id, org_id):
+        with session_scope() as session:
+            all_needed_roles = get_project_needed_roles(session=session)
+            returned_roles = []
+            available_roles = []
+            for role in all_needed_roles:
+                current_role = all_needed_roles[role]
+                if str(current_role.get("proj_id")) == str(proj_id):
+                    role_id = current_role.get("role_id")
+                    role_name = get_team_roles(session=session, org_id=org_id)[role_id].get("name")
+                    current_role["role_name"] = role_name
+                    if int(current_role.get("count")) > 0:
+                        available_roles.append({"value": role_id, "label": role_name})
+                    del current_role["proj_id"]
+                    returned_roles.append(current_role)
+
+            project_assignments = db.get_project_assignments(org_id)
+            for assignment in project_assignments:
+                if assignment.get("proj_id") == proj_id:
+                    role_ids = assignment.get("role_ids")
+
+                    for id in role_ids:
+                        for role in returned_roles:
+                            if role.get("role_id") == id:
+                                role["count"] = int(role.get("count")) + 1
+
+            return returned_roles, available_roles
+
+
+    @staticmethod
     def delete_project_needed_roles(project_id):
         with session_scope() as session:
             delete_project_needed_roles(session=session, project_id=project_id)
