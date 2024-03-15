@@ -20,6 +20,7 @@ class Projects(Base):
     description = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
     can_be_deleted = Column(Boolean, nullable=False)
+    tech_stack = Column(ARRAY(String), nullable=False)
 
 
     @staticmethod
@@ -37,6 +38,7 @@ class Projects(Base):
                 "status": str(project.status),
                 "description": str(project.description),
                 "created_at": str(project.created_at),
+                "tech_stack": project.tech_stack,
                 "can_be_deleted": str(project.can_be_deleted)
             }
         return serialized_projects

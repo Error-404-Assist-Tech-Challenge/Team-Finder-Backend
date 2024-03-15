@@ -16,8 +16,8 @@ def get_projects(user_id):
         project_id = current_project.get("id")
         if str(current_project.get("manager_id")) == str(user_id):
             # Getting tech stack skills names
-            tech_stack = db.get_project_tech_stack_skills(project_id, organization_id)
-            current_project["tech_stack"] = tech_stack
+            required_skills = db.get_project_tech_stack_skills(project_id, organization_id)
+            current_project["required_skills"] = required_skills
 
             # Getting team role names
             team_role, available_roles = db.get_all_project_roles(project_id, organization_id)
@@ -45,9 +45,10 @@ def create_projects(data, user_id):
                       status=project_data.get("status"),
                       description=project_data.get("description"),
                       created_at=project_data.get("created_at"),
+                      tech_stack=project_data.get("tech_stack"),
                       can_be_deleted=True)
     # Create project tech stack
-    db.create_project_tech_stack_skills(project_id, project_data.get("tech_stack"))
+    db.create_project_tech_stack_skills(project_id, project_data.get("required_skills"))
 
     # Create team roles needed
     team_roles_needed = project_data.get("team_roles")
@@ -81,10 +82,11 @@ def update_project(data, user_id):
                       status=status,
                       description=project_data.get("description"),
                       created_at=project_data.get("created_at"),
+                      tech_stack=project_data.get("tech_stack"),
                       can_be_deleted=can_be_deleted)
 
     # Update tech stack skills
-    db.update_project_tech_stack_skills(project_id, project_data.get("tech_stack"))
+    db.update_project_tech_stack_skills(project_id, project_data.get("required_skills"))
 
     # Update project needed roles
     team_roles_needed = project_data.get("team_roles")

@@ -24,7 +24,8 @@ class UpdateProject(BaseModel):
     status: Literal['Not Started', 'Starting', 'In Progress', 'Closing', 'Closed']
     description: str
     created_at: datetime = datetime.now().isoformat()
-    tech_stack: List[UUID]
+    required_skills: List[UUID]
+    tech_stack: List[str]
     team_roles: List[Team_roles]
 
 
@@ -36,7 +37,8 @@ class Projects(BaseModel):
     status: Literal['Not Started', 'Starting', 'In Progress', 'Closing', 'Closed']
     description: str
     created_at: datetime = datetime.now().isoformat()
-    tech_stack: List[UUID]
+    required_skills: List[UUID]
+    tech_stack: List[str]
     team_roles: List[Team_roles]
 
 # PROJECTS MEMBERS
