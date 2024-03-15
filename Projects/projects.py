@@ -36,4 +36,4 @@ def projects_get(user_id: str = Depends(auth_handler.auth_wrapper)):
 
 @projects_router.get("/api/projects/user")
 def user_projects(user_id: str = Depends(auth_handler.auth_wrapper)):
-    return get_user_projects(user_id)
+    return get_user_projects()

@@ -99,9 +99,10 @@ def update_project(data, user_id):
 # EMPLOYEE PROJECT
 
 
-def get_user_projects(user_id):
+def get_user_projects():
     active = []
     past = []
+    user_id = "e1bd7159-84bb-4009-868b-a01370f88ba2"
     organization_id = db.get_user(user_id).get("org_id")
     project_assignments = db.get_project_assignments(organization_id)
     for assign in project_assignments:
@@ -116,7 +117,8 @@ def get_user_projects(user_id):
                 assign["status"] = project_info.get("status")
                 assign["description"] = project_info.get("description")
                 assign["period"] = project_info.get("period")
-                assign["technology_stack"] = db.get_project_tech_stack_skills(project_id, organization_id)
+                assign["required_skills"] = db.get_project_tech_stack_skills(project_id, organization_id)
+                assign["technology_stack"] = project_info.get("tech_stack")
                 assign["role_names"] = db.get_project_needed_roles_names(project_id, organization_id)
                 active.append(assign)
             elif assign.get("proposal") is False and assign.get("deallocated") is True:
@@ -127,7 +129,8 @@ def get_user_projects(user_id):
                 assign["deadline_date"] = project_info.get("deadline_date")
                 assign["status"] = project_info.get("status")
                 assign["description"] = project_info.get("description")
-                assign["technology_stack"] = db.get_project_tech_stack_skills(project_id, organization_id)
+                assign["required_skills"] = db.get_project_tech_stack_skills(project_id, organization_id)
+                assign["technology_stack"] = project_info.get("tech_stack")
                 assign["role_names"] = db.get_project_needed_roles_names(project_id, organization_id)
                 past.append(assign)
 
