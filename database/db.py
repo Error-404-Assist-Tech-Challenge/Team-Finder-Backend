@@ -485,6 +485,12 @@ class DataBase:
                                  proposal=proposal)
 
     @staticmethod
+    def get_employee_skill_proposals(user_id):
+        with session_scope() as session:
+            proposed_skills = get_proposed_employee_skills(session=session, user_id=user_id)
+            return proposed_skills
+
+    @staticmethod
     def get_skill_proposals(department_id):
         with session_scope() as session:
             proposed_skills = []

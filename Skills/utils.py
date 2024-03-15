@@ -506,3 +506,33 @@ def get_skill_proposals(user_id):
                     skill_proposal["project_manager"] = db.get_user(project.get("manager_id")).get("name")
                     skill_proposal["work_hours"] = assignment.get("work_hours")
             return skill_proposals
+
+
+def get_employee_skill_proposals(user_id):
+    organization_id = db.get_user(user_id).get("org_id")
+    proposed_skills = db.get_employee_skill_proposals(user_id)
+    proposals = []
+
+    for key in proposed_skills:
+        proposal_info = proposed_skills[key]
+        keys_to_remove = ['assignment_id', 'role_ids', 'project_id', 'project_name', 'project_manager', 'work_hours',
+                          'role_names', 'dealloc_reason', 'proposal', 'deallocated', 'read', 'id', 'skill_id', 'dept_id',
+                          'user_id', 'comment']
+
+        skill_id = proposal_info.get("skill_id")
+        if skill_id:
+            skill_info = db.get_skill_info(skill_id, organization_id)
+            org_skill_categories = db.get_skill_categories(organization_id)
+            for category in org_skill_categories:
+                if category.get("value") == skill_info.get("category_id"):
+                    proposal_info["category_name"] = category.get("label")
+            proposal_info["name"] = skill_info.get("name")
+            proposal_info["description"] = skill_info.get("description")
+
+            for key_to_remove in keys_to_remove:
+                if key_to_remove in proposal_info:
+                    proposal_info.pop(key_to_remove, None)
+
+            proposals.append(proposal_info)
+
+    return proposals
