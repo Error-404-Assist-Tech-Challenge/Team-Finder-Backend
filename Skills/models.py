@@ -135,6 +135,14 @@ class Proposal(BaseModel):
     user_name: str
     work_hours: Optional[int]
 
+
+class EmployeeProposal(BaseModel):
+    name: str
+    category_name: str
+    description: str
+    level: int
+    experience: int
+
 # NOTIFICATIONS
 
 

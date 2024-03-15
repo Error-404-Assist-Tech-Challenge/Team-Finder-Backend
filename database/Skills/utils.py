@@ -143,6 +143,16 @@ def propose_skill(session, user_id, skill_id, dept_id, level, experience, propos
         return error
 
 
+def get_proposed_employee_skills(session, user_id):
+    try:
+        skill_proposals = session.query(Skill_proposals).filter(Skill_proposals.user_id == user_id).all()
+        return Skill_proposals.serialize_skill_proposals(skill_proposals)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
 def get_proposed_skills(session):
     try:
         skill_proposals = session.query(Skill_proposals).all()

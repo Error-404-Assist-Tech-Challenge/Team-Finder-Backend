@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from typing import List
-from Skills.models import Skills, SkillProposal, Update_skill, Put_Notifications, Notification, Proposal
-from Skills.utils import create_skills, get_skills, update_skill_proposal, get_skill_proposals, get_department_notifications, update_department_notifications
+from Skills.models import Skills, SkillProposal, Update_skill, Put_Notifications, Notification, Proposal, EmployeeProposal
+from Skills.utils import create_skills, get_skills, update_skill_proposal, get_skill_proposals, get_department_notifications, update_department_notifications, get_employee_skill_proposals
 from auth import AuthHandler
 
 auth_handler = AuthHandler()
@@ -26,6 +26,11 @@ def skill_proposal_update(skills_proposal_data: Update_skill, user_id: str = Dep
 @skills_router.get("/api/skills/proposal", response_model=List[Proposal])
 def skill_proposal_get(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_skill_proposals(user_id)
+
+
+@skills_router.get("/api/skills/employee_proposals", response_model=List[EmployeeProposal])
+def employee_skill_proposal_get(user_id: str = Depends(auth_handler.auth_wrapper)):
+    return get_employee_skill_proposals(user_id)
 
 
 @skills_router.get("/api/skills/proposal/unread", response_model=List[Notification])
