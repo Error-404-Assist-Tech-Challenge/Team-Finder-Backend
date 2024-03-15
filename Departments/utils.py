@@ -89,10 +89,7 @@ def delete_department(data, user_id):
 
 
 def get_departments_managers(user_id):
-    print(user_id)
     dep_role = db.get_department_manager_id()
-    print(user_id)
-    print(dep_role)
     managers_with_department = []
     managers_available = []
 

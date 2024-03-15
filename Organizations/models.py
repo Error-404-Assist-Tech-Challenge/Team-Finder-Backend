@@ -17,6 +17,7 @@ class OrganizationMember(BaseModel):
     email: str
     created_at: datetime
     roles: List[str]
+    is_in_department: bool
 
 
 # SKILLS

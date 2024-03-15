@@ -66,8 +66,16 @@ def get_org_users(admin_id):
     org_roles = db.get_organization_roles()
     org_users = []
 
+    department_members = db.get_all_department_members()
+    users_in_department = []
+    for member in department_members:
+        users_in_department.append(member.get("user_id"))
     for key in users:
         user = users[key]
+        if key in users_in_department:
+            user["is_in_department"] = True
+        else:
+            user["is_in_department"] = False
         del user["password"], user["org_id"]
 
         if user.get("id") == admin_id:
@@ -148,7 +156,7 @@ def create_organization_skill(data, user_id):
                                          description=skill_data.get("description"),
                                          created_at=current_time)
 
-    if skill_data.get("assign_department"):
+    if str(skill_data.get("assign_department")) == "true":
         departments = db.get_department(org_id)
 
         for key in departments:
