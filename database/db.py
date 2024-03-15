@@ -697,7 +697,7 @@ class DataBase:
     # PROJECTS===============================================================================================================
     @staticmethod
     def create_project(project_id, org_id, name, manager_id, period, start_date, deadline_date, status, description,
-                       created_at, can_be_deleted):
+                       created_at, can_be_deleted, tech_stack):
         with session_scope() as session:
             return create_project(session=session,
                                   project_id=project_id,
@@ -710,6 +710,7 @@ class DataBase:
                                   status=status,
                                   description=description,
                                   created_at=created_at,
+                                  tech_stack=tech_stack,
                                   can_be_deleted=can_be_deleted)
 
     @staticmethod
@@ -769,7 +770,7 @@ class DataBase:
 
     @staticmethod
     def update_project(name, period, start_date, deadline_date, status, description, created_at, project_id,
-                       can_be_deleted):
+                       can_be_deleted, tech_stack):
         with session_scope() as session:
             return update_project(session=session,
                                   project_id=project_id,
@@ -780,6 +781,7 @@ class DataBase:
                                   status=status,
                                   description=description,
                                   created_at=created_at,
+                                  tech_stack=tech_stack,
                                   can_be_deleted=can_be_deleted)
 
     # PROJECT ASSIGNMENTS

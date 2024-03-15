@@ -6,7 +6,7 @@ from database.Skills.models import Skill_proposals
 # PROJECTS
 
 
-def create_project(session, project_id, org_id, name, period, start_date, deadline_date, status, description, manager_id, created_at, can_be_deleted):
+def create_project(session, project_id, org_id, name, period, start_date, deadline_date, status, description, manager_id, created_at, can_be_deleted, tech_stack):
     try:
         obj = Projects(id=project_id,
                        org_id=org_id,
@@ -18,6 +18,7 @@ def create_project(session, project_id, org_id, name, period, start_date, deadli
                        can_be_deleted=can_be_deleted,
                        description=description,
                        manager_id=manager_id,
+                       tech_stack=tech_stack,
                        created_at=created_at)
         session.add(obj)
         return obj
@@ -39,7 +40,7 @@ def remove_project_manager_id(session, proj_id, manager_id):
         return error
 
 
-def update_project(session, project_id, name, period, start_date, deadline_date, status, description, created_at, can_be_deleted):
+def update_project(session, project_id, name, period, start_date, deadline_date, status, description, created_at, can_be_deleted, tech_stack):
     try:
         project = session.query(Projects).filter(Projects.id == project_id).first()
         if project:
@@ -50,6 +51,7 @@ def update_project(session, project_id, name, period, start_date, deadline_date,
             project.status = status
             project.description = description
             project.created_at = created_at
+            project.tech_stack = tech_stack
             project.can_be_deleted = can_be_deleted
             session.commit()
     except SQLAlchemyError as e:
