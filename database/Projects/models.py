@@ -54,6 +54,7 @@ class Projects(Base):
             "deadline_date": str(self.deadline_date),
             "status": str(self.status),
             "description": str(self.description),
+            "tech_stack": self.tech_stack,
             "created_at": str(self.created_at)
         }
 
