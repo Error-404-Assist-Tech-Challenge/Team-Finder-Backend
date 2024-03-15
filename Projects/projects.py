@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
-from Projects.models import Projects, DeleteProject, UpdateProject
-from Projects.utils import create_projects, get_projects, delete_project, update_project, get_user_projects
+from Projects.models import Project, DeleteProject, UpdateProject
+from Projects.utils import create_project, get_projects, delete_project, update_project, get_user_projects
 from auth import AuthHandler
 
 projects_router = APIRouter()
@@ -8,11 +8,11 @@ auth_handler = AuthHandler()
 
 
 @projects_router.post("/api/project")
-def create_projects_route(projects_data: Projects, user_id: str = Depends(auth_handler.auth_wrapper)):
-    return create_projects(projects_data, user_id)
+def create_projects_route(projects_data: Project, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return create_project(projects_data, user_id)
+
 
 # Get all projects
-
 
 @projects_router.get("/api/projects")
 def projects_get(user_id: str = Depends(auth_handler.auth_wrapper)):
