@@ -764,9 +764,9 @@ class DataBase:
     @staticmethod
     def delete_project(project_id):
         with session_scope() as session:
-            delete_project(session=session, project_id=project_id)
-            db.delete_project_tech_stack_skills(project_id)
+            db.delete_project_required_skills(project_id)
             db.delete_project_needed_roles(project_id)
+            delete_project(session=session, project_id=project_id)
 
     @staticmethod
     def update_project(name, period, start_date, deadline_date, status, description, created_at, project_id,
@@ -858,40 +858,41 @@ class DataBase:
 
     # PROJECT TECH STACK SKILLS
     @staticmethod
-    def create_project_tech_stack_skills(proj_id, tech_stack):
+    def create_project_tech_stack_skills(proj_id, skill_id, minimum_level):
         with session_scope() as session:
             return create_project_tech_stack_skill(session=session,
                                                    proj_id=proj_id,
-                                                   tech_stack=tech_stack)
+                                                   skill_id=skill_id,
+                                                   minimum_level=minimum_level)
 
     @staticmethod
     def get_project_tech_stack_skills(proj_id, org_id):
         with session_scope() as session:
-            tech_stack_list = []
-            all_tech_stack = get_project_tech_stack_skills(session=session)
-            current_tech_stack = all_tech_stack[proj_id]
+            required_skills_list = []
+            required_skills = get_project_tech_stack_skills(session=session)
 
-            tech_stack = current_tech_stack.get("tech_stack")
-            for item in tech_stack:
-                returned_item = {
-                    "skill_id": item,
-                    "skill_name": db.get_skill_info(item, org_id).get("name")
-                }
-                tech_stack_list.append(returned_item)
+            for key in required_skills:
+                current_skill = required_skills[key]
 
-            return tech_stack_list
+                if str(current_skill.get("proj_id")) == str(proj_id):
+                    current_skill.pop("proj_id", None)
+                    current_skill["name"] = db.get_skill_info(current_skill.get("skill_id"), org_id).get("name")
+                    required_skills_list.append(current_skill)
+
+            return required_skills_list
 
     @staticmethod
-    def update_project_tech_stack_skills(proj_id, tech_stack):
+    def update_project_tech_stack_skills(proj_id, skill_id, minimum_level):
         with session_scope() as session:
             return update_project_tech_stack_skill(session=session,
                                                    proj_id=proj_id,
-                                                   tech_stack=tech_stack)
+                                                   skill_id=skill_id,
+                                                   minimum_level=minimum_level)
 
     @staticmethod
-    def delete_project_tech_stack_skills(project_id):
+    def delete_project_required_skills(project_id):
         with session_scope() as session:
-            delete_tech_stack(session=session, project_id=project_id)
+            delete_required_skills(session=session, project_id=project_id)
 
     # PROJECT NEEDED ROLES
     @staticmethod

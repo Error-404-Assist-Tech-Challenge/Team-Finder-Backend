@@ -15,6 +15,11 @@ class DeleteProject(BaseModel):
     proj_id: UUID
 
 
+class RequiredSkill(BaseModel):
+    skill_id: UUID
+    minimum_level: int
+
+
 class UpdateProject(BaseModel):
     proj_id: UUID
     name: str
@@ -24,12 +29,11 @@ class UpdateProject(BaseModel):
     status: Literal['Not Started', 'Starting', 'In Progress', 'Closing', 'Closed']
     description: str
     created_at: datetime = datetime.now().isoformat()
-    required_skills: List[UUID]
     tech_stack: List[str]
     team_roles: List[Team_roles]
 
 
-class Projects(BaseModel):
+class Project(BaseModel):
     name: str
     period: Literal['Fixed', 'Ongoing']
     start_date: datetime
@@ -37,7 +41,7 @@ class Projects(BaseModel):
     status: Literal['Not Started', 'Starting', 'In Progress', 'Closing', 'Closed']
     description: str
     created_at: datetime = datetime.now().isoformat()
-    required_skills: List[UUID]
+    required_skills: List[RequiredSkill]
     tech_stack: List[str]
     team_roles: List[Team_roles]
 

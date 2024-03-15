@@ -274,10 +274,10 @@ def get_user_team_roles(session):
 # PROJECT TECH STACK SKILLS
 
 
-def create_project_tech_stack_skill(session, tech_stack, proj_id):
+def create_project_tech_stack_skill(session, proj_id, skill_id, minimum_level):
     try:
-        obj = Project_tech_stack_skills(tech_stack=tech_stack,
-                                        proj_id=proj_id)
+        obj = Project_tech_stack_skills(proj_id=proj_id, skill_id=skill_id, minimum_level=minimum_level)
+
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
@@ -296,12 +296,12 @@ def get_project_tech_stack_skills(session):
         return error
 
 
-def delete_tech_stack(session, project_id):
+def delete_required_skills(session, project_id):
     try:
-        project_tech_stack_skill = session.query(Project_tech_stack_skills).filter(Project_tech_stack_skills.proj_id == project_id).first()
-        if project_tech_stack_skill:
-            session.delete(project_tech_stack_skill)
-            session.commit()
+        required_skills = session.query(Project_tech_stack_skills).filter(Project_tech_stack_skills.proj_id == project_id).all()
+        if required_skills:
+            for skill in required_skills:
+                session.delete(skill)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)

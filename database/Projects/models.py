@@ -155,21 +155,24 @@ class User_team_roles(Base):
 class Project_tech_stack_skills(Base):
     __tablename__ = "project_tech_stack_skills"
 
-    proj_id = Column(UUID, ForeignKey("projects.id"), primary_key=True, nullable=False)
-    tech_stack = Column(ARRAY(UUID), nullable=False)
+    id = Column(UUID, primary_key=True, nullable=False, default=uuid.uuid4())
+    proj_id = Column(UUID, ForeignKey("projects.id"), nullable=False)
+    skill_id = Column(UUID, ForeignKey("skills.id"), nullable=False)
+    minimum_level = Column(INTEGER, nullable=False)
 
     @staticmethod
     def serialize_project_tech_stack_skills(project_tech_stack_skills):
         serialize_project_tech_stack_skill = {}
         for project_tech_stack_skill in project_tech_stack_skills:
-            serialize_project_tech_stack_skill[str(project_tech_stack_skill.proj_id)] = {
-                "tech_stack": [str(tech) for tech in project_tech_stack_skill.tech_stack],
-                "proj_id": str(project_tech_stack_skill.proj_id)
+            serialize_project_tech_stack_skill[str(project_tech_stack_skill.id)] = {
+                "skill_id": str(project_tech_stack_skill.skill_id),
+                "proj_id": str(project_tech_stack_skill.proj_id),
+                "minimum_level": int(project_tech_stack_skill.minimum_level)
             }
         return serialize_project_tech_stack_skill
 
-# PROJECT NEEDED ROLES
 
+# PROJECT NEEDED ROLES
 
 class Project_needed_roles(Base):
     __tablename__ = "project_needed_roles"

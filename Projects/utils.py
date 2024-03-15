@@ -30,9 +30,10 @@ def get_projects(user_id):
     return sorted_projects
 
 
-def create_projects(data, user_id):
+def create_project(data, user_id):
     project_data = data.model_dump()
     project_id = str(uuid4())
+    required_skills = project_data.get("required_skills")
     project_data["id"] = project_id
     # Create project info
     db.create_project(project_id=project_id,
@@ -47,8 +48,10 @@ def create_projects(data, user_id):
                       created_at=project_data.get("created_at"),
                       tech_stack=project_data.get("tech_stack"),
                       can_be_deleted=True)
-    # Create project tech stack
-    db.create_project_tech_stack_skills(project_id, project_data.get("required_skills"))
+
+    # Create required project skills
+    for skill in required_skills:
+        db.create_project_tech_stack_skills(proj_id=project_id, skill_id=skill.get("skill_id"), minimum_level=skill.get("minimum_level"))
 
     # Create team roles needed
     team_roles_needed = project_data.get("team_roles")
@@ -73,7 +76,7 @@ def update_project(data, user_id):
     can_be_deleted = project_info.get("can_be_deleted")
     if str(status) in ["In Progress", "Closed", "Closing"]:
         can_be_deleted = False
-        # Update project
+    # Update project
     db.update_project(name=project_data.get("name"),
                       project_id=project_id,
                       period=project_data.get("period"),
@@ -85,8 +88,9 @@ def update_project(data, user_id):
                       tech_stack=project_data.get("tech_stack"),
                       can_be_deleted=can_be_deleted)
 
-    # Update tech stack skills
-    db.update_project_tech_stack_skills(project_id, project_data.get("required_skills"))
+    # Update tech stack skills // MAY DELETE AND CREATE SEPARATE ENDPOINT
+    # for skill in required_skills:
+    #     db.update_project_tech_stack_skills(proj_id=project_id, skill_id=skill.get("skill_id"), minimum_level=skill.get("minimum_level"))
 
     # Update project needed roles
     team_roles_needed = project_data.get("team_roles")
