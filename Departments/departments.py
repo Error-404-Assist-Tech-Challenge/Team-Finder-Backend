@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
-from Departments.models import Department, DepartmentUpdate, RemoveDepartment, DepartmentResponse, ManagedDepartment
+from Departments.models import Department, DepartmentUpdate, RemoveDepartment, DepartmentResponse, ManagedDepartment, DepartmentProjectsResponse
 from Departments.utils import *
 from auth import AuthHandler
 
@@ -46,6 +46,6 @@ def departments_get_statistics(user_id: str = Depends(auth_handler.auth_wrapper)
     return get_department_statistics(user_id)
 
 
-@departments_router.get("/api/department/projects")
+@departments_router.get("/api/department/projects", response_model=List[DepartmentProjectsResponse])
 def departments_get_projects(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_projects_department(user_id)

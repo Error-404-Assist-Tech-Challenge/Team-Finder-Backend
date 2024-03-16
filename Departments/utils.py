@@ -128,25 +128,41 @@ def get_projects_department(user_id): # Endpoint where department manager can se
     user = db.get_user(user_id)
     organization_id = user.get("org_id")
     departments = db.get_department(organization_id)
+
     for department in departments:
         current_department = departments[department]
         if str(current_department.get("manager_id")) == user_id:
             current_department_members = db.get_department_members(current_department.get("id"))
             for member in current_department_members:
                 department_members[member.get("user_id")] = member.get("user_id")
+
     project_assignments = db.get_project_assignments(organization_id)
     for assign in project_assignments:
         if str(assign.get("proposal")) == "False" and str(assign.get("deallocated")) == "False" and assign.get("user_id") in department_members:
-            del department_members[assign.get("user_id")]
+            team_member_name = db.get_user(assign.get("user_id")).get("name")
+            assign["team_members"] = []
+
+            keys_to_remove = ["org_id", "user_id", "id", "role_ids", "proposal", "deallocated",
+                              "dealloc_reason", "work_hours", "comment"]
+
+            for key in keys_to_remove:
+                assign.pop(key, None)
+
+            project_returned = False
+            for project in returned_projects:
+                if project.get("proj_id") == assign.get("proj_id"):
+                    project["team_members"].append(team_member_name)
+                    project_returned = True
+
+            if project_returned:
+                continue
+
             project_info = db.get_project_info(assign.get("proj_id"))
             assign["project_name"] = project_info.get("name")
-            assign["start_date"] = project_info.get("start_date")
             assign["deadline_date"] = project_info.get("deadline_date")
             assign["status"] = project_info.get("status")
-            assign["description"] = project_info.get("description")
-            assign["period"] = project_info.get("period")
-            assign["technology_stack"] = db.get_project_tech_stack_skills(assign.get("proj_id"), organization_id)
-            assign["role_names"] = db.get_project_needed_roles_names(assign.get("proj_id"), organization_id)
+            assign["team_members"].append(team_member_name)
+
             returned_projects.append(assign)
 
     return returned_projects

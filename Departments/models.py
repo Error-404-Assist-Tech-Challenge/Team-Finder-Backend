@@ -64,4 +64,10 @@ class ManagedDepartment(BaseModel):
     name: str
 
 
+class DepartmentProjectsResponse(BaseModel):
+    proj_id: UUID
+    project_name: str
+    deadline_date: str
+    status: str
+    team_members: List[str]
 
