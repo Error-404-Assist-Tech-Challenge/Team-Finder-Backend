@@ -211,34 +211,44 @@ def search_employees(proj_id, user_id):
         if employee_data.get("org_id") == org_id and employee_skill.get("user_id") != user_id:
             skill_data = db.get_skill(employee_skill.get("skill_id"))
             employee_skill["skills"] = []
-            meets_requirement = False
+            meets_level_requirement = False
             for required_skill in tech_stack_skills:
                 if skill_data.get("name") == required_skill.get("name"):
                     if int(employee_skill.get("level")) >= int(required_skill.get("minimum_level")):
-                        meets_requirement = True
+                        meets_level_requirement = True
+
+            meets_skill_requirement = False
+            if employee_skill.get("skill_id") in stack_skill_ids:
+                meets_skill_requirement = True
 
             employee_skill["skills"].append({
                 "name": skill_data.get("name"),
                 "experience": employee_skill.get("experience"),
                 "level": employee_skill.get("level"),
-                "meets_requirement": meets_requirement
+                "meets_skill_requirement": meets_skill_requirement,
+                "meets_level_requirement": meets_level_requirement
             })
 
             # Check if the employee is already eligible and append skill
             is_already_eligible = False
             for employee in eligible_employees:
                 if employee["user_id"] == employee_skill.get("user_id"):
-                    meets_requirement = False
+                    meets_level_requirement = False
                     for required_skill in tech_stack_skills:
                         if skill_data.get("name") == required_skill.get("name"):
                             if int(employee_skill.get("level")) >= int(required_skill.get("minimum_level")):
-                                meets_requirement = True
+                                meets_level_requirement = True
+
+                    meets_skill_requirement = False
+                    if employee_skill.get("skill_id") in stack_skill_ids:
+                        meets_skill_requirement = True
 
                     employee["skills"].append({
                         "name": skill_data.get("name"),
                         "experience": employee_skill.get("experience"),
                         "level": employee_skill.get("level"),
-                        "meets_requirement": meets_requirement
+                        "meets_skill_requirement": meets_skill_requirement,
+                        "meets_level_requirement": meets_level_requirement
                     })
                     is_already_eligible = True
             if is_already_eligible:
@@ -345,7 +355,7 @@ def search_employees(proj_id, user_id):
     deallocated_employees = sorted(deallocated_employees, key=lambda x: x["name"])
 
     potential_employees = [employee for employee in eligible_employees if employee.get('user_id') not in user_ids_to_remove]
-    potential_employees = [employee for employee in potential_employees if not all(skill['meets_requirement'] == False for skill in employee['skills'])]
+    potential_employees = [employee for employee in potential_employees if not all(skill['meets_skill_requirement'] == False for skill in employee['skills'])]
 
     returned_data = {"active": active_employees, "proposed": proposed_employees, "past": deallocated_employees, "new": potential_employees}
 

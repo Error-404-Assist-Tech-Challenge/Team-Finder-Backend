@@ -58,7 +58,8 @@ class SkillResponse(BaseModel):
     name: str
     experience: int
     level: int
-    meets_requirement: bool = False
+    meets_skill_requirement: bool = False
+    meets_level_requirement: bool = False
 
 
 class RoleResponse(BaseModel):
