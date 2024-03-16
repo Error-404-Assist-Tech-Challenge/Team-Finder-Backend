@@ -22,7 +22,7 @@ def update_team_role_route(team_role_data: TeamRoleUpdate, admin_id: str = Depen
 def delete_team_role_route(team_role_data: TeamRoleDelete, admin_id: str = Depends(auth_handler.auth_wrapper)):
     response, error = delete_team_role(team_role_data, admin_id)
     if error:
-        raise HTTPException(status_code=500, detail=error)
+        raise HTTPException(status_code=409, detail=error)
     return response
 
 
