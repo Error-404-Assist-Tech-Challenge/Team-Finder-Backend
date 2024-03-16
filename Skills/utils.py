@@ -436,8 +436,8 @@ def update_skill_proposal(data, user_id):
                 skill_id = current_skill.get("skill_id")
                 proposal = current_skill.get("proposal")
                 # Check if the proposal is for project or for skill requests
-                if skill_id and proposal:
-                    if current_skill.get("user_id") == str(update_data.get("user_id")) and current_skill.get("skill_id") == str(update_data.get("skill_id")):
+                if str(update_data.get("proposal")) == "True":
+                    if (str(current_skill.get("user_id")) == str(update_data.get("user_id"))) and (current_skill.get("skill_id") == str(update_data.get("skill_id"))):
                         level = current_skill.get("level")
                         experience = current_skill.get("experience")
                         user_skill_exists = db.verify_user_skill(user_id=update_data.get("user_id"),
