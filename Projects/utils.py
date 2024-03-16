@@ -334,6 +334,17 @@ def search_employees(proj_id, user_id):
 
     potential_employees = [employee for employee in eligible_employees if employee.get('user_id') not in user_ids_to_remove]
 
+    # Check if employee skill minimum level is eligible for project
+    for employee in potential_employees:
+        filtered_skills = []
+        for skill in employee["skills"]:
+            for required_skill in tech_stack_skills:
+                if skill.get("name") == required_skill.get("name"):
+                    if int(skill.get("level")) >= int(required_skill.get("minimum_level")):
+                        filtered_skills.append(skill)
+
+        employee["skills"] = filtered_skills
+
     returned_data = {"active": active_employees, "proposed": proposed_employees, "past": deallocated_employees, "new": potential_employees}
 
     return returned_data
