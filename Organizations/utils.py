@@ -344,7 +344,22 @@ def update_team_role(data, admin_id):
 
 def delete_team_role(data, admin_id):
     team_role_data = data.model_dump()
-    response, error = db.delete_team_role(id=team_role_data.get("id"))
+    org_id = db.get_user(admin_id).get("org_id")
+    org_projects = db.get_org_projects(org_id)
+
+    error = False
+    # Temporary error handling
+    for key in org_projects:
+
+        project_needed_roles, _ = db.get_project_needed_roles(key, org_id)
+        for needed_role in project_needed_roles:
+            if str(needed_role.get("role_id")) == str(team_role_data.get("id")):
+                error = "This role is a project needed role"
+
+    if error:
+        pass
+    else:
+        response, error = db.delete_team_role(id=team_role_data.get("id"))
 
     returned_data = get_team_roles(admin_id)
 
