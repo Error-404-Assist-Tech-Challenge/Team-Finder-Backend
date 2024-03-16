@@ -276,7 +276,8 @@ def get_user_team_roles(session):
 
 def create_project_tech_stack_skill(session, proj_id, skill_id, minimum_level):
     try:
-        obj = Project_tech_stack_skills(proj_id=proj_id, skill_id=skill_id, minimum_level=minimum_level)
+        id = uuid.uuid4()
+        obj = Project_tech_stack_skills(id=id, proj_id=proj_id, skill_id=skill_id, minimum_level=minimum_level)
 
         session.add(obj)
         return obj
