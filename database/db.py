@@ -298,6 +298,7 @@ class DataBase:
                 if member_dept_id == dept_id:
                     member["name"] = users[member_user_id].get("name")
                     member["email"] = users[member_user_id].get("email")
+                    print(member)
                     returned_members.append(member)
             return returned_members
 
