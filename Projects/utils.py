@@ -72,6 +72,7 @@ def update_project(data, user_id):
     project_data = data.model_dump()
     project_id = project_data.get("proj_id")
     status = project_data.get("status")
+    required_skills = project_data.get("required_skills")
     project_info = db.get_project_info(project_data.get("proj_id"))
     can_be_deleted = project_info.get("can_be_deleted")
     if str(status) in ["In Progress", "Closed", "Closing"]:
@@ -84,13 +85,25 @@ def update_project(data, user_id):
                       deadline_date=project_data.get("deadline_date"),
                       status=status,
                       description=project_data.get("description"),
-                      created_at=project_data.get("created_at"),
                       tech_stack=project_data.get("tech_stack"),
                       can_be_deleted=can_be_deleted)
 
-    # Update tech stack skills // MAY DELETE AND CREATE SEPARATE ENDPOINT
-    # for skill in required_skills:
-    #     db.update_project_tech_stack_skills(proj_id=project_id, skill_id=skill.get("skill_id"), minimum_level=skill.get("minimum_level"))
+    for skill in required_skills:
+        if skill.get("required"):
+            # Try to update the skill requirement
+            updated_required_skill = db.update_project_tech_stack_skills(proj_id=project_id,
+                                                                         skill_id=skill.get("skill_id"),
+                                                                         minimum_level=skill.get("minimum_level"))
+            # If the skill requirement doesn't exist, then it will be created
+            if updated_required_skill:
+                pass
+            else:
+                db.create_project_tech_stack_skills(proj_id=project_id,
+                                                    skill_id=skill.get("skill_id"),
+                                                    minimum_level=skill.get("minimum_level"))
+        else:
+            # Delete skill requirement
+            db.delete_project_required_skill(proj_id=project_id, skill_id=skill.get("skill_id"))
 
     # Update project needed roles
     team_roles_needed = project_data.get("team_roles")

@@ -55,7 +55,8 @@ class Projects(Base):
             "status": str(self.status),
             "description": str(self.description),
             "tech_stack": self.tech_stack,
-            "created_at": str(self.created_at)
+            "created_at": str(self.created_at),
+            "can_be_deleted": self.can_be_deleted
         }
 
 
