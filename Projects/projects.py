@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
-from Projects.models import Project, DeleteProject, UpdateProject, RequiredSkillResponse, CreateRequiredSkill, EligibleSkills
+from Projects.models import Project, DeleteProject, UpdateProject, RequiredSkillResponse, CreateRequiredSkills, EligibleSkills
 from Projects.utils import create_project, get_projects, delete_project, update_project, get_user_projects, create_skill_requirement, get_eligible_skills
 from auth import AuthHandler
 
@@ -42,7 +42,7 @@ def user_projects(user_id: str = Depends(auth_handler.auth_wrapper)):
 
 # A team member from a project can assign skill requirements
 @projects_router.post("/api/projects/skill_requirement", response_model=List[RequiredSkillResponse])
-def project_skill_requirement_create(required_skill: CreateRequiredSkill, user_id: str = Depends(auth_handler.auth_wrapper)):
+def project_skill_requirement_create(required_skill: CreateRequiredSkills, user_id: str = Depends(auth_handler.auth_wrapper)):
     skill_requirements, error = create_skill_requirement(required_skill, user_id)
     if error:
         raise HTTPException(status_code=409, detail=error)

@@ -21,6 +21,10 @@ class CreateRequiredSkill(BaseModel):
     minimum_level: int
 
 
+class CreateRequiredSkills(BaseModel):
+    skills: List[CreateRequiredSkill]
+
+
 class RequiredSkillResponse(BaseModel):
     skill_id: UUID
     minimum_level: int
