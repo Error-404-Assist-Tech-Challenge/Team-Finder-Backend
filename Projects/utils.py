@@ -602,6 +602,34 @@ def create_project_tech_stack_skill(data):
     return project_tech_stack_skill
 
 
+def create_skill_requirement(data, user_id):
+    skill_data = data.model_dump()
+    proj_id = skill_data.get("proj_id")
+    skill_id = skill_data.get("skill_id")
+    minimum_level = skill_data.get("minimum_level")
+    org_id = db.get_user(user_id).get("org_id")
+
+    required_skills = db.get_project_tech_stack_skills(proj_id, org_id)
+
+    for skill in required_skills:
+        if str(skill.get("skill_id")) == str(skill_id):
+            return None, "Skill requirement already exists for this project"
+
+    new_requirement = db.create_project_tech_stack_skills(proj_id=proj_id, skill_id=skill_id, minimum_level=minimum_level)
+
+    keys_to_remove = ["proj_id", "id"]
+
+    for key in keys_to_remove:
+        new_requirement.pop(key, None)
+
+    skill_name = db.get_skill(new_requirement.get("skill_id")).get("name")
+    new_requirement["name"] = skill_name
+
+    required_skills.append(new_requirement)
+
+    return required_skills, None
+
+
 # PROJECT NEEDED ROLES
 def get_project_needed_roles(proj_id, user_id):
     org_id = db.get_user(user_id).get("org_id")
