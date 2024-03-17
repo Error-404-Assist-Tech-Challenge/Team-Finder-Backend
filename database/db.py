@@ -474,7 +474,7 @@ class DataBase:
             return read_notification(session=session, proposal_id=proposal_id)
 
     @staticmethod
-    def propose_skill(skill_id, id, user_id, dept_id, level, experience, proposal, read):
+    def propose_skill(skill_id, id, user_id, dept_id, level, experience, proposal, read, for_employee = None):
         with session_scope() as session:
             return propose_skill(session=session,
                                  id=id,
@@ -484,6 +484,7 @@ class DataBase:
                                  level=level,
                                  read=read,
                                  experience=experience,
+                                 for_employee=for_employee,
                                  proposal=proposal)
 
     @staticmethod
@@ -491,6 +492,19 @@ class DataBase:
         with session_scope() as session:
             proposed_skills = get_proposed_employee_skills(session=session, user_id=user_id)
             return proposed_skills
+
+    @staticmethod
+    def accept_employee_skill_proposal(proposal_id, level, experience):
+        with session_scope() as session:
+            return accept_employee_skill_proposal(session=session,
+                                                  proposal_id=proposal_id,
+                                                  level=level,
+                                                  experience=experience)
+
+    @staticmethod
+    def delete_employee_skill_proposal(proposal_id):
+        with session_scope() as session:
+            return delete_employee_skill_proposal(session=session, proposal_id=proposal_id)
 
     @staticmethod
     def get_skill_proposals(department_id):
