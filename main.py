@@ -28,7 +28,7 @@ from scheduler import scheduler
 
 app = FastAPI()
 
-origins = ["http://localhost:5173", "https://localhost:5174"]
+origins = ["http://localhost:5173", "https://localhost:5174", "https://team-finder-404.web.app"]
 
 app.add_middleware(
     CORSMiddleware,
