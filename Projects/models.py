@@ -33,6 +33,10 @@ class RequiredSkill(BaseModel):
     required: Optional[bool] = True
 
 
+class EligibleSkills(BaseModel):
+    id: UUID
+    name: str
+
 class UpdateProject(BaseModel):
     proj_id: UUID
     name: str

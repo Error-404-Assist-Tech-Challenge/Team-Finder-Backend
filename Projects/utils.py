@@ -630,6 +630,25 @@ def create_skill_requirement(data, user_id):
     return required_skills, None
 
 
+def get_eligible_skills(proj_id, user_id):
+    org_id = db.get_user(user_id).get("org_id")
+    required_skills = db.get_project_tech_stack_skills(proj_id, org_id)
+    member_skills = db.get_user_skills(user_id)
+
+    required_skill_ids = set(req['skill_id'] for req in required_skills)
+
+    employee_unused_skill_ids = [
+        skill['skill_id'] for skill in member_skills if skill['skill_id'] not in required_skill_ids
+    ]
+
+    eligible_skills = []
+    for skill_id in employee_unused_skill_ids:
+        skill_data = db.get_skill(skill_id)
+        eligible_skills.append({"id": skill_id, "name": skill_data.get("name")})
+
+    return eligible_skills
+
+
 # PROJECT NEEDED ROLES
 def get_project_needed_roles(proj_id, user_id):
     org_id = db.get_user(user_id).get("org_id")
