@@ -173,6 +173,7 @@ def get_department_members(user_id):
     user_data = db.get_user(user_id)
     org_id = user_data.get("org_id")
     departments = db.get_department(org_id)
+    user_skills = db.get_users_skills()
 
     for department in departments:
         current_department = departments[department]
@@ -185,7 +186,7 @@ def get_department_members(user_id):
                 org_skills = db.get_skills(org_id)
 
                 # Get user skills
-
+                endorsements = []
                 for skill in member_skills:
                     org_skill = org_skills.get(skill.get("skill_id"))
 
@@ -194,7 +195,7 @@ def get_department_members(user_id):
 
                 # Get user skills
 
-                endorsements = db.get_skill_endorsements(member.get("user_id"))
+                endorsements = db.get_user_endorsements(user_id)
                 member["endorsements"] = endorsements
                 member["skills"] = member_skill_names
 

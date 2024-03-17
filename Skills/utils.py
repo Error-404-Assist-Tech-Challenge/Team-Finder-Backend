@@ -64,7 +64,7 @@ def get_skills_by_users_id(user_id):
                 user_skill["skill_author"] = db.get_user(skill_author).get("name")
 
                 # Put skill endorsements
-                user_skill["skill_endorsements"] = db.get_skill_endorsements(user_id)
+                user_skill["skill_endorsements"] = db.get_skill_endorsements(skill.get("id"), user_id)
                 user_skills_list.append(user_skill)
     user_skills_list.sort(key=lambda x: x.get("skill_name", "").lower())
     return user_skills_list

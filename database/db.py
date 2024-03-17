@@ -452,7 +452,17 @@ class DataBase:
                                             proj_id=proj_id)
 
     @staticmethod
-    def get_skill_endorsements(user_id):
+    def get_skill_endorsements(skill_id, user_id):
+        with session_scope() as session:
+            returned_endorsements = []
+            all_endorsements = get_endorsements(session=session)
+            for endo in all_endorsements:
+                if str(endo.get("skill_id")) == skill_id and str(endo.get("user_id")) == user_id:
+                    returned_endorsements.append(endo)
+            return returned_endorsements
+
+    @staticmethod
+    def get_user_endorsements(user_id):
         with session_scope() as session:
             returned_endorsements = []
             all_endorsements = get_endorsements(session=session)
