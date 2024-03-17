@@ -292,15 +292,22 @@ def create_organization_user_role(data, admin_id):
 
 # TEAM_ROLES
 def get_team_roles(admin_id):
-    user_data = db.get_user(admin_id)
-    team_roles_data = db.get_team_roles(user_data.get("org_id"))
+    org_id = db.get_user(admin_id).get("org_id")
+    team_roles_data = db.get_team_roles(org_id)
+
+    used_team_roles = db.get_all_organization_team_roles(org_id)
 
     for key in team_roles_data:
         team_roles_data[key].pop("org_id")
 
     team_roles = []
     for key, value in team_roles_data.items():
-        team_roles.append({"id": key, "name": value["name"]})
+        if key in used_team_roles:
+            used = True
+        else:
+            used = False
+
+        team_roles.append({"id": key, "name": value["name"], "used": used})
 
     return team_roles
 

@@ -81,6 +81,12 @@ class TeamRole(BaseModel):
     name: str
 
 
+class TeamRolesUsed(BaseModel):
+    id: UUID
+    name: str
+    used: bool
+
+
 class TeamRoleAll(BaseModel):
     value: UUID
     label: str
