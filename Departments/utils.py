@@ -186,17 +186,21 @@ def get_department_members(user_id):
                 org_skills = db.get_skills(org_id)
 
                 # Get user skills
-                endorsements = []
                 for skill in member_skills:
                     org_skill = org_skills.get(skill.get("skill_id"))
 
                     if org_skill:
                         member_skill_names.append(org_skill.get("name"))
 
-                # Get user skills
-
+                # Get user skills and endorsements
                 endorsements = db.get_user_endorsements(user_id)
-                member["endorsements"] = endorsements
+                if endorsements:
+                    for endo in endorsements:
+                        endo["project_name"] = ""
+                        if str(endo.get("proj_id")) != "None":
+                            project_name = db.get_project_info(str(endo.get("proj_id"))).get("name")
+                            endo["project_name"] = project_name
+                member["skill_endorsements"] = endorsements
                 member["skills"] = member_skill_names
 
             return department_members
