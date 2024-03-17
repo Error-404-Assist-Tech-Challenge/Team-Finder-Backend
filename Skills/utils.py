@@ -162,36 +162,65 @@ def create_user_skills(data, user_id):
 
 def get_department_notifications(user_id):
     dep_skill_proposals = get_skill_proposals(user_id)
+    employee_skill_proposals = get_employee_skill_proposals(user_id)
     returned_notifications = []
-    for proposal in dep_skill_proposals:
-        if str(proposal.get("read")) == "False":
-            skill_id = proposal.get("skill_id")
-            if str(skill_id) != "None":
+
+    if employee_skill_proposals:
+        for proposal in employee_skill_proposals:
+            if str(proposal.get("read")) == "False":
                 returned_body = {
-                    "proposal_id": proposal.get("id"),
-                    "user_name": proposal.get("user_name"),
-                    "skill_id": proposal.get("skill_id"),
-                    "skill_name": proposal.get("skill_name"),
-                    "proposal": proposal.get("proposal"),
-                    "project_name": proposal.get("project_name"),
-                    "deallocated": proposal.get("deallocated"),
-                    "dealloc_reason": proposal.get("dealloc_reason"),
-                    "type": proposal.get("type")
-                }
+                        "proposal_id": proposal.get("id"),
+                        "user_name": proposal.get("user_name"),
+                        "skill_id": proposal.get("skill_id"),
+                        "skill_name": proposal.get("name"),
+                        "proposal": proposal.get("proposal"),
+                        "project_name": proposal.get("project_name"),
+                        "deallocated": proposal.get("deallocated"),
+                        "dealloc_reason": proposal.get("dealloc_reason"),
+                        "for_employee": True,
+                        "level": proposal.get("level"),
+                        "experience": proposal.get("experience"),
+                        "type": proposal.get("type")
+                    }
                 returned_notifications.append(returned_body)
-            else:
-                returned_body = {
-                    "proposal_id": proposal.get("id"),
-                    "user_name": proposal.get("user_name"),
-                    "skill_id": proposal.get("skill_name"),
-                    "skill_name": proposal.get("skill_name"),
-                    "proposal": proposal.get("proposal"),
-                    "project_name": proposal.get("project_name"),
-                    "deallocated": proposal.get("deallocated"),
-                    "dealloc_reason": proposal.get("dealloc_reason"),
-                    "type": proposal.get("type")
-                }
-                returned_notifications.append(returned_body)
+
+    if dep_skill_proposals:
+        for proposal in dep_skill_proposals:
+            if str(proposal.get("read")) == "False":
+                skill_id = proposal.get("skill_id")
+                if str(skill_id) != "None":
+                    returned_body = {
+                        "proposal_id": proposal.get("id"),
+                        "user_name": proposal.get("user_name"),
+                        "skill_id": proposal.get("skill_id"),
+                        "skill_name": proposal.get("skill_name"),
+                        "proposal": proposal.get("proposal"),
+                        "project_name": proposal.get("project_name"),
+                        "deallocated": proposal.get("deallocated"),
+                        "dealloc_reason": proposal.get("dealloc_reason"),
+                        "for_employee": False,
+                        "level": proposal.get("level"),
+                        "experience": proposal.get("experience"),
+                        "type": proposal.get("type")
+                    }
+                    returned_notifications.append(returned_body)
+                else:
+                    returned_body = {
+                        "proposal_id": proposal.get("id"),
+                        "user_name": proposal.get("user_name"),
+                        "skill_id": proposal.get("skill_name"),
+                        "skill_name": proposal.get("skill_name"),
+                        "proposal": proposal.get("proposal"),
+                        "project_name": proposal.get("project_name"),
+                        "deallocated": proposal.get("deallocated"),
+                        "dealloc_reason": proposal.get("dealloc_reason"),
+                        "for_employee": False,
+                        "level": proposal.get("level"),
+                        "experience": proposal.get("experience"),
+                        "type": proposal.get("type")
+                    }
+                    returned_notifications.append(returned_body)
+
     return returned_notifications
 
 
@@ -536,9 +565,6 @@ def get_employee_skill_proposals(user_id):
     for key in proposed_skills:
         proposal_info = proposed_skills[key]
         if proposal_info.get("for_employee") == True:
-            keys_to_remove = ['assignment_id', 'role_ids', 'project_id', 'project_name', 'project_manager', 'work_hours',
-                              'role_names', 'dealloc_reason', 'proposal', 'deallocated', 'read', 'dept_id',
-                              'user_id', 'comment']
 
             skill_id = proposal_info.get("skill_id")
             if skill_id:
@@ -549,10 +575,6 @@ def get_employee_skill_proposals(user_id):
                         proposal_info["category_name"] = category.get("label")
                 proposal_info["name"] = skill_info.get("name")
                 proposal_info["description"] = skill_info.get("description")
-
-                for key_to_remove in keys_to_remove:
-                    if key_to_remove in proposal_info:
-                        proposal_info.pop(key_to_remove, None)
 
                 proposals.append(proposal_info)
 

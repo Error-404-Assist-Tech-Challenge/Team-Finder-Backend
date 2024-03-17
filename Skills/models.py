@@ -1,6 +1,6 @@
 from typing import Literal, Optional, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from uuid import UUID
 from datetime import datetime
 
@@ -165,7 +165,10 @@ class Notification(BaseModel):
     project_name: Optional[str]
     deallocated: Optional[bool]
     dealloc_reason: Optional[str]
-    user_name: str
+    user_name: Optional[str]
+    for_employee: Optional[bool]
+    level: Optional[str]
+    experience: Optional[str]
     type: Optional[str]
 
 
