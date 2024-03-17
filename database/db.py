@@ -203,6 +203,35 @@ class DataBase:
             return get_organization_roles(session=session)
 
     # TEAM_ROLES
+
+
+            # with session_scope() as session:
+            # all_needed_roles = get_project_needed_roles(session=session)
+            # needed_role_ids = []
+            # for role_id in all_needed_roles:
+            #     needed_role_ids.append(role_id)
+            #
+            # return needed_role_ids
+
+    @staticmethod
+    def get_all_organization_team_roles(org_id):
+        with session_scope() as session:
+            projects = db.get_org_projects(org_id)
+            project_assignments = db.get_project_assignments(org_id)
+            needed_role_ids = []
+
+            for proj_id in projects:
+                for assignment in project_assignments:
+                    if assignment.get("proj_id") == proj_id:
+                        role_ids = assignment.get("role_ids")
+
+                        for id in role_ids:
+                            needed_role_ids.append(id)
+
+            sorted_unique_data = list(sorted(set(needed_role_ids)))
+
+            return sorted_unique_data
+
     @staticmethod
     def create_team_role(id, org_id, name):
         with session_scope() as session:
