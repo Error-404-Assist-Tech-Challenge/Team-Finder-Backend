@@ -355,7 +355,7 @@ class DataBase:
         with session_scope() as session:
             returned_skills = {}
             skills = get_skills(session=session)
-            departments_skills = get_department_skills(session=session)
+            departments_skills = get_all_department_skills(session=session)
             for skill in skills:
                 current_skill = skills[skill]
                 if str(current_skill.get("org_id")) == str(organization_id):
@@ -637,7 +637,7 @@ class DataBase:
     @staticmethod
     def get_department_skills_names(organization_id):
         with session_scope() as session:
-            dep_skills = get_department_skills(session=session)
+            dep_skills = get_all_department_skills(session=session)
             # GET ORGANIZATION DEPARTMENTS
             returned_departments = {}
             departments = get_department(session=session)
@@ -687,7 +687,7 @@ class DataBase:
             department_members = db.get_department_members(dept_id)
 
             # Fetching department skills and user skills info from db
-            org_dept_skills = get_department_skills(session)
+            org_dept_skills = get_all_department_skills(session)
             org_user_skills = get_user_skills(session)
 
             # Modifying user_skills for reference search
