@@ -15,6 +15,18 @@ class DeleteProject(BaseModel):
     proj_id: UUID
 
 
+class CreateRequiredSkill(BaseModel):
+    proj_id: UUID
+    skill_id: UUID
+    minimum_level: int
+
+
+class RequiredSkillResponse(BaseModel):
+    skill_id: UUID
+    minimum_level: int
+    name: str
+
+
 class RequiredSkill(BaseModel):
     skill_id: UUID
     minimum_level: int

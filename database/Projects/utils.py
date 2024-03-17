@@ -279,7 +279,7 @@ def create_project_tech_stack_skill(session, proj_id, skill_id, minimum_level):
         obj = Project_tech_stack_skills(id=id, proj_id=proj_id, skill_id=skill_id, minimum_level=minimum_level)
 
         session.add(obj)
-        return obj
+        return obj.serialize()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)

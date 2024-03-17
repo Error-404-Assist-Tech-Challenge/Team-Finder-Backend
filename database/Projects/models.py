@@ -161,6 +161,14 @@ class Project_tech_stack_skills(Base):
     skill_id = Column(UUID, ForeignKey("skills.id"), nullable=False)
     minimum_level = Column(INTEGER, nullable=False)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "skill_id": self.skill_id,
+            "proj_id": self.proj_id,
+            "minimum_level": self.minimum_level
+        }
+
     @staticmethod
     def serialize_project_tech_stack_skills(project_tech_stack_skills):
         serialize_project_tech_stack_skill = {}
