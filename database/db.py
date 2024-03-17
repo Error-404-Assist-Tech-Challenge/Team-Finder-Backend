@@ -462,9 +462,9 @@ class DataBase:
             return returned_endorsements
 
     @staticmethod
-    def delete_user_endorsements(skill_id, org_id):
+    def delete_user_endorsements(user_id, org_id):
         with session_scope() as session:
-            return delete_skill_endorsement(session=session, skill_id=skill_id, org_id=org_id)
+            return delete_skill_endorsement(session=session, user_id=user_id, org_id=org_id)
 
     # SKILL PROPOSALS
 
