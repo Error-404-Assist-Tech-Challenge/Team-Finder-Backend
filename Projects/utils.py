@@ -127,7 +127,7 @@ def get_user_projects(user_id):
             project_id = assign.get("proj_id")
             project_info = db.get_project_info(project_id)
             # See if user is active in a project
-            if assign.get("proposal") is False and assign.get("deallocated") is False and (project_id not in proj_ids):
+            if assign.get("proposal") is False and assign.get("deallocated") is False and (project_id not in proj_ids) and project_info.get("status") != "Closed":
                 proj_ids.append(project_id)
                 assign["project_name"] = project_info.get("name")
                 assign["start_date"] = project_info.get("start_date")
