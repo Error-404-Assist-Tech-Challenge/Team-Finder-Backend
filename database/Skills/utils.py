@@ -266,7 +266,7 @@ def create_department_skill(session, dept_id, skill_id, id):
         return error
 
 
-def get_department_skills(session):
+def get_all_department_skills(session):
     try:
         department_skill = session.query(Department_skills).all()
         return Department_skills.serialize_department_skills(department_skill)
@@ -274,6 +274,17 @@ def get_department_skills(session):
         error = str(e.__dict__['orig'])
         print(error)
         return error
+
+
+def get_department_skills(session, dept_id):
+    try:
+        department_skill = session.query(Department_skills).filter(Department_skills.dept_id == dept_id).all()
+        return Department_skills.serialize_department_skills(department_skill)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
 
 
 def update_department_skill(session, dept_id, skill_id, new_dept_id, new_skill_id):

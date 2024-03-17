@@ -207,7 +207,7 @@ def get_project_assignments(session, org_id):
 def get_project_assigned_members(session, proj_id):
     try:
         members = session.query(Project_assignments).filter(Project_assignments.proj_id == proj_id).all()
-        return members
+        return Project_assignments.serialize_project_assignments(members)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)

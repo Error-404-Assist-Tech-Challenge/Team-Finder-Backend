@@ -133,11 +133,6 @@ class Skill_proposals(Base):
     for_employee = Column(Boolean, nullable=True)
     read = Column(Boolean, nullable=False)
 
-    def serialize(self):
-        return {
-            "for_employee": self.for_employee
-        }
-
     @staticmethod
     def serialize_skill_proposals(skill_proposals):
         serialized_skill = {}

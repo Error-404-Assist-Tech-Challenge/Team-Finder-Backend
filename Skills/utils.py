@@ -537,7 +537,7 @@ def get_employee_skill_proposals(user_id):
         proposal_info = proposed_skills[key]
         if proposal_info.get("for_employee") == True:
             keys_to_remove = ['assignment_id', 'role_ids', 'project_id', 'project_name', 'project_manager', 'work_hours',
-                              'role_names', 'dealloc_reason', 'proposal', 'deallocated', 'read', 'skill_id', 'dept_id',
+                              'role_names', 'dealloc_reason', 'proposal', 'deallocated', 'read', 'dept_id',
                               'user_id', 'comment']
 
             skill_id = proposal_info.get("skill_id")

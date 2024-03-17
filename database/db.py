@@ -604,14 +604,23 @@ class DataBase:
                                            id=id)
 
     @staticmethod
-    def get_department_skills():
+    def get_department_skills(dept_id):
         with session_scope() as session:
-            return get_department_skills(session=session)
+            department_skills = get_department_skills(session=session, dept_id=dept_id)
+            returned_data = []
+            for key in department_skills:
+                returned_data.append(department_skills[key].get("skill_id"))
+            return returned_data
+
+    @staticmethod
+    def get_all_department_skills():
+        with session_scope() as session:
+            return get_all_department_skills(session=session)
 
     @staticmethod
     def get_department_skill(skill_id, dept_id=None):
         with session_scope() as session:
-            department_skills = get_department_skills(session=session)
+            department_skills = get_all_department_skills(session=session)
             skill_departments = []
             for department in department_skills:
                 current_department = department_skills[department]
@@ -865,6 +874,12 @@ class DataBase:
     def get_project_approved_members(proj_id):
         with session_scope() as session:
             all_project_assigned_members = get_project_assigned_members(session=session, proj_id=proj_id)
+            for member in all_project_assigned_members:
+                if member.get("deallocated") == False and member.get("proposal") == False:
+                    pass
+                else:
+                    all_project_assigned_members = [d for d in all_project_assigned_members if d != member]
+            return all_project_assigned_members
 
     # USER TEAM ROLES
 
