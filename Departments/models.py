@@ -18,7 +18,7 @@ class DepartmentMember(BaseModel):
     email: str
     name: str
     skills: Optional[List[str]] = Field(default_factory=list)
-    endorsements: List[Skill_endorsements]
+    endorsements: Optional[List[Skill_endorsements]] = Field(default_factory=list)
 
 
 class CreateMember(BaseModel):
@@ -64,4 +64,10 @@ class ManagedDepartment(BaseModel):
     name: str
 
 
+class DepartmentProjectsResponse(BaseModel):
+    proj_id: UUID
+    project_name: str
+    deadline_date: str
+    status: str
+    team_members: List[str]
 

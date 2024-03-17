@@ -18,6 +18,7 @@ class DeleteProject(BaseModel):
 class RequiredSkill(BaseModel):
     skill_id: UUID
     minimum_level: int
+    required: Optional[bool] = True
 
 
 class UpdateProject(BaseModel):
@@ -28,7 +29,7 @@ class UpdateProject(BaseModel):
     deadline_date: Optional[datetime]
     status: Literal['Not Started', 'Starting', 'In Progress', 'Closing', 'Closed']
     description: str
-    created_at: datetime = datetime.now().isoformat()
+    required_skills: List[RequiredSkill]
     tech_stack: List[str]
     team_roles: List[Team_roles]
 
@@ -57,6 +58,8 @@ class SkillResponse(BaseModel):
     name: str
     experience: int
     level: int
+    meets_skill_requirement: bool = False
+    meets_level_requirement: bool = False
 
 
 class RoleResponse(BaseModel):

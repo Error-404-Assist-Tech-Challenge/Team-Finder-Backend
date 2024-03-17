@@ -298,6 +298,7 @@ class DataBase:
                 if member_dept_id == dept_id:
                     member["name"] = users[member_user_id].get("name")
                     member["email"] = users[member_user_id].get("email")
+                    print(member)
                     returned_members.append(member)
             return returned_members
 
@@ -770,7 +771,7 @@ class DataBase:
             delete_project(session=session, project_id=project_id)
 
     @staticmethod
-    def update_project(name, period, start_date, deadline_date, status, description, created_at, project_id,
+    def update_project(name, period, start_date, deadline_date, status, description, project_id,
                        can_be_deleted, tech_stack):
         with session_scope() as session:
             return update_project(session=session,
@@ -781,7 +782,6 @@ class DataBase:
                                   deadline_date=deadline_date,
                                   status=status,
                                   description=description,
-                                  created_at=created_at,
                                   tech_stack=tech_stack,
                                   can_be_deleted=can_be_deleted)
 
@@ -894,6 +894,11 @@ class DataBase:
     def delete_project_required_skills(project_id):
         with session_scope() as session:
             delete_required_skills(session=session, project_id=project_id)
+
+    @staticmethod
+    def delete_project_required_skill(proj_id, skill_id):
+        with session_scope() as session:
+            delete_required_skill(session=session, project_id=proj_id, skill_id=skill_id)
 
     # PROJECT NEEDED ROLES
     @staticmethod

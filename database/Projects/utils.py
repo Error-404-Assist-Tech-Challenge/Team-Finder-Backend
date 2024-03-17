@@ -40,7 +40,7 @@ def remove_project_manager_id(session, proj_id, manager_id):
         return error
 
 
-def update_project(session, project_id, name, period, start_date, deadline_date, status, description, created_at, can_be_deleted, tech_stack):
+def update_project(session, project_id, name, period, start_date, deadline_date, status, description, can_be_deleted, tech_stack):
     try:
         project = session.query(Projects).filter(Projects.id == project_id).first()
         if project:
@@ -50,7 +50,6 @@ def update_project(session, project_id, name, period, start_date, deadline_date,
             project.deadline_date = deadline_date
             project.status = status
             project.description = description
-            project.created_at = created_at
             project.tech_stack = tech_stack
             project.can_be_deleted = can_be_deleted
             session.commit()
@@ -276,7 +275,8 @@ def get_user_team_roles(session):
 
 def create_project_tech_stack_skill(session, proj_id, skill_id, minimum_level):
     try:
-        obj = Project_tech_stack_skills(proj_id=proj_id, skill_id=skill_id, minimum_level=minimum_level)
+        id = uuid.uuid4()
+        obj = Project_tech_stack_skills(id=id, proj_id=proj_id, skill_id=skill_id, minimum_level=minimum_level)
 
         session.add(obj)
         return obj
@@ -308,12 +308,28 @@ def delete_required_skills(session, project_id):
         return error
 
 
-def update_project_tech_stack_skill(session, proj_id, tech_stack):
+def delete_required_skill(session, project_id, skill_id):
     try:
-        project_tech_stack_skill = session.query(Project_tech_stack_skills).filter(Project_tech_stack_skills.proj_id == proj_id).first()
+        required_skill = session.query(Project_tech_stack_skills).filter(Project_tech_stack_skills.proj_id == project_id,
+                                                                         Project_tech_stack_skills.skill_id == skill_id).first()
+        if required_skill:
+            session.delete(required_skill)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def update_project_tech_stack_skill(session, proj_id, skill_id, minimum_level):
+    try:
+        project_tech_stack_skill = session.query(Project_tech_stack_skills).filter(Project_tech_stack_skills.proj_id == proj_id,
+                                                                                   Project_tech_stack_skills.skill_id == skill_id).first()
+
         if project_tech_stack_skill:
-            project_tech_stack_skill.tech_stack = tech_stack
+            project_tech_stack_skill.minimum_level = minimum_level
             session.commit()
+
+        return project_tech_stack_skill
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
