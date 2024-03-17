@@ -136,11 +136,23 @@ class Proposal(BaseModel):
 
 
 class EmployeeProposal(BaseModel):
+    id: UUID
     name: str
     category_name: str
     description: str
     level: int
     experience: int
+
+
+class AcceptEmployeeProposal(BaseModel):
+    id: UUID
+    level: int
+    experience: int
+
+
+class DeleteEmployeeProposal(BaseModel):
+    id: UUID
+
 
 # NOTIFICATIONS
 

@@ -132,9 +132,17 @@ def remove_user_skill(session, user_id, skill_id):
 # SKILL PROPOSALS
 
 
-def propose_skill(session, user_id, skill_id, dept_id, level, experience, proposal, id, read):
+def propose_skill(session, user_id, skill_id, dept_id, level, experience, proposal, id, read, for_employee = None):
     try:
-        obj = Skill_proposals(user_id=user_id, id=id, skill_id=skill_id, level=level, experience=experience, dept_id=dept_id, proposal=proposal, read=read)
+        obj = Skill_proposals(user_id=user_id,
+                              id=id,
+                              skill_id=skill_id,
+                              level=level,
+                              experience=experience,
+                              dept_id=dept_id,
+                              proposal=proposal,
+                              for_employee=for_employee,
+                              read=read)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
@@ -147,6 +155,38 @@ def get_proposed_employee_skills(session, user_id):
     try:
         skill_proposals = session.query(Skill_proposals).filter(Skill_proposals.user_id == user_id).all()
         return Skill_proposals.serialize_skill_proposals(skill_proposals)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def accept_employee_skill_proposal(session, proposal_id, level, experience):
+    try:
+        skill_proposal = session.query(Skill_proposals).filter(Skill_proposals.id == proposal_id).first()
+        if skill_proposal:
+            skill_proposal.for_employee = False
+            skill_proposal.level = level
+            skill_proposal.experience = experience
+            session.commit()
+            return skill_proposal
+        else:
+            return None
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def delete_employee_skill_proposal(session, proposal_id):
+    try:
+        skill_proposal = session.query(Skill_proposals).filter(Skill_proposals.id == proposal_id).first()
+        if skill_proposal:
+            session.delete(skill_proposal)
+            session.commit()
+            return skill_proposal
+        else:
+            return None
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)

@@ -480,6 +480,11 @@ def get_skill_proposals(user_id):
             # Put the info in each proposal
             for skill_proposal in skill_proposals:
                 skill_proposal["id"] = skill_proposal.get("id")
+                # Check if proposal is a skill upgrade intended for employee=
+                if skill_proposal.get("for_employee") == True:
+                    skill_proposals = [d for d in skill_proposals if d != skill_proposal]
+                    continue
+
                 # Check if it is skill proposal or project assignment
                 role_ids = skill_proposal.get("role_ids")
                 skill_id = skill_proposal.get("skill_id")
@@ -523,24 +528,59 @@ def get_employee_skill_proposals(user_id):
 
     for key in proposed_skills:
         proposal_info = proposed_skills[key]
-        keys_to_remove = ['assignment_id', 'role_ids', 'project_id', 'project_name', 'project_manager', 'work_hours',
-                          'role_names', 'dealloc_reason', 'proposal', 'deallocated', 'read', 'id', 'skill_id', 'dept_id',
-                          'user_id', 'comment']
+        if proposal_info.get("for_employee") == True:
+            keys_to_remove = ['assignment_id', 'role_ids', 'project_id', 'project_name', 'project_manager', 'work_hours',
+                              'role_names', 'dealloc_reason', 'proposal', 'deallocated', 'read', 'skill_id', 'dept_id',
+                              'user_id', 'comment']
 
-        skill_id = proposal_info.get("skill_id")
-        if skill_id:
-            skill_info = db.get_skill_info(skill_id, organization_id)
-            org_skill_categories = db.get_skill_categories(organization_id)
-            for category in org_skill_categories:
-                if category.get("value") == skill_info.get("category_id"):
-                    proposal_info["category_name"] = category.get("label")
-            proposal_info["name"] = skill_info.get("name")
-            proposal_info["description"] = skill_info.get("description")
+            skill_id = proposal_info.get("skill_id")
+            if skill_id:
+                skill_info = db.get_skill_info(skill_id, organization_id)
+                org_skill_categories = db.get_skill_categories(organization_id)
+                for category in org_skill_categories:
+                    if category.get("value") == skill_info.get("category_id"):
+                        proposal_info["category_name"] = category.get("label")
+                proposal_info["name"] = skill_info.get("name")
+                proposal_info["description"] = skill_info.get("description")
 
-            for key_to_remove in keys_to_remove:
-                if key_to_remove in proposal_info:
-                    proposal_info.pop(key_to_remove, None)
+                for key_to_remove in keys_to_remove:
+                    if key_to_remove in proposal_info:
+                        proposal_info.pop(key_to_remove, None)
 
-            proposals.append(proposal_info)
+                proposals.append(proposal_info)
 
     return proposals
+
+
+def accept_employee_skill_proposal(data, user_id):
+    proposal_data = data.model_dump()
+    proposal_id = proposal_data.get("id")
+    level = proposal_data.get("level")
+    experience = proposal_data.get("experience")
+
+    accepted_proposal = db.accept_employee_skill_proposal(proposal_id, level, experience)
+
+    returned_data = None
+    error = None
+    if accepted_proposal:
+        returned_data = get_employee_skill_proposals(user_id)
+    else:
+        error = "Error accepting employee skill proposal"
+
+    return returned_data, error
+
+
+def delete_employee_skill_proposal(data, user_id):
+    proposal_data = data.model_dump()
+    proposal_id = proposal_data.get("id")
+
+    deleted_proposal = db.delete_employee_skill_proposal(proposal_id)
+
+    returned_data = None
+    error = None
+    if deleted_proposal:
+        returned_data = get_employee_skill_proposals(user_id)
+    else:
+        error = "Error deleting employee skill proposal"
+
+    return returned_data, error
