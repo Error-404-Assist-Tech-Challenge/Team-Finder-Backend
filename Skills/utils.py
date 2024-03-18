@@ -441,7 +441,7 @@ def create_department_skill(data, user_id):
 
 def delete_department_skill(data, user_id):
     removed_skill_id = data.model_dump().get("skill_id")
-    department_skills = get_department_skills()
+    department_skills = db.get_all_department_skills()
     for department in department_skills:
         current_department = department_skills[department]
         current_department_id = current_department.get("dept_id")
