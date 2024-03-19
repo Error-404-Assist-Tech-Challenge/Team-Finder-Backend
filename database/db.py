@@ -432,6 +432,24 @@ class DataBase:
             return users_skills
 
     @staticmethod
+    def get_org_user_skills(org_id):
+        with session_scope() as session:
+            returned_org_skills = []
+            organization_skills = []
+
+            org_skills = get_skills(session=session)
+            for skill in org_skills:
+                current_skill = org_skills[skill]
+                if str(current_skill.get("org_id")) == str(org_id):
+                    organization_skills.append(skill)
+            users_skills = get_user_skills(session=session)
+            for skill in users_skills:
+                if skill.get("skill_id") in organization_skills:
+                    returned_org_skills.append(skill)
+
+            return returned_org_skills
+
+    @staticmethod
     def update_user_skill(user_id, level, experience, skill_id):
         with session_scope() as session:
             return update_user_skill(session=session,
@@ -709,42 +727,29 @@ class DataBase:
         with session_scope() as session:
             department_skills = []
             returned_body = []
-            reference_user_skill = {}
 
             # See how many members in department are
             department_members = db.get_department_members(dept_id)
 
             # Fetching department skills and user skills info from db
-            org_dept_skills = get_all_department_skills(session)
-            org_user_skills = get_user_skills(session)
-
-            # Modifying user_skills for reference search
-            for user_skill in org_user_skills:
-                # Verifying if user is in organization
-                current_user_id = user_skill.get("user_id")
-                if db.get_user(current_user_id).get("org_id") == org_id:
-                    reference_user_skill[user_skill.get("user_id")] = {
-                        "skill_id": user_skill.get("skill_id"),
-                        "level": user_skill.get("level"),
-                        "experience": user_skill.get("experience")
-                    }
+            org_dept_skills = get_department_skills(session, dept_id)
+            org_user_skills = db.get_org_user_skills(org_id)
             # Search every skill from department
             for skill in org_dept_skills:
                 current_skill = org_dept_skills[skill]
-                if str(current_skill.get("dept_id")) == str(dept_id):
-                    department_skills.append(current_skill.get("skill_id"))
+                department_skills.append(current_skill.get("skill_id"))
             # Search for every skill info
             for skill in department_skills:
                 levels = [0, 0, 0, 0, 0, 0]
                 total_users_skills = 0
                 skill_info = db.get_skill_info(skill, org_id)
 
-                # Search for every user with skills if has a specific skill
-                for user_skill in reference_user_skill:
-                    if str(reference_user_skill[user_skill].get("skill_id")) == str(skill):
+                # Search for every user with skills if it has a specific skill from department
+                for user_skill in org_user_skills:
+                    if str(user_skill.get("skill_id")) == str(skill):
                         levels[0] = total_users_skills + 1
                         total_users_skills = total_users_skills + 1
-                        current_user_skill_info = reference_user_skill[user_skill]
+                        current_user_skill_info = user_skill
                         current_user_skill_level = int(current_user_skill_info.get("level"))
                         levels[current_user_skill_level] = levels[current_user_skill_level] + 1
                 returned_skill = {
