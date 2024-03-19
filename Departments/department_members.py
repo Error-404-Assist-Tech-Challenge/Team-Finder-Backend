@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from typing import List
-from Departments.models import DepartmentMember, CreateMember,DeleteMember
+from Departments.models import DepartmentMember, CreateMember, DeleteMember, ReturnedMembers
 from Departments.utils import create_department_member, get_department_members, get_available_department_members, delete_department_member
 from auth import AuthHandler
 
@@ -13,7 +13,7 @@ def create_department_member_route(department_member_data: CreateMember, user_id
     return create_department_member(department_member_data, user_id)
 
 
-@department_members_router.get("/api/departments/members", response_model=List[DepartmentMember])
+@department_members_router.get("/api/departments/members", response_model=List[ReturnedMembers])
 def department_members_get(user_id: str = Depends(auth_handler.auth_wrapper)):
     return get_department_members(user_id)
 
