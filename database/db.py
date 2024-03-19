@@ -722,13 +722,14 @@ class DataBase:
             for user_skill in org_user_skills:
                 # Verifying if user is in organization
                 current_user_id = user_skill.get("user_id")
-                if db.get_user(current_user_id).get("org_id") == org_id:
+                user_skill_dept_id = db.get_department_user(current_user_id)
+                if db.get_user(current_user_id).get("org_id") == org_id and str(user_skill_dept_id) == str(dept_id):
                     reference_user_skill[user_skill.get("user_id")] = {
+                        "user_info": db.get_user(user_skill.get("user_id")),
                         "skill_id": user_skill.get("skill_id"),
                         "level": user_skill.get("level"),
                         "experience": user_skill.get("experience")
                     }
-
             # Search every skill from department
             for skill in org_dept_skills:
                 current_skill = org_dept_skills[skill]
