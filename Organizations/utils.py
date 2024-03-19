@@ -296,6 +296,7 @@ def get_team_roles(admin_id):
     team_roles_data = db.get_team_roles(org_id)
 
     used_team_roles = db.get_all_organization_team_roles(org_id)
+    print(used_team_roles)
 
     for key in team_roles_data:
         team_roles_data[key].pop("org_id")
