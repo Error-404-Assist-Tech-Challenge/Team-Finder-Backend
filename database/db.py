@@ -217,20 +217,14 @@ class DataBase:
     def get_all_organization_team_roles(org_id):
         with session_scope() as session:
             projects = db.get_org_projects(org_id)
-            project_assignments = db.get_project_assignments(org_id)
             needed_role_ids = []
 
             for proj_id in projects:
-                for assignment in project_assignments:
-                    if assignment.get("proj_id") == proj_id:
-                        role_ids = assignment.get("role_ids")
+                project_needed_roles, _ = db.get_project_needed_roles(proj_id, org_id)
+                for needed_role in project_needed_roles:
+                    needed_role_ids.append(needed_role.get("role_id"))
 
-                        for id in role_ids:
-                            needed_role_ids.append(id)
-
-            sorted_unique_data = list(sorted(set(needed_role_ids)))
-
-            return sorted_unique_data
+            return needed_role_ids
 
     @staticmethod
     def create_team_role(id, org_id, name):
