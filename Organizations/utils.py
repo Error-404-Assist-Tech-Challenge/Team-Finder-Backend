@@ -142,6 +142,7 @@ def get_all_unused_skills(user_id):
 
 
 def create_organization_skill(data, user_id):
+    print("Entered")
     skill_data = data.model_dump()
     user_data = db.get_user(user_id)
     org_id = user_data.get("org_id")
@@ -155,12 +156,11 @@ def create_organization_skill(data, user_id):
                                          name=skill_data.get("name"),
                                          description=skill_data.get("description"),
                                          created_at=current_time)
-
-    if str(skill_data.get("assign_department")) == "true":
+    if skill_data.get("assign_department") is True:
         departments = db.get_department(org_id)
 
         for key in departments:
-            if departments[key].get("manager_id") == user_id:
+            if str(departments[key].get("manager_id")) == user_id:
                 department_skill_id = str(uuid4())
                 db.create_department_skill(dept_id=key,
                                            skill_id=skill.get("id"),
@@ -169,7 +169,7 @@ def create_organization_skill(data, user_id):
 
                 return returned_data, None
 
-            return None, "You do not manage any department"
+        return None, "You do not manage any department"
 
     returned_data = get_organizations_skills(user_id)
 
