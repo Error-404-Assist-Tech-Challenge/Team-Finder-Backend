@@ -651,8 +651,8 @@ def get_eligible_skills(proj_id, user_id):
 # PROJECT NEEDED ROLES
 def get_project_needed_roles(proj_id, user_id):
     org_id = db.get_user(user_id).get("org_id")
-    _, project_needed_roles = db.get_project_needed_roles(proj_id=proj_id, org_id=org_id)
-    return project_needed_roles
+    all_roles, project_needed_roles = db.get_project_needed_roles(proj_id=proj_id, org_id=org_id)
+    return {"all_roles": all_roles, "needed_roles": project_needed_roles}
 
 
 def create_project_needed_role(data):
