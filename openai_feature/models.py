@@ -5,11 +5,6 @@ from uuid import UUID
 from pydantic import BaseModel
 
 
-class Tech_stack(BaseModel):
-    skill_id: UUID
-    skill_name: str
-
-
 class Team_roles(BaseModel):
     role_id: UUID
     count: int
@@ -26,11 +21,11 @@ class Project(BaseModel):
     name: str
     period: str
     start_date: datetime
-    deadline_date: datetime
+    deadline_date: Optional[datetime]
     status: str
     description: str
     can_be_deleted: bool
-    tech_stack: List[Tech_stack]
+    tech_stack: List[str]
     team_role: List[Team_roles]
     available_roles: List[Available_roles]
 
