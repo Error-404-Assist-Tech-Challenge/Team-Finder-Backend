@@ -260,7 +260,7 @@ def update_user_skills(data, user_id):
         # Update endorsements
         endorsements = user_skill_data.get("endorsements")
         if endorsements is not None:
-            db.delete_user_endorsements(user_id=user_id, org_id=db.get_user(user_id).get("org_id"))
+            db.delete_skill_endorsement(user_id=user_id, org_id=db.get_user(user_id).get("org_id"), skill_id=skill_id)
             for endo in endorsements:
                 proj_id = endo.get("proj_id")
                 if proj_id == '':
@@ -292,7 +292,7 @@ def update_user_skills(data, user_id):
             returned_data = get_skills_by_users_id(user_id)
             return returned_data
         else:
-            db.delete_user_endorsements(user_id=user_id, org_id=db.get_user(user_id).get("org_id"))
+            db.delete_skill_endorsement(user_id=user_id, org_id=db.get_user(user_id).get("org_id"), skill_id=skill_id)
             returned_data = get_skills_by_users_id(user_id)
             return returned_data
     elif is_manager:

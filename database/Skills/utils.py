@@ -63,10 +63,10 @@ def get_endorsements(session):
         return error
 
 
-def delete_skill_endorsement(session, user_id, org_id):
+def delete_single_skill_endorsement(session, user_id, org_id, skill_id):
     try:
         all_endorsements = session.query(Endorsements).filter(Endorsements.user_id == user_id,
-                                                              Endorsements.org_id == org_id).all()
+                                                              Endorsements.skill_id == skill_id).all()
         for endo in all_endorsements:
             session.delete(endo)
             session.commit()
