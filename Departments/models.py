@@ -13,12 +13,28 @@ class Skill_endorsements(BaseModel):
     proj_id: Optional[str]
 
 
+class Returned_endorsements(BaseModel):
+    type: str
+    endorsement: str
+    description: str
+    proj_id: Optional[str]
+    project_name: Optional[str]
+
+
 class DepartmentMember(BaseModel):
     user_id: UUID
     email: str
     name: str
     skills: Optional[List[str]] = Field(default_factory=list)
     endorsements: Optional[List[Skill_endorsements]] = Field(default_factory=list)
+
+
+class ReturnedMembers(BaseModel):
+    user_id: UUID
+    email: str
+    name: str
+    skills: Optional[List[str]] = Field(default_factory=list)
+    endorsements: Optional[List[Returned_endorsements]] = Field(default_factory=list)
 
 
 class CreateMember(BaseModel):

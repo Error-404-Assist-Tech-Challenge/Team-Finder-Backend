@@ -173,7 +173,6 @@ def get_department_members(user_id):
     user_data = db.get_user(user_id)
     org_id = user_data.get("org_id")
     departments = db.get_department(org_id)
-    user_skills = db.get_users_skills()
 
     for department in departments:
         current_department = departments[department]
@@ -193,14 +192,16 @@ def get_department_members(user_id):
                         member_skill_names.append(org_skill.get("name"))
 
                 # Get user skills and endorsements
-                endorsements = db.get_user_endorsements(user_id)
+                endorsements = db.get_user_endorsements(member.get("user_id"))
                 if endorsements:
                     for endo in endorsements:
                         endo["project_name"] = ""
                         if str(endo.get("proj_id")) != "None":
                             project_name = db.get_project_info(str(endo.get("proj_id"))).get("name")
                             endo["project_name"] = project_name
-                member["skill_endorsements"] = endorsements
+                    member["endorsements"] = endorsements
+                else:
+                    member["endorsements"] = []
                 member["skills"] = member_skill_names
 
             return department_members
