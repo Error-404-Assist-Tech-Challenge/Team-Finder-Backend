@@ -731,9 +731,10 @@ class DataBase:
             # See how many members in department are
             department_members = db.get_department_members(dept_id)
 
-            # Fetching department skills and user skills info from db
+            # Fetching department skills and user skills info from db and department members
             org_dept_skills = get_department_skills(session, dept_id)
             org_user_skills = db.get_org_user_skills(org_id)
+            department_members = db.get_department_members(dept_id)
             # Search every skill from department
             for skill in org_dept_skills:
                 current_skill = org_dept_skills[skill]
@@ -746,7 +747,12 @@ class DataBase:
 
                 # Search for every user with skills if it has a specific skill from department
                 for user_skill in org_user_skills:
-                    if str(user_skill.get("skill_id")) == str(skill):
+                    # Find if user is in department
+                    is_in_department = False
+                    for member in department_members:
+                        if member.get("user_id") == user_skill.get("user_id"):
+                            is_in_department = True
+                    if str(user_skill.get("skill_id")) == str(skill) and is_in_department is True:
                         levels[0] = total_users_skills + 1
                         total_users_skills = total_users_skills + 1
                         current_user_skill_info = user_skill
