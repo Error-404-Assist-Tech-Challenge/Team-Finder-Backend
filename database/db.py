@@ -730,6 +730,7 @@ class DataBase:
                         "level": user_skill.get("level"),
                         "experience": user_skill.get("experience")
                     }
+            return reference_user_skill
             # Search every skill from department
             for skill in org_dept_skills:
                 current_skill = org_dept_skills[skill]
