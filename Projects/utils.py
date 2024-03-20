@@ -332,11 +332,12 @@ def search_employees(proj_id, user_id):
                         employee["proposed_roles"] = user_role_ids
 
                 else:
-                    employee_project_info = db.get_projects_id(assignment.get("proj_id"))[0]
-                    proj_deadline = employee_project_info.get("deadline_date")
-
-                    if proj_deadline != "None":
-                        deadlines.append(proj_deadline)
+                    projects_info = db.get_projects_id(assignment.get("proj_id"))
+                    if projects_info:
+                        employee_project_info = db.get_projects_id(assignment.get("proj_id"))[0]
+                        proj_deadline = employee_project_info.get("deadline_date")
+                        if proj_deadline != "None":
+                            deadlines.append(proj_deadline)
 
         # Get the nearest assigned project deadline
         nearest_deadline_str = ""
