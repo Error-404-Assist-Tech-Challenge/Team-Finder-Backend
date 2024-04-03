@@ -36,3 +36,30 @@ class Users(Base):
                 "created_at": str(user.created_at)
             }
         return serialized_users
+
+
+# PASSWORD_RESET_TOKEN
+class PasswordResetTokens(Base):
+    __tablename__ = "password_reset_tokens"
+
+    id = Column(String, primary_key=True, nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    expires_at = Column(TIMESTAMP, nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "expires_at": self.expires_at
+        }
+
+    @staticmethod
+    def serialize_tokens(tokens):
+        serialized_tokens = []
+        for token in tokens:
+            serialized_tokens.append({
+                "id": str(token.id),
+                "user_id": str(token.user_id),
+                "expires_at": str(token.expires_at)
+            })
+
+        return serialized_tokens

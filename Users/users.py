@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response, Depends, Cookie, HTTPException
 from auth import AuthHandler
 from Users.models import AdminCreate, AuthResponse, EmployeeCreate, UserLogin
-from Users.utils import create_admin, create_employee, get_user, login_user, account_exists
+from Users.utils import create_admin, create_employee, get_user, login_user, account_exists, create_password_reset_token
 
 auth_handler = AuthHandler()
 user_router = APIRouter()
@@ -72,4 +72,10 @@ def user_login(user_data: UserLogin, response: Response):
 def user_logout(response: Response):
     response.set_cookie(key="refresh_token", value="", secure=True, httponly=True, domain=".koyeb.app", path="/api", samesite="none")
     return {"detail": "Logged out"}
+
+
+@user_router.post("/api/users/password_reset_token")
+def password_reset_token(user_id: str = Depends(auth_handler.auth_wrapper)):
+    response, error = create_password_reset_token(user_id)
+    return {"detail": response}
 

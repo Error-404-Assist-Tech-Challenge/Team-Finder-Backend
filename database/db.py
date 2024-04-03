@@ -108,6 +108,26 @@ class DataBase:
         with session_scope() as session:
             return get_signup_token(session=session, id=id)
 
+    # PASSWORD_RESET_TOKENS
+    @staticmethod
+    def create_password_reset_token(id, user_id, expires_at):
+        with session_scope() as session:
+            return create_password_reset_token(session=session,
+                                               id=id,
+                                               user_id=user_id,
+                                               expires_at=expires_at)
+
+
+    @staticmethod
+    def get_password_reset_tokens():
+        with session_scope() as session:
+            return get_password_reset_tokens(session=session)
+
+    @staticmethod
+    def delete_password_reset_token(id):
+        with session_scope() as session:
+            return delete_password_reset_tokens(session=session, id=id)
+
     # ORGANIZATIONS==========================================================================================================
 
     @staticmethod
