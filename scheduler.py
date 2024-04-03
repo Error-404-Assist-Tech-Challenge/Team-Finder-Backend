@@ -16,6 +16,17 @@ def delete_expired_signup_tokens():
             db.delete_signup_token(token.get("id"))
 
 
+def delete_expired_password_reset_tokens():
+    password_reset_tokens = db.get_password_reset_tokens()
+    format = "%Y-%m-%d %H:%M:%S"
+    current_time = datetime.utcnow()
+
+    for token in password_reset_tokens:
+
+        if datetime.strptime(token.get("expires_at"), format) < current_time:
+            db.delete_password_reset_token(token.get("id"))
+
+
 def propose_user_skill_update():
     organizations = db.get_organizations()
     for org_id in organizations:
@@ -130,4 +141,5 @@ def propose_user_skill_update():
 scheduler = BackgroundScheduler()
 
 scheduler.add_job(delete_expired_signup_tokens, "interval", hours=12)
+scheduler.add_job(delete_expired_password_reset_tokens, "interval", hours=12)
 scheduler.add_job(propose_user_skill_update, "interval", hours=1)

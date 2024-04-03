@@ -1,8 +1,10 @@
 from uuid import uuid4
 from auth import AuthHandler
-from datetime import datetime
+from datetime import datetime, timedelta
+import secrets
 from passlib.context import CryptContext
 from database.db import db
+from smtp import send_email
 
 auth_handler = AuthHandler()
 pwd_context = CryptContext(schemes=["bcrypt"])
@@ -146,3 +148,20 @@ def get_user(id):
     del user_data["id"], user_data["password"], user_data["created_at"], user_data["org_id"]
 
     return user_data
+
+
+def create_password_reset_token(user_id):
+    user_data = db.get_user(user_id)
+    format = "%Y-%m-%d %H:%M:%S"
+    current_time = datetime.utcnow().strftime(format)
+    expires_at = datetime.strptime(current_time, format) + timedelta(hours=12)
+    id = secrets.token_urlsafe(16)
+
+    token, error = db.create_password_reset_token(id, user_id, expires_at)
+
+    if token:
+        send_email(receiver_email=user_data.get("email"),
+                   token=token.get("id"))
+
+    return token, error
+
