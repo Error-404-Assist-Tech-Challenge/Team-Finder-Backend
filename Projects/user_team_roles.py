@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from Projects.models import User_team_roles
 from Projects.utils import create_user_team_role, get_user_team_roles
 
-user_team_roles_router = APIRouter()
+user_team_roles_router = APIRouter(tags=["Projects"])
 
 
 @user_team_roles_router.post("/api/projects/user_team_roles", response_model=User_team_roles)

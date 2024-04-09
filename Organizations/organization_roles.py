@@ -5,7 +5,7 @@ from Organizations.models import RoleCreate, RemoveRole, OrganizationMember
 from Organizations.utils import *
 
 auth_handler = AuthHandler()
-organization_roles_router = APIRouter()
+organization_roles_router = APIRouter(tags=["Organizations"])
 
 
 @organization_roles_router.post("/api/organizations/roles", response_model=List[OrganizationMember])

@@ -5,7 +5,7 @@ from Skills.utils import create_skills, get_skills, update_skill_proposal, get_s
 from auth import AuthHandler
 
 auth_handler = AuthHandler()
-skills_router = APIRouter()
+skills_router = APIRouter(tags=["Skills"])
 
 
 @skills_router.post("/api/skills", response_model=Skills)

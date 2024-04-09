@@ -4,7 +4,7 @@ from auth import AuthHandler
 from openai_feature.models import *
 from openai_feature.utils import *
 
-chat_gpt_router = APIRouter()
+chat_gpt_router = APIRouter(tags=["CHAT GPT"])
 auth_handler = AuthHandler()
 
 

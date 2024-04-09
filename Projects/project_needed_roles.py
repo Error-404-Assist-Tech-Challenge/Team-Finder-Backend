@@ -5,7 +5,7 @@ from Projects.models import ProjectNeededRoles, UpdateProjectNeededRoles
 from Projects.utils import create_project_needed_role, get_project_needed_roles, update_project_needed_role
 
 auth_handler = AuthHandler()
-project_needed_roles_router = APIRouter()
+project_needed_roles_router = APIRouter(tags=["Projects"])
 
 
 @project_needed_roles_router.post("/api/projects/project_needed_roles", response_model=ProjectNeededRoles)

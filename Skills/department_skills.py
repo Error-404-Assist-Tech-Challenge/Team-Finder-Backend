@@ -6,7 +6,7 @@ from Skills.utils import create_department_skill, get_department_skills, delete_
 from auth import AuthHandler
 
 auth_handler = AuthHandler()
-department_skills_router = APIRouter()
+department_skills_router = APIRouter(tags=["Skills"])
 
 
 @department_skills_router.post("/api/skills/department", response_model=List[Skill])

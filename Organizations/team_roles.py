@@ -5,7 +5,7 @@ from Organizations.models import TeamRole, TeamRoleCreate, TeamRoleUpdate, TeamR
 from Organizations.utils import *
 
 auth_handler = AuthHandler()
-team_roles_router = APIRouter()
+team_roles_router = APIRouter(tags=["Organizations"])
 
 
 @team_roles_router.post("/api/organizations/team_roles", response_model=List[TeamRole])
