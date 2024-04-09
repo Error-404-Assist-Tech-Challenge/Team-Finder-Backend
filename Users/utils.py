@@ -150,18 +150,41 @@ def get_user(id):
     return user_data
 
 
-def create_password_reset_token(user_id):
-    user_data = db.get_user(user_id)
+def create_password_reset_token(email):
     format = "%Y-%m-%d %H:%M:%S"
     current_time = datetime.utcnow().strftime(format)
     expires_at = datetime.strptime(current_time, format) + timedelta(hours=12)
     id = secrets.token_urlsafe(16)
 
-    token, error = db.create_password_reset_token(id, user_id, expires_at)
+    token, error = db.create_password_reset_token(id, email, expires_at)
 
     if token:
-        send_email(receiver_email=user_data.get("email"),
+        send_email(receiver_email=email,
                    token=token.get("id"))
 
     return token, error
 
+
+def reset_password(data):
+    password_data = data.model_dump()
+    password = password_data.get("password")
+    token = password_data.get("token")
+
+    hashed_password = auth_handler.get_password_hash(password)
+
+    password_reset_token = db.get_password_reset_token(token)
+    user_id = password_reset_token.get("user_id")
+
+    if password_reset_token:
+        format = "%Y-%m-%d %H:%M:%S"
+        current_time = datetime.utcnow()
+
+        if datetime.strptime(str(password_reset_token.get("expires_at")), format) > current_time:
+            returned_data = db.reset_password(user_id=user_id, password=hashed_password)
+            db.delete_password_reset_token(token)
+
+            return returned_data, False
+        else:
+            return False, "Sign up token expired"
+    else:
+        return False, "Sign up token invalid"

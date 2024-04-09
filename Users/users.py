@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response, Depends, Cookie, HTTPException
 from auth import AuthHandler
-from Users.models import AdminCreate, AuthResponse, EmployeeCreate, UserLogin
-from Users.utils import create_admin, create_employee, get_user, login_user, account_exists, create_password_reset_token
+from Users.models import AdminCreate, AuthResponse, EmployeeCreate, UserLogin, PasswordReset
+from Users.utils import create_admin, create_employee, get_user, login_user, account_exists, create_password_reset_token, reset_password
 
 auth_handler = AuthHandler()
 user_router = APIRouter()
@@ -74,8 +74,17 @@ def user_logout(response: Response):
     return {"detail": "Logged out"}
 
 
-@user_router.post("/api/users/password_reset_token")
-def password_reset_token(user_id: str = Depends(auth_handler.auth_wrapper)):
-    response, error = create_password_reset_token(user_id)
-    return {"detail": response}
+@user_router.put("/api/users/reset_password")
+def password_reset(password_data: PasswordReset):
+    response, error = reset_password(password_data)
+    if error:
+        raise HTTPException(status_code=401, detail=error)
+    return {"detail": "Password reset successful"}
 
+
+@user_router.post("/api/users/password_reset_token")
+def password_reset_token(email: str):
+    response, error = create_password_reset_token(email)
+    if error:
+        raise HTTPException(status_code=500, detail=error)
+    return {"detail": "Password reset request successful"}
