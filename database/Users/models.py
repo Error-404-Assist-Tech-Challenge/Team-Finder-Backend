@@ -49,6 +49,7 @@ class PasswordResetTokens(Base):
     def serialize(self):
         return {
             "id": self.id,
+            "user_id": self.user_id,
             "expires_at": self.expires_at
         }
 

@@ -110,13 +110,12 @@ class DataBase:
 
     # PASSWORD_RESET_TOKENS
     @staticmethod
-    def create_password_reset_token(id, user_id, expires_at):
+    def create_password_reset_token(id, email, expires_at):
         with session_scope() as session:
             return create_password_reset_token(session=session,
                                                id=id,
-                                               user_id=user_id,
+                                               email=email,
                                                expires_at=expires_at)
-
 
     @staticmethod
     def get_password_reset_tokens():
@@ -124,9 +123,19 @@ class DataBase:
             return get_password_reset_tokens(session=session)
 
     @staticmethod
+    def get_password_reset_token(id):
+        with session_scope() as session:
+            return get_password_reset_token(session=session, id=id)
+
+    @staticmethod
     def delete_password_reset_token(id):
         with session_scope() as session:
             return delete_password_reset_tokens(session=session, id=id)
+
+    @staticmethod
+    def reset_password(user_id, password):
+        with session_scope() as session:
+            return reset_password(session=session, user_id=user_id, password=password)
 
     # ORGANIZATIONS==========================================================================================================
 
