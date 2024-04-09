@@ -5,7 +5,7 @@ from Projects.models import Project_members, SearchResponse
 from Projects.utils import create_project_member, get_project_members, search_employees
 
 auth_handler = AuthHandler()
-project_members_router = APIRouter()
+project_members_router = APIRouter(tags=["Projects"])
 
 
 @project_members_router.post("/api/projects/project_members", response_model=Project_members)

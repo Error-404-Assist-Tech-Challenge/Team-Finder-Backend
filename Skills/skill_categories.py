@@ -5,7 +5,7 @@ from Skills.utils import create_skill_category, delete_skill_category, get_skill
 from auth import AuthHandler
 
 auth_handler = AuthHandler()
-skill_categories_router = APIRouter()
+skill_categories_router = APIRouter(tags=["Skills"])
 
 
 @skill_categories_router.post("/api/skills/categories", response_model=List[SkillCategoriesResponse])

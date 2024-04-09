@@ -6,7 +6,7 @@ from Users.utils import create_admin, create_employee, get_user, login_user, acc
 
 auth_handler = AuthHandler()
 connection_manager = ConnectionManager()
-user_router = APIRouter()
+user_router = APIRouter(tags=["Users"])
 
 
 @user_router.post("/api/users/admin", response_model=AuthResponse)

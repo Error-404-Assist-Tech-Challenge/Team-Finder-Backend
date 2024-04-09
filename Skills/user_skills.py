@@ -5,7 +5,7 @@ from Skills.utils import create_user_skills, get_skills_by_users_id, update_user
 from auth import AuthHandler
 
 auth_handler = AuthHandler()
-user_skills_router = APIRouter()
+user_skills_router = APIRouter(tags=["Skills"])
 
 
 @user_skills_router.post("/api/skills/user")

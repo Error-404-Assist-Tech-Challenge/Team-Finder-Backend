@@ -5,7 +5,7 @@ from Departments.utils import create_department_member, get_department_members, 
 from auth import AuthHandler
 
 auth_handler = AuthHandler()
-department_members_router = APIRouter()
+department_members_router = APIRouter(tags=["Departments"])
 
 
 @department_members_router.post("/api/departments/members", response_model=List[DepartmentMember])

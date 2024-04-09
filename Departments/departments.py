@@ -4,7 +4,7 @@ from Departments.models import Department, DepartmentUpdate, RemoveDepartment, D
 from Departments.utils import *
 from auth import AuthHandler
 
-departments_router = APIRouter()
+departments_router = APIRouter(tags=["Departments"])
 auth_handler = AuthHandler()
 
 

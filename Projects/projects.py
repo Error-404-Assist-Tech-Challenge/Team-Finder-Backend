@@ -4,7 +4,7 @@ from Projects.models import Project, DeleteProject, UpdateProject, RequiredSkill
 from Projects.utils import create_project, get_projects, delete_project, update_project, get_user_projects, create_skill_requirement, get_eligible_skills
 from auth import AuthHandler
 
-projects_router = APIRouter()
+projects_router = APIRouter(tags=["Projects"])
 auth_handler = AuthHandler()
 
 

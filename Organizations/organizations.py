@@ -7,7 +7,7 @@ from Organizations.utils import *
 
 
 auth_handler = AuthHandler()
-organization_router = APIRouter()
+organization_router = APIRouter(tags=["Organizations"])
 
 
 @organization_router.post("/api/organizations", response_model=Organization)

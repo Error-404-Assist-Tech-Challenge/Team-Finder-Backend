@@ -3,7 +3,7 @@ from Projects.models import AssignmentProposal, UpdateAssignmentProposal, Deallo
 from Projects.utils import create_project_assignment, get_project_assignments, update_project_assignment, delete_project_assignment, manage_proposal, create_project_deallocation, delete_project_deallocation, update_project_deallocation
 from auth import AuthHandler
 
-project_assignments_router = APIRouter()
+project_assignments_router = APIRouter(tags=["Projects"])
 auth_handler = AuthHandler()
 
 

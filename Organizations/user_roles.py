@@ -3,7 +3,7 @@ from Organizations.models import UserRole
 from Organizations.utils import *
 from auth import AuthHandler
 
-user_roles_router = APIRouter()
+user_roles_router = APIRouter(tags=["Organizations"])
 auth_handler = AuthHandler()
 
 
