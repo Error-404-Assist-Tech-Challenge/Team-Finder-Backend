@@ -1,3 +1,4 @@
+import os
 import jwt
 from fastapi import HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -8,8 +9,8 @@ from datetime import datetime, timedelta
 class AuthHandler():
     security = HTTPBearer()
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    access_secret = 'SECRET'
-    refresh_secret = 'REFRESH'
+    access_secret = os.environ["ACCESS_SECRET"]
+    refresh_secret = os.environ["REFRESH_SECRET"]
 
     def get_password_hash(self, password):
         return self.pwd_context.hash(password)
