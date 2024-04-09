@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.websockets import WebSocket, WebSocketDisconnect
+
+from websocket.manager import ConnectionManager
 
 from Users.users import user_router
 
@@ -26,7 +29,9 @@ from Projects.user_team_roles import user_team_roles_router
 
 from scheduler import scheduler
 
+
 app = FastAPI()
+manager = ConnectionManager()
 
 origins = ["http://localhost:5173", "https://localhost:5174", "https://team-finder-404.web.app"]
 
@@ -55,6 +60,17 @@ app.include_router(project_assignments_router)
 app.include_router(project_members_router)
 app.include_router(project_needed_roles_router)
 app.include_router(user_team_roles_router)
+
+
+@app.websocket("/ws/{access_token}")
+async def websocket_endpoint(websocket: WebSocket, access_token: str):
+    await manager.connect(websocket, access_token=access_token)
+
+    try:
+        while True:
+            message = await websocket.receive_text()
+    except WebSocketDisconnect:
+        pass
 
 
 if __name__ == "__main__":

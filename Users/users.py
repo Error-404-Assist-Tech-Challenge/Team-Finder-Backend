@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Response, Depends, Cookie, HTTPException
 from auth import AuthHandler
+from websocket.manager import ConnectionManager
 from Users.models import AdminCreate, AuthResponse, EmployeeCreate, UserLogin, PasswordReset
 from Users.utils import create_admin, create_employee, get_user, login_user, account_exists, create_password_reset_token, reset_password
 
 auth_handler = AuthHandler()
+connection_manager = ConnectionManager()
 user_router = APIRouter()
 
 
@@ -88,3 +90,8 @@ def password_reset_token(email: str):
     if error:
         raise HTTPException(status_code=500, detail=error)
     return {"detail": "Password reset request successful"}
+
+
+@user_router.post("/api/users/websocket_disconnect")
+async def websocket_disconnect(user_id: str = Depends(auth_handler.auth_wrapper)):
+    await connection_manager.disconnect(user_id)
