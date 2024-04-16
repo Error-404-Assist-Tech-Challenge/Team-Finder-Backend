@@ -1,11 +1,14 @@
 from datetime import datetime
 from uuid import uuid4
-
 from fastapi import HTTPException
 
+from websocket.manager import ConnectionManager
 from database.db import db
 
 from Organizations.utils import get_organizations_skills
+
+
+connection_manager = ConnectionManager()
 
 
 # SKILLS
@@ -77,7 +80,7 @@ def get_skills_by_users_id(user_id):
     return user_skills_list
 
 
-def create_user_skills(data, user_id):
+async def create_user_skills(data, user_id):
     user_skill_data = data.model_dump()
     is_manager = False
 
@@ -133,6 +136,12 @@ def create_user_skills(data, user_id):
                          experience=user_skill_data.get("experience"),
                          read=False,
                          proposal=False)
+
+        dept_info = db.get_department_info(department_id)
+        manager_id = str(dept_info.get("manager_id"))
+
+        await connection_manager.broadcast_notification(manager_id, get_department_notifications(manager_id))
+
         return get_skills_by_users_id(user_id)
     # If user is manager auto accept is implemented
     elif is_manager:
@@ -240,7 +249,7 @@ def remove_user_skill(data, user_id):
     return returned_data
 
 
-def update_user_skills(data, user_id):
+async def update_user_skills(data, user_id):
     user_skill_data = data.model_dump()
     is_manager = False
     skill_id = user_skill_data.get("skill_id")
@@ -289,6 +298,12 @@ def update_user_skills(data, user_id):
                              level=user_skill_data.get("level"),
                              experience=user_skill_data.get("experience"),
                              read=False)
+
+            dept_info = db.get_department_info(department_id)
+            manager_id = str(dept_info.get("manager_id"))
+
+            await connection_manager.broadcast_notification(manager_id, get_department_notifications(manager_id))
+
             returned_data = get_skills_by_users_id(user_id)
             return returned_data
         else:

@@ -1,8 +1,12 @@
 from uuid import uuid4
-
-from database.db import db
 from datetime import datetime, timedelta
-from Skills.utils import get_skill_proposals
+
+from websocket.manager import ConnectionManager
+from database.db import db
+from Skills.utils import get_skill_proposals, get_department_notifications
+
+
+connection_manager = ConnectionManager()
 
 
 # PROJECTS
@@ -379,7 +383,7 @@ def get_project_assignments(user_id):
     return returned_project_assignments
 
 
-def create_project_assignment(data, user_id):
+async def create_project_assignment(data, user_id):
     deallocation_data = data.model_dump()
     project_assignments_id = str(uuid4())
     deallocation_data["id"] = project_assignments_id
@@ -422,6 +426,11 @@ def create_project_assignment(data, user_id):
                                           deallocated=False,
                                           read=False)
 
+    dept_info = db.get_department_info(dept_id)
+    manager_id = str(dept_info.get("manager_id"))
+
+    await connection_manager.broadcast_notification(manager_id, get_department_notifications(manager_id))
+
     for id in role_ids:
         role_info = db.get_project_needed_role(role_id=id, proj_id=proj_id)
         needed_role_id = role_info.get("id")
@@ -461,7 +470,7 @@ def delete_project_assignment(data, user_id):
     return search_employees(proj_id, user_id)
 
 
-def create_project_deallocation(data, user_id):
+async def create_project_deallocation(data, user_id):
     deallocation_data = data.model_dump()
     project_assignment_id = deallocation_data.get("assignment_id")
     proj_id = deallocation_data.get("proj_id")
@@ -502,6 +511,11 @@ def create_project_deallocation(data, user_id):
                                           proposal=True,
                                           deallocated=True,
                                           read=False)
+
+    dept_info = db.get_department_info(dept_id)
+    manager_id = str(dept_info.get("manager_id"))
+
+    await connection_manager.broadcast_notification(manager_id, get_department_notifications(manager_id))
 
     return search_employees(proj_id, user_id)
 
