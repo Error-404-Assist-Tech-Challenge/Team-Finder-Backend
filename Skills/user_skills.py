@@ -9,8 +9,8 @@ user_skills_router = APIRouter(tags=["Skills"])
 
 
 @user_skills_router.post("/api/skills/user")
-def create_user_skill_route(user_skill_data: UserSkills, user_id: str = Depends(auth_handler.auth_wrapper)):
-    return create_user_skills(user_skill_data, user_id)
+async def create_user_skill_route(user_skill_data: UserSkills, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return await create_user_skills(user_skill_data, user_id)
 
 
 @user_skills_router.get("/api/skills/user")

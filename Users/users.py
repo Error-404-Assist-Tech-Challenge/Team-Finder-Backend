@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Response, Depends, Cookie, HTTPException
+from functools import partial
+
 from auth import AuthHandler
 from websocket.manager import ConnectionManager
 from Users.models import AdminCreate, AuthResponse, EmployeeCreate, UserLogin, PasswordReset
@@ -7,6 +9,9 @@ from Users.utils import create_admin, create_employee, get_user, login_user, acc
 auth_handler = AuthHandler()
 connection_manager = ConnectionManager()
 user_router = APIRouter(tags=["Users"])
+
+# Create a partial function with disconnect_websocket set to True
+auth_wrapper_with_params = partial(auth_handler.auth_wrapper, disconnect_websocket=True)
 
 
 @user_router.post("/api/users/admin", response_model=AuthResponse)
@@ -93,5 +98,5 @@ def password_reset_token(email: str):
 
 
 @user_router.post("/api/users/websocket_disconnect")
-async def websocket_disconnect(user_id: str = Depends(auth_handler.auth_wrapper)):
-    await connection_manager.disconnect(user_id)
+async def websocket_disconnect(access_token: str = Depends(auth_wrapper_with_params)):
+    await connection_manager.disconnect(access_token)

@@ -8,8 +8,8 @@ auth_handler = AuthHandler()
 
 
 @project_assignments_router.post("/api/projects/assignment_proposal", response_model=SearchResponse)
-def create_project_assignments_route(project_assignments_data: AssignmentProposal, user_id: str = Depends(auth_handler.auth_wrapper)):
-    return create_project_assignment(project_assignments_data, user_id)
+async def create_project_assignments_route(project_assignments_data: AssignmentProposal, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return await create_project_assignment(project_assignments_data, user_id)
 
 
 @project_assignments_router.put("/api/projects/assignment_proposal", response_model=SearchResponse)
@@ -18,8 +18,8 @@ def create_project_assignments_route(project_assignments_data: UpdateAssignmentP
 
 
 @project_assignments_router.post("/api/projects/deallocation_proposal", response_model=SearchResponse)
-def create_project_deallocation_route(project_assignments_data: DeallocationProposal, user_id: str = Depends(auth_handler.auth_wrapper)):
-    return create_project_deallocation(project_assignments_data, user_id)
+async def create_project_deallocation_route(project_assignments_data: DeallocationProposal, user_id: str = Depends(auth_handler.auth_wrapper)):
+    return await create_project_deallocation(project_assignments_data, user_id)
 
 
 @project_assignments_router.put("/api/projects/deallocation_proposal", response_model=SearchResponse)

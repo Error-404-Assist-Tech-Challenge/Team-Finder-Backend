@@ -1,6 +1,6 @@
 import os
 import jwt
-from fastapi import HTTPException, Security
+from fastapi import HTTPException, Security, WebSocketException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
@@ -30,17 +30,26 @@ class AuthHandler():
             algorithm='HS256'
         )
 
-    def decode_token(self, token, secret):
+    def decode_token(self, token, secret, connect_websocket=None):
         try:
             payload = jwt.decode(token, secret, algorithms=['HS256'])
-            return payload['sub']
+            return payload['sub'], None
         except jwt.ExpiredSignatureError:
+            if connect_websocket:
+                return None, 'Token has expired'
             raise HTTPException(status_code=401, detail='Token has expired')
         except jwt.InvalidTokenError as e:
+            if connect_websocket:
+                return None, 'Invalid token'
             raise HTTPException(status_code=401, detail='Invalid token')
 
-    def auth_wrapper(self, auth: HTTPAuthorizationCredentials = Security(security)):
-        return self.decode_token(auth.credentials, self.access_secret)
+    def auth_wrapper(self, auth: HTTPAuthorizationCredentials = Security(security), disconnect_websocket=None):
+        if disconnect_websocket:
+            self.decode_token(auth.credentials, self.access_secret)
+            return auth.credentials
+        else:
+            user_id, _ = self.decode_token(auth.credentials, self.access_secret)
+            return user_id
 
     def refresh_token(self, refresh_token):
         user_id = self.decode_token(refresh_token, self.refresh_secret)
