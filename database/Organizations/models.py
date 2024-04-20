@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, TIMESTAMP, ForeignKey
+from sqlalchemy import Column, String, TIMESTAMP, ForeignKey, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
@@ -11,6 +11,7 @@ class Organization(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
     name = Column(String, nullable=False)
     hq_address = Column(String, nullable=False)
+    demo = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
 
     @staticmethod
@@ -32,8 +33,22 @@ class Organization(Base):
             }
         return serialize_organization
 
+    @staticmethod
+    def serialize_organizations_demo(organizations):
+        serialize_organization = {}
+        for organization in organizations:
+            serialize_organization[str(organization.id)] = {
+                "id": str(organization.id),
+                "name": str(organization.name),
+                "hq_address": str(organization.hq_address),
+                "created_at": str(organization.created_at),
+                "demo": str(organization.demo)
+            }
+        return serialize_organization
 
-#ORGANIZATION_ROLES
+
+# ORGANIZATION_ROLES
+
 class Organization_roles(Base):
     __tablename__ = "organization_roles"
 
