@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.websockets import WebSocket
+from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from websocket.manager import ConnectionManager
 
@@ -69,8 +69,8 @@ async def websocket_endpoint(websocket: WebSocket, access_token: str):
     try:
         while True:
             message = await websocket.receive_text()
-    except Exception as e:
-        pass
+    except WebSocketDisconnect as e:
+        await manager.disconnect(access_token)
 
 
 if __name__ == "__main__":

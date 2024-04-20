@@ -1,5 +1,4 @@
-import os
-from starlette.websockets import WebSocket
+from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from auth import AuthHandler
 
@@ -33,13 +32,12 @@ class ConnectionManager(metaclass=SingletonMeta):
             await connection.send_json(notification)
 
     async def connect(self, websocket: WebSocket, access_token):
+        await websocket.accept()
         _, error = auth_handler.decode_token(access_token, auth_handler.access_secret, connect_websocket=True)
         self.active_connections[access_token] = websocket
 
         if error:
-            self.active_connections.pop(access_token)
-        else:
-            await websocket.accept()
+            raise WebSocketDisconnect(code=1008, reason="Expired or invalid access token")
 
-    async def disconnect(self, client_id):
-        self.active_connections.pop(client_id)
+    async def disconnect(self, access_token=None):
+        self.active_connections.pop(access_token)

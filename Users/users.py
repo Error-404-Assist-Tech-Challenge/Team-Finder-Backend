@@ -95,8 +95,3 @@ def password_reset_token(email: str):
     if error:
         raise HTTPException(status_code=500, detail=error)
     return {"detail": "Password reset request successful"}
-
-
-@user_router.post("/api/users/websocket_disconnect")
-async def websocket_disconnect(access_token: str = Depends(auth_wrapper_with_params)):
-    await connection_manager.disconnect(access_token)
