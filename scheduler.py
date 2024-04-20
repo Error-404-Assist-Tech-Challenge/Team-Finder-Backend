@@ -1,5 +1,6 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from database.db import db
 import uuid
 
@@ -138,8 +139,24 @@ def propose_user_skill_update():
                                              read=False)
 
 
+def deactivate_demo_accounts():
+    organizations = db.get_organizations_demo()
+
+    format = '%Y-%m-%d %H:%M:%S.%f'
+    current_time = datetime.utcnow()
+    for organization in organizations:
+        current_organization = organizations[organization]
+        if current_organization.get("demo") == "True":
+            created_at = datetime.strptime(current_organization.get("created_at"), format)
+            org_created_at = created_at + relativedelta(months=3)
+            if org_created_at > current_time:
+                db.deactivate_account(current_organization.get("id"))
+
+
+
 scheduler = BackgroundScheduler()
 
+scheduler.add_job(deactivate_demo_accounts, "interval", seconds=4)
 scheduler.add_job(delete_expired_signup_tokens, "interval", hours=12)
 scheduler.add_job(delete_expired_password_reset_tokens, "interval", hours=12)
 scheduler.add_job(propose_user_skill_update, "interval", hours=1)

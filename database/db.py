@@ -181,6 +181,11 @@ class DataBase:
             return get_organizations(session=session)
 
     @staticmethod
+    def get_organizations_demo():
+        with session_scope() as session:
+            return get_organizations_demo(session=session)
+
+    @staticmethod
     def get_organization(id):
         with session_scope() as session:
             return get_organization(session=session, id=id)
@@ -1102,6 +1107,14 @@ class DataBase:
     def get_project_members():
         with session_scope() as session:
             return get_project_members(session=session)
+
+    # Payments
+
+    @staticmethod
+    def deactivate_account(organization_id):
+        with session_scope() as session:
+            return deactivate_account(session=session, organization_id=organization_id)
+
 
     # CHAT GPT FEATURE=======================================================================================================
     @staticmethod

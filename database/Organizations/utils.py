@@ -29,7 +29,7 @@ def get_organization_roles(session):
 # ORGANIZATIONS
 def create_organization(session, name, hq_address, created_at, organization_id):
     try:
-        obj = Organization(name=name, hq_address=hq_address, created_at=created_at, id=organization_id)
+        obj = Organization(name=name, hq_address=hq_address, created_at=created_at, id=organization_id, demo=True)
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
@@ -88,6 +88,16 @@ def get_organizations(session):
     try:
         organizations = session.query(Organization).all()
         return Organization.serialize_organizations(organizations)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def get_organizations_demo(session):
+    try:
+        organizations = session.query(Organization).all()
+        return Organization.serialize_organizations_demo(organizations)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
@@ -249,3 +259,18 @@ def get_signup_token(session, id):
         error = str(e.__dict__['orig'])
         print(error)
         return []
+
+
+def deactivate_account(session, organization_id):
+        try:
+            organization = session.query(Organization).filter_by(id=organization_id).first()
+            if organization:
+                organization.demo = "unpaid"
+                session.commit()
+            else:
+                return None, "Team role not found"
+            return "Team role deleted", None
+        except SQLAlchemyError as e:
+            error = str(e.__dict__['orig'])
+            print(error)
+            return error
