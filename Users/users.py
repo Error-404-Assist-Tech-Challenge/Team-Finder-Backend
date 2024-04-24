@@ -81,12 +81,16 @@ def user_logout(response: Response):
     return {"detail": "Logged out"}
 
 
-@user_router.put("/api/users/reset_password")
-def password_reset(password_data: PasswordReset):
-    response, error = reset_password(password_data)
+@user_router.put("/api/users/reset_password", response_model=AuthResponse)
+def password_reset(password_data: PasswordReset, response: Response):
+    returned_data, error = reset_password(password_data)
     if error:
         raise HTTPException(status_code=401, detail=error)
-    return {"detail": "Password reset successful"}
+    else:
+        access_token, refresh_token = auth_handler.generate_tokens(returned_data.get("id"))
+        returned_data["access_token"] = access_token
+        response.set_cookie(key="refresh_token", value=refresh_token, secure=True, httponly=True, domain=".koyeb.app", path="/api", samesite="none")
+    return returned_data
 
 
 @user_router.get("/api/users/verify_password_reset_token")
