@@ -189,9 +189,9 @@ def reset_password(data):
     hashed_password = auth_handler.get_password_hash(password)
 
     password_reset_token = db.get_password_reset_token(token)
-    user_id = password_reset_token.get("user_id")
 
     if password_reset_token:
+        user_id = password_reset_token.get("user_id")
         format = "%Y-%m-%d %H:%M:%S"
         current_time = datetime.utcnow()
 
@@ -199,8 +199,28 @@ def reset_password(data):
             returned_data = db.reset_password(user_id=user_id, password=hashed_password)
             db.delete_password_reset_token(token)
 
-            return returned_data, False
+            user_data = db.get_user(user_id)
+
+            login_data = {}
+            login_data["name"] = user_data.get("name")
+            login_data["id"] = user_data.get("id")
+            login_data["email"] = user_data.get("email")
+
+            if user_data.get("org_id"):
+                org_data = db.get_organization(user_data.get("org_id"))
+                org_roles = db.get_organization_roles()
+                user_roles = db.user_roles_get(user_data.get("id"))
+
+                user_role_names = []
+                for role_id in user_roles:
+                    if org_roles.get(role_id):
+                        user_role_names.append(org_roles.get(role_id).get("name"))
+
+                login_data["roles"] = user_role_names
+                login_data["org_name"] = org_data.get("name")
+                login_data["hq_address"] = org_data.get("hq_address")
+                return login_data, False
         else:
-            return False, "Sign up token expired"
+            return False, "Reset token expired"
     else:
-        return False, "Sign up token invalid"
+        return False, "Reset token invalid"
