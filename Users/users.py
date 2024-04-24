@@ -4,7 +4,7 @@ from functools import partial
 from auth import AuthHandler
 from websocket.manager import ConnectionManager
 from Users.models import AdminCreate, AuthResponse, EmployeeCreate, UserLogin, PasswordReset
-from Users.utils import create_admin, create_employee, get_user, login_user, account_exists, create_password_reset_token, reset_password
+from Users.utils import create_admin, create_employee, get_user, login_user, account_exists, create_password_reset_token, reset_password, verify_password_reset_token
 
 auth_handler = AuthHandler()
 connection_manager = ConnectionManager()
@@ -87,6 +87,14 @@ def password_reset(password_data: PasswordReset):
     if error:
         raise HTTPException(status_code=401, detail=error)
     return {"detail": "Password reset successful"}
+
+
+@user_router.get("/api/users/verify_password_reset_token")
+def password_reset_token_verify(token: str):
+    response, error = verify_password_reset_token(token)
+    if error:
+        raise HTTPException(status_code=401, detail=error)
+    return {"email": response}
 
 
 @user_router.get("/api/users/password_reset_token")
