@@ -165,6 +165,22 @@ def create_password_reset_token(email):
     return token, error
 
 
+def verify_password_reset_token(token):
+    signup_tokens = db.get_password_reset_tokens()
+    format = "%Y-%m-%d %H:%M:%S"
+    current_time = datetime.utcnow()
+
+    for token_obj in signup_tokens:
+        if token_obj.get("id") == token:
+            if datetime.strptime(token_obj.get("expires_at"), format) < current_time:
+                return None, "Reset password token expired"
+            else:
+                user_data = db.get_user(token_obj.get("user_id"))
+                return user_data.get("email"), None
+
+    return None, "Reset password token invalid"
+
+
 def reset_password(data):
     password_data = data.model_dump()
     password = password_data.get("password")
