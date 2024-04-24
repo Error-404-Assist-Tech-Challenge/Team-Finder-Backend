@@ -89,7 +89,7 @@ def password_reset(password_data: PasswordReset):
     return {"detail": "Password reset successful"}
 
 
-@user_router.post("/api/users/password_reset_token")
+@user_router.get("/api/users/password_reset_token")
 def password_reset_token(email: str):
     response, error = create_password_reset_token(email)
     if error:
