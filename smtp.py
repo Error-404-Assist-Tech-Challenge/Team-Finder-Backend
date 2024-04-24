@@ -10,7 +10,7 @@ def send_email(receiver_email, token):
     text = (
     "Hello,\n\nWe received a request for a password change on your team-finder-404.web.app account."
     " You can reset your password by clicking this link:"
-    f" https://team-finder-404.web.app/resetpassword/{token}\n\n"
+    f" https://team-finder-404.web.app/newpassword/{token}\n\n"
     "This link will expire in 12 hours. After that, you'll need to submit a new request in order"
     " to reset your password. If you don't want to reset it, simply disregard this email.\n\n"
     "(Please don't reply to this message; it's automated)\n\nThanks,\nTeam Finder"
