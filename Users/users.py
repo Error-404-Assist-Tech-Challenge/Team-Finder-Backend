@@ -93,5 +93,5 @@ def password_reset(password_data: PasswordReset):
 def password_reset_token(email: str):
     response, error = create_password_reset_token(email)
     if error:
-        raise HTTPException(status_code=500, detail=error)
+        raise HTTPException(status_code=409, detail=error)
     return {"detail": "Password reset request successful"}
