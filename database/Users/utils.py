@@ -36,9 +36,11 @@ def get_user(session, id):
 def create_password_reset_token(session, id, email, expires_at):
     try:
         user_data = session.query(Users).filter(Users.email == email).first()
-        token = PasswordResetTokens(id=id, user_id=user_data.id, expires_at=expires_at)
-        session.add(token)
-        return token.serialize(), None
+        if user_data:
+            token = PasswordResetTokens(id=id, user_id=user_data.id, expires_at=expires_at)
+            session.add(token)
+            return token.serialize(), None
+        return None, "Email not found"
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return None, error
