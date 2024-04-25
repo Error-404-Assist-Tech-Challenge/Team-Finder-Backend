@@ -111,10 +111,10 @@ def login_user(data):
                         if org_roles.get(role_id):
                             user_role_names.append(org_roles.get(role_id).get("name"))
 
-
                     login_data["roles"] = user_role_names
                     login_data["org_name"] = org_data.get("name")
                     login_data["hq_address"] = org_data.get("hq_address")
+                    login_data["organization_status"] = org_data.get("demo")
                     return login_data, False
                 else:
                     return login_data, "Authentication successful but not apart of an organization"
@@ -219,6 +219,7 @@ def reset_password(data):
                 login_data["roles"] = user_role_names
                 login_data["org_name"] = org_data.get("name")
                 login_data["hq_address"] = org_data.get("hq_address")
+                login_data["organization_status"] = org_data.get("demo")
                 return login_data, False
         else:
             return False, "Reset token expired"

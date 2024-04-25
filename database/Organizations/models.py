@@ -18,7 +18,8 @@ class Organization(Base):
     def serialize_organization(organization):
         return {
             "name": str(organization.name),
-            "hq_address": str(organization.hq_address)
+            "hq_address": str(organization.hq_address),
+            "demo": str(organization.demo)
         }
 
     @staticmethod
