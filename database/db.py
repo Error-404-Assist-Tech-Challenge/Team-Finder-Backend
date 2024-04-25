@@ -11,6 +11,8 @@ from database.Organizations.utils import *
 from database.Departments.utils import *
 from database.Users.utils import *
 from database.Projects.utils import *
+from database.Discussions.utils import *
+from database.Messages.utils import *
 
 engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{DB_PORT}/{DB_NAME}')
 
@@ -1114,6 +1116,40 @@ class DataBase:
     def deactivate_account(organization_id):
         with session_scope() as session:
             return deactivate_account(session=session, organization_id=organization_id)
+
+    # DISCUSSIONS ======================================================================================================
+
+    @staticmethod
+    def get_user_discussions(user_id):
+        with session_scope() as session:
+            return get_user_discussions(session=session, user_id=user_id)
+
+    @staticmethod
+    def get_discussions():
+        with session_scope() as session:
+            return get_discussions(session=session)
+
+    @staticmethod
+    def create_discussion(contacts, discussion_id, name):
+        with session_scope() as session:
+            return create_discussion(session=session, contacts=contacts, discussion_id=discussion_id, name=name)
+
+    # MESSAGES =========================================================================================================
+
+    @staticmethod
+    def create_message(message_id, user_id, value, discussion_id, created_at):
+        with session_scope() as session:
+            return create_message(session=session,
+                                  id=message_id,
+                                  user_id=user_id,
+                                  value=value,
+                                  discussion_id=discussion_id,
+                                  created_at=created_at)
+
+    @staticmethod
+    def get_messages():
+        with session_scope() as session:
+            return get_messages(session)
 
 
     # CHAT GPT FEATURE=======================================================================================================
