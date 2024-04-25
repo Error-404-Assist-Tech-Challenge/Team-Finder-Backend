@@ -192,6 +192,11 @@ class DataBase:
         with session_scope() as session:
             return get_organization(session=session, id=id)
 
+    @staticmethod
+    def get_organization_info(id):
+        with session_scope() as session:
+            return get_organization_info(session=session, id=id)
+
     # USER ROLES
     @staticmethod
     def create_user_role(user_id, role_id):
@@ -1151,8 +1156,14 @@ class DataBase:
         with session_scope() as session:
             return get_messages(session)
 
+    # PAYMENTS =========================================================================================================
 
-    # CHAT GPT FEATURE=======================================================================================================
+    @staticmethod
+    def update_organization_payment(id, status):
+        with session_scope() as session:
+            return update_organization_payment(session=session, id=id, status=status)
+
+    # CHAT GPT FEATURE==================================================================================================
     @staticmethod
     def get_all_details(org_id, user_id):
         with session_scope() as session:

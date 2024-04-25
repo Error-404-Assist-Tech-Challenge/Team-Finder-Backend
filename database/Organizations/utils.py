@@ -29,7 +29,7 @@ def get_organization_roles(session):
 # ORGANIZATIONS
 def create_organization(session, name, hq_address, created_at, organization_id):
     try:
-        obj = Organization(name=name, hq_address=hq_address, created_at=created_at, id=organization_id, demo=True)
+        obj = Organization(name=name, hq_address=hq_address, created_at=created_at, id=organization_id, demo=True, status="Active")
         session.add(obj)
         return obj
     except SQLAlchemyError as e:
@@ -108,6 +108,31 @@ def get_organization(session, id):
     try:
         organization = session.query(Organization).filter_by(id=id).first()
         return Organization.serialize_organization(organization)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def get_organization_info(session, id):
+    try:
+        organization = session.query(Organization).filter_by(id=id).first()
+        return Organization.serialize_organization_info(organization)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def update_organization_payment(session, status, id):
+    try:
+        organization = session.query(Organization).filter_by(id=id).first()
+        if organization:
+            organization.status = status
+            session.commit()
+            return Organization.serialize_organization_info(organization), None
+        else:
+            return None, "No organization with this ID is found"
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)

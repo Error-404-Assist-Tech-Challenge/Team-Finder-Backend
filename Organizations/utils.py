@@ -261,6 +261,21 @@ def create_organization(data):
     return organization_data
 
 
+def get_organization_info(user_id):
+    organization_id = db.get_user(user_id).get("org_id")
+    organization = db.get_organization_info(organization_id)
+    if organization:
+        return organization, None
+    else:
+        return None, "No organization found"
+
+
+def update_organization_payment(data):
+    organization_data = data.model_dump()
+    organization = db.update_organization_payment(id=organization_data.get("id"), status=organization_data.get("status"))
+    return organization
+
+
 # ORGANIZATION_ROLES
 def get_organization_roles():
     user_roles = db.get_organization_roles()
