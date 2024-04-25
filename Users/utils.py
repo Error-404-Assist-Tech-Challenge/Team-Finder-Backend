@@ -144,6 +144,7 @@ def get_user(id):
     user_data["roles"] = user_role_names
     user_data["org_name"] = org_data.get("name")
     user_data["hq_address"] = org_data.get("hq_address")
+    user_data["organization_status"] = org_data.get("demo")
 
     del user_data["id"], user_data["password"], user_data["created_at"], user_data["org_id"]
 
