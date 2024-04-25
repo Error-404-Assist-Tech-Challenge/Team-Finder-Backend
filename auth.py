@@ -52,7 +52,7 @@ class AuthHandler():
             return user_id
 
     def refresh_token(self, refresh_token):
-        user_id = self.decode_token(refresh_token, self.refresh_secret)
+        user_id, _ = self.decode_token(refresh_token, self.refresh_secret)
         access_token, _ = self.generate_tokens(user_id)
         return access_token, user_id
 
