@@ -4,7 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from database.db import Base
 
 
-#ORGANIZATIONS
+# q ORGANIZATIONS
 class Organization(Base):
     __tablename__ = "organizations"
 
@@ -12,6 +12,7 @@ class Organization(Base):
     name = Column(String, nullable=False)
     hq_address = Column(String, nullable=False)
     demo = Column(String, nullable=False)
+    status = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
 
     @staticmethod
@@ -20,6 +21,17 @@ class Organization(Base):
             "name": str(organization.name),
             "hq_address": str(organization.hq_address),
             "demo": str(organization.demo)
+        }
+
+    @staticmethod
+    def serialize_organization_info(organization):
+        return {
+            "id": str(organization.id),
+            "name": str(organization.name),
+            "hq_address": str(organization.hq_address),
+            "demo": str(organization.demo),
+            "status": str(organization.status),
+            "created_at": str(organization.created_at)
         }
 
     @staticmethod
@@ -43,7 +55,8 @@ class Organization(Base):
                 "name": str(organization.name),
                 "hq_address": str(organization.hq_address),
                 "created_at": str(organization.created_at),
-                "demo": str(organization.demo)
+                "demo": str(organization.demo),
+                "status": str(organization.status)
             }
         return serialize_organization
 
