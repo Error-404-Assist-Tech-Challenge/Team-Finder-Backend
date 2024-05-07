@@ -1139,8 +1139,13 @@ class DataBase:
         with session_scope() as session:
             return create_discussion(session=session, contacts=contacts, discussion_id=discussion_id, name=name)
 
-    # MESSAGES =========================================================================================================
+    # CONTACTS ========================================================================================================
+    @staticmethod
+    def get_organization_contacts(organization_id):
+        with session_scope() as session:
+            return get_organization_contacts(session=session, organization_id=organization_id)
 
+    # MESSAGES ========================================================================================================
     @staticmethod
     def create_message(message_id, user_id, value, discussion_id, created_at):
         with session_scope() as session:
