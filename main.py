@@ -26,8 +26,10 @@ from Projects.projects_assignments import project_assignments_router
 from Projects.projects_members import project_members_router
 from Projects.project_needed_roles import project_needed_roles_router
 from Projects.user_team_roles import user_team_roles_router
+
 from Messages.messages import message_router
 from Discussions.discussions import discussions_router
+from Contacts.contacts import contacts_router
 
 from Payments.stripe import stripe_router
 
@@ -67,6 +69,7 @@ app.include_router(user_team_roles_router)
 app.include_router(message_router)
 app.include_router(discussions_router)
 app.include_router(stripe_router)
+app.include_router(contacts_router)
 
 
 @app.websocket("/ws/{access_token}")

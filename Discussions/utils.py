@@ -1,5 +1,5 @@
 from collections import Counter
-from uuid import uuid4
+from uuid import uuid4, UUID
 from auth import AuthHandler
 from datetime import datetime
 from passlib.context import CryptContext
@@ -10,8 +10,21 @@ pwd_context = CryptContext(schemes=["bcrypt"])
 
 
 def get_user_discussions(user_id):
-    user_discussions = db.get_user_discussions(user_id)
+    user_discussions, error = db.get_user_discussions(user_id)
     if user_discussions:
+        for discussion in user_discussions:
+
+            if not discussion.get("name"):
+                if len(discussion.get("contacts")) == 1:
+                    user_data = db.get_user(discussion.get("contacts")[0])
+                    discussion["name"] = user_data.get("name")
+                else:
+                    for contact_id in discussion.get("contacts"):
+                        if contact_id != user_id:
+                            user_data = db.get_user(discussion.get("contacts")[0])
+                            discussion["name"] = user_data.get("name")
+                            break
+
         return user_discussions, None
     else:
         return None, "No discussions found for this user"
@@ -20,19 +33,21 @@ def get_user_discussions(user_id):
 def create_new_discussion(data):
     discussion_id = str(uuid4())
     discussion_data = data.model_dump()
-    discussion_data["id"] = discussion_id
+    contacts = list(set(discussion_data.get("contacts")))
 
-    db.create_discussion(contacts=discussion_data["contacts"], discussion_id=discussion_data["id"],
-                         name=discussion_data["name"])
+    db.create_discussion(contacts=contacts, discussion_id=discussion_id,
+                         name=discussion_data.get("name"))
 
-    return discussion_data
+    return data
 
 
-def get_contact_discussions(data):
-    discussions, error = db.get_discussions()
-    if discussions:
-        for discussion in discussions:
-            contact_id = discussion.get("contacts")
-            if Counter(contact_id) == Counter(data):
-                return discussion, None
-    return None, None
+def get_contact_discussions(contacts):
+    discussions, _ = db.get_discussions()
+
+    for discussion in discussions:
+        contact_ids = [UUID(uuid) for uuid in discussion.get("contacts")]
+
+        if sorted(contact_ids) == sorted(contacts):
+            return "Discussion already exists"
+
+    return None

@@ -13,6 +13,7 @@ class Users(Base):
     password = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)
     org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
+
     def serialize(self):
         return {
             "id": str(self.id),
@@ -35,6 +36,20 @@ class Users(Base):
                 "org_id": str(user.org_id),
                 "created_at": str(user.created_at)
             }
+        return serialized_users
+
+    @staticmethod
+    def serialize_contacts(users):
+        serialized_users = []
+        for user in users:
+            serialized_users.append({
+                "id": str(user.id),
+                "name": str(user.name),
+                "email": str(user.email),
+                "password": str(user.password),
+                "org_id": str(user.org_id),
+                "created_at": str(user.created_at)
+            })
         return serialized_users
 
 

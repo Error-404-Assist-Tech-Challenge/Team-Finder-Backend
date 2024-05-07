@@ -3,21 +3,24 @@ from Discussions.models import *
 from Discussions.utils import *
 
 auth_handler = AuthHandler()
-discussions_router = APIRouter()
+discussions_router = APIRouter(tags=["Discussions"])
 
 
 @discussions_router.post("/api/discussions")
-def create_discussion(discussion_data: Discussions, user_id: str = Depends(auth_handler.auth_wrapper)):
+def create_discussion(discussion_data: Discussion, user_id: str = Depends(auth_handler.auth_wrapper)):
     contacts = discussion_data.contacts
+    contacts.append(UUID(user_id))
+    contacts = list(set(contacts))
     users = db.get_users()
+
     for contact in contacts:
         if users.get(str(contact)) is None:
-            raise HTTPException(status_code=404, detail="Contact not found.")
+            raise HTTPException(status_code=404, detail=f"Contact ({contact}) not found")
 
-    contacts_discussions, error = get_contact_discussions(contacts)
+    error = get_contact_discussions(contacts)
 
     if error:
-        raise HTTPException(status_code=404, detail=error)
+        raise HTTPException(status_code=409, detail=error)
 
     contacts_discussion = create_new_discussion(discussion_data)
     return contacts_discussion

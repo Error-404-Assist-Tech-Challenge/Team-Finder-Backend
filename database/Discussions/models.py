@@ -8,7 +8,7 @@ class Discussions(Base):
     __tablename__ = "discussions"
 
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=True)
     contacts = Column(ARRAY(UUID(as_uuid=True)), nullable=False)
 
     def serialize(self):
@@ -20,13 +20,12 @@ class Discussions(Base):
 
     @staticmethod
     def serialize_discussions(discussions):
-        discussions_dict = {}
+        serialized_discussions = []
         for discussion in discussions:
             serialized_contacts = [str(contact) for contact in discussion.contacts]
-            discussions_dict[str(discussion.id)] = {
+            serialized_discussions.append({
                 "id": str(discussion.id),
                 "contacts": serialized_contacts,
                 "name": discussion.name
-            }
-        return discussions_dict
-
+            })
+        return serialized_discussions
