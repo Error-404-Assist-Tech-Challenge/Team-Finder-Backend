@@ -1,7 +1,5 @@
-from collections import Counter
 from uuid import uuid4, UUID
 from auth import AuthHandler
-from datetime import datetime
 from passlib.context import CryptContext
 from database.db import db
 
@@ -15,6 +13,7 @@ def get_user_discussions(user_id):
         for discussion in user_discussions:
 
             if not discussion.get("name"):
+                # Getting the discussion name
                 if len(discussion.get("contacts")) == 1:
                     user_data = db.get_user(discussion.get("contacts")[0])
                     discussion["name"] = user_data.get("name")
@@ -24,6 +23,13 @@ def get_user_discussions(user_id):
                             user_data = db.get_user(discussion.get("contacts")[0])
                             discussion["name"] = user_data.get("name")
                             break
+
+            # Getting the names of all contacts
+            contacts = []
+            for contact_id in discussion.get("contacts"):
+                user_data = db.get_user(contact_id)
+                contacts.append({"id": contact_id, "name": user_data.get("name")})
+            discussion["contacts"] = contacts
 
         return user_discussions, None
     else:

@@ -6,7 +6,7 @@ auth_handler = AuthHandler()
 discussions_router = APIRouter(tags=["Discussions"])
 
 
-@discussions_router.post("/api/discussions")
+@discussions_router.post("/api/discussions", response_model=List[DiscussionsResponse])
 def create_discussion(discussion_data: Discussion, user_id: str = Depends(auth_handler.auth_wrapper)):
     contacts = discussion_data.contacts
     contacts.append(UUID(user_id))
@@ -22,13 +22,13 @@ def create_discussion(discussion_data: Discussion, user_id: str = Depends(auth_h
     if error:
         raise HTTPException(status_code=409, detail=error)
 
-    contacts_discussion = create_new_discussion(discussion_data)
-    return contacts_discussion
+    create_new_discussion(discussion_data)
 
-# !!! Implement response model
+    discussions, _ = get_user_discussions(user_id)
+    return discussions
 
 
-@discussions_router.get("/api/discussions")
+@discussions_router.get("/api/discussions", response_model=List[DiscussionsResponse])
 def get_discussion(user_id: str = Depends(auth_handler.auth_wrapper)):
     discussions, error = get_user_discussions(user_id)
     if error:

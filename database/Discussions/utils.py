@@ -29,7 +29,6 @@ def get_discussions(session):
 
 def create_discussion(session, contacts, discussion_id, name):
     try:
-        print(contacts)
         obj = Discussions(contacts=contacts, id=discussion_id, name=name)
         session.add(obj)
         return obj.serialize(), None
