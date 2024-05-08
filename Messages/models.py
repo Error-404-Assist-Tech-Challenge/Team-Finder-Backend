@@ -3,16 +3,15 @@ from uuid import UUID
 from pydantic import BaseModel
 
 
-class Messages(BaseModel):
-    discussion_id: str
-    user_id: str
+class Message(BaseModel):
+    discussion_id: UUID
     value: str
 
 
-class ResponseMessages(BaseModel):
-    id: str
-    discussion_id: str
-    user_id: str
+class MessageResponse(BaseModel):
+    id: UUID
+    user_id: UUID
+    name: str
     value: str
     created_at: str
 

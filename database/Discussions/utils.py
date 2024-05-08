@@ -27,6 +27,18 @@ def get_discussions(session):
         return None, error
 
 
+def get_discussion(session, discussion_id):
+    try:
+        discussion = session.query(Discussions).filter(Discussions.id == discussion_id).first()
+        if discussion:
+            return discussion.serialize(), None
+        else:
+            return [], {"error_message: 'No discussions found'"}
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return None, error
+
+
 def create_discussion(session, contacts, discussion_id, name):
     try:
         obj = Discussions(contacts=contacts, id=discussion_id, name=name)

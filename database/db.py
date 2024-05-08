@@ -1140,6 +1140,11 @@ class DataBase:
             return get_discussions(session=session)
 
     @staticmethod
+    def get_discussion(discussion_id):
+        with session_scope() as session:
+            return get_discussion(session=session, discussion_id=discussion_id)
+
+    @staticmethod
     def create_discussion(contacts, discussion_id, name):
         with session_scope() as session:
             return create_discussion(session=session, contacts=contacts, discussion_id=discussion_id, name=name)
