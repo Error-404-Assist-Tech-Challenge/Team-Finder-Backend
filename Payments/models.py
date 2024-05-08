@@ -1,13 +1,25 @@
-from typing import Literal
+from typing import Literal, List
 
 from pydantic import BaseModel
 
 
-class PaymentsInfo(BaseModel):
-    id: str
-    name: str
-    demo: str
-    status: Literal['active', 'inactive']
-    hq_address: str
-    created_at: str
+class PriceFetch(BaseModel):
+    price_id: str
+    interval: str
+    currency: str
+    amount: int
 
+
+class Pricing(BaseModel):
+    name: str
+    product_id: str
+    description: str
+    price_list: List[PriceFetch]
+
+
+class Plan(BaseModel):
+    price_id: str
+
+
+class ClientSecret(BaseModel):
+    client_secret: str

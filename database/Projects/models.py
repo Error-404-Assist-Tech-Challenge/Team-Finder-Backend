@@ -22,7 +22,6 @@ class Projects(Base):
     can_be_deleted = Column(Boolean, nullable=False)
     tech_stack = Column(ARRAY(String), nullable=False)
 
-
     @staticmethod
     def serialize_projects(projects):
         serialized_projects = {}
