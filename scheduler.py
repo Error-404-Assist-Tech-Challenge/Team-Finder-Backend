@@ -146,7 +146,7 @@ def deactivate_demo_accounts():
     current_time = datetime.utcnow()
     for organization in organizations:
         current_organization = organizations[organization]
-        if current_organization.get("demo") == "True" or current_organization.get("unpaid") == "unpaid":
+        if current_organization.get("demo") == "True" or current_organization.get("demo") == "unpaid":
             created_at = datetime.strptime(current_organization.get("created_at"), format)
             org_created_at = created_at + relativedelta(months=3)
             if org_created_at > current_time:

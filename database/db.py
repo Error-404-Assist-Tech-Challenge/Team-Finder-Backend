@@ -1122,6 +1122,11 @@ class DataBase:
         with session_scope() as session:
             return deactivate_account(session=session, organization_id=organization_id)
 
+    @staticmethod
+    def activate_account(organization_id):
+        with session_scope() as session:
+            return activate_account(session=session, organization_id=organization_id)
+
     # DISCUSSIONS ======================================================================================================
 
     @staticmethod
@@ -1167,6 +1172,11 @@ class DataBase:
     def update_organization_payment(id, status):
         with session_scope() as session:
             return update_organization_payment(session=session, id=id, status=status)
+
+    @staticmethod
+    def update_subscription(org_id):
+        with session_scope() as session:
+            return update_subscription(session=session, org_id=org_id)
 
     # CHAT GPT FEATURE==================================================================================================
     @staticmethod

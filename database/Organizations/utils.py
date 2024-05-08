@@ -292,10 +292,33 @@ def deactivate_account(session, organization_id):
             if organization:
                 organization.demo = "unpaid"
                 session.commit()
-            else:
-                return None, "Team role not found"
-            return "Team role deleted", None
         except SQLAlchemyError as e:
             error = str(e.__dict__['orig'])
             print(error)
             return error
+
+
+def activate_account(session, organization_id):
+    try:
+        organization = session.query(Organization).filter_by(id=organization_id).first()
+        if organization:
+            organization.demo = "paid"
+            session.commit()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
+
+
+def update_subscription(session, org_id):
+    try:
+        organization = session.query(Organization).filter_by(id=org_id).first()
+
+        if organization:
+            organization.demo = "paid"
+            session.commit()
+            return "Subscription successfully updated"
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        return error
