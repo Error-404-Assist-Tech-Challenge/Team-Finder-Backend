@@ -36,7 +36,7 @@ def get_pricing_info(user_id: str = Depends(auth_handler.auth_wrapper)):
 
 
 @payments_router.get("/membership_info", response_model=MembershipInfo)
-def get_pricing_info(user_id: str = Depends(auth_handler.auth_wrapper)):
+def get_membership_info(user_id: str = Depends(auth_handler.auth_wrapper)):
     user = db.get_user(user_id)
     try:
         # Retrieve customer by email
@@ -79,23 +79,38 @@ def get_pricing_info(user_id: str = Depends(auth_handler.auth_wrapper)):
 async def create_checkout_session(data: Plan, user_id: str = Depends(auth_handler.auth_wrapper)):
     data = data.model_dump()
     user = db.get_user(user_id)
-    try:
-        session = stripe.checkout.Session.create(
-            success_url="https://google.com/",
-            cancel_url="https://google.com/",
-            payment_method_types=["card"],
-            client_reference_id=user.get("id"),
-            line_items=[
-                {
-                    "price": data.get("price_id"),
-                    "quantity": 1,
-                }
-            ],
-            mode="subscription",
-        )
-        return {"url": session.url}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+    # Get pricing details
+    pricing_details = stripe.Price.retrieve(data.get("price_id"))
+    subscription_type = pricing_details["recurring"].get("interval")
+
+    # Verify if user has a subscription
+    subscriptions = get_membership_info(user_id)
+    current_interval = subscriptions.get("interval")
+    if subscription_type == current_interval and subscription_type == "year":
+        raise HTTPException(status_code=500, detail="User already has an yearly subscription")
+    elif subscription_type == 'month' and subscription_type == current_interval:
+        raise HTTPException(status_code=500, detail="User already has an monthly subscription")
+    elif subscription_type == "month" and "year" == current_interval:
+        raise HTTPException(status_code=500, detail="User already has an yearly subscription")
+    else:
+        try:
+            session = stripe.checkout.Session.create(
+                success_url="https://google.com/",
+                cancel_url="https://google.com/",
+                payment_method_types=["card"],
+                client_reference_id=user.get("id"),
+                line_items=[
+                    {
+                        "price": data.get("price_id"),
+                        "quantity": 1,
+                    }
+                ],
+                mode="subscription",
+            )
+            return {"url": session.url}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
 
 
 @payments_router.post("/webhook")
