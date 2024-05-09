@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 from fastapi import APIRouter, Response, Depends, Cookie, HTTPException, Header, Request
@@ -32,6 +33,46 @@ def get_pricing_info(user_id: str = Depends(auth_handler.auth_wrapper)):
                           "amount": price["unit_amount"]}
             response_body["price_list"].append(price_body)
     return response_body
+
+
+@payments_router.get("/membership_info", response_model=MembershipInfo)
+def get_pricing_info(user_id: str = Depends(auth_handler.auth_wrapper)):
+    user = db.get_user(user_id)
+    try:
+        # Retrieve customer by email
+        customers = stripe.Customer.list(email=user.get("email"))
+        if customers.data:
+            customer_id = customers.data[0].id  # Assuming only one customer per email
+            # Retrieve subscriptions by customer ID
+            subscriptions = stripe.Subscription.list(customer=customer_id)
+            subscriptions = subscriptions["data"][0]
+            if subscriptions:
+                if subscriptions["status"] == "active":
+                    currency = subscriptions.get("currency")
+                    current_period_start = subscriptions.get("current_period_start")
+                    current_period_end = subscriptions.get("current_period_end")
+
+                    items = subscriptions.get("items", {}).get("data", [])
+                    if items:
+                        amount = items[0].get("plan", {}).get("amount")
+                        interval = items[0].get("plan", {}).get("interval")
+                    else:
+                        amount = None
+                        interval = None
+
+                    returned_object = {
+                        "currency": currency,
+                        "current_period_start": datetime.utcfromtimestamp(current_period_start),
+                        "current_period_end": datetime.utcfromtimestamp(current_period_end),
+                        "amount": amount,
+                        "interval": interval
+                    }
+                    return returned_object
+        else:
+            return None  # No customer found with the given email
+    except stripe.error.StripeError as e:
+        print("Stripe error:", e)
+        return None
 
 
 @payments_router.post("/create-checkout-session")
