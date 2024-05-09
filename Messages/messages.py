@@ -17,10 +17,10 @@ async def create_message(message_data: Message, user_id: str = Depends(auth_hand
         raise HTTPException(status_code=404, detail="Discussion not found")
 
     discussion_contacts = discussion.get("contacts")
-    if user_id not in discussion_contacts:
+    if UUID(user_id) not in discussion_contacts:
         raise HTTPException(status_code=404, detail="The user is not part of the discussion")
 
-    create_new_message(message_data, user_id)
+    await create_new_message(message_data, user_id)
 
     messages, error = get_messages_by_discussion_id(user_id, discussion_id)
     if error:
@@ -33,10 +33,10 @@ async def create_message(message_data: Message, user_id: str = Depends(auth_hand
 def get_messages(discussion_id: UUID, user_id: str = Depends(auth_handler.auth_wrapper)):
     discussion, error = db.get_discussion(discussion_id)
     if not discussion:
-        raise HTTPException(status_code=404, detail="Discussion not found.")
+        raise HTTPException(status_code=404, detail="Discussion not found")
 
     discussion_contacts = discussion.get("contacts")
-    if user_id not in discussion_contacts:
+    if UUID(user_id) not in discussion_contacts:
         raise HTTPException(status_code=404, detail="The user is not part of the discussion")
 
     messages, error = get_messages_by_discussion_id(user_id, discussion_id)

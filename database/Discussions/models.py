@@ -15,7 +15,7 @@ class Discussions(Base):
         return {
             "id": str(self.id),
             "name": str(self.name),
-            "contacts": str(self.contacts)
+            "contacts": self.contacts
         }
 
     @staticmethod
